@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SignupPage = () => {
+const Signup = () => {
     return (
         <section className="text-center text-lg-start">
             <style>
@@ -75,4 +75,4 @@ const SignupPage = () => {
     );
 };
 
-export default SignupPage;
+export default Signup;
