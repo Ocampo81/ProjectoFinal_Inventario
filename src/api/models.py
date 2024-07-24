@@ -9,7 +9,9 @@ class User(db.Model):
     lastName = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    profile = db.Column(db.String(20), unique=False, nullable=False)
+    profile = db.Column(db.Integer, nullable=False)
+    idProfile = db.Column(db.Integer, db.ForeignKey('profile.id'))
+
 
     def __repr__(self):
         return '<User %r>' %self.email
@@ -24,7 +26,21 @@ class User(db.Model):
             "profile": self.profile
             # do not serialize the password, its a security breach
         } 
-    
+
+class Profile(db.Model):
+    __tablename__ = 'profile'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+
+    def __repr__(self):
+        return '<Objective %r>' %self.id
+
+    def serialize(self):
+        return {
+            "Id_objective": self.id,
+            "Name": self.name
+            # do not serialize the password, its a security breach
+        }
 
 class Provider(db.Model):
     __tablename__ = 'provider'
@@ -38,8 +54,8 @@ class Provider(db.Model):
 
     def serialize(self):
         return {
-            "Id_objective": self.nit,
-            "Name": self.phone
+            "nit": self.nit,
+            "phone": self.phone
             # do not serialize the password, its a security breach
         }
     
