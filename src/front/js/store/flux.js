@@ -1,7 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: "",
+			message: {},
 			isAuthenticated: false,
 			userToken: null,
 			user: {},
@@ -71,20 +71,48 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			postLogin: (email, password) => {
+			postLogin: async (email, password) => {
 				console.log(email, password)
-				fetch(process.env.BACKEND_URL + "/api/login", {
-					method: "POST",
-					body: JSON.stringify({ email, password }), // data can be `string` or {object}!
-					headers: {
-						"Content-Type": "application/json"
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+						method: "POST",
+						body: JSON.stringify({ email, password }), // data can be `string` or {object}!
+						headers: {
+							"Content-Type": "application/json"
+						}
+					})
+					const data = await response.json();
+					console.log("VALOR DE DATA antes del IF",data)
+					if (response.ok) {
+						console.log(data.Message.token);
+						console.log(data.Message.email);
+						console.log(data.Message.id);
+						setStore({ message: data.token });
+						// resp = data.Message.token != ""
+						if (data.Message.token != undefined){
+							// localStorage.setItem('data.Message.token')
+							localStorage.setItem("accessToken", data.Message.token);
+
+							return true
+						}
+						else {
+							setStore({ message: data.Message.error });
+							return false
+						}
+					}
+					else {
+						setStore({ message: data.Message.error });
 					}
 
-				})
-					.then(res => res.json())
-					.then(response => console.log("VALOR DE LOCALSTORAGE  *** ", localStorage.getItem('accessToken')))
-					.catch(error => console.error("Error:", error));
+				}
+				catch (error) {
+					console.log("Error loading message from backend", error)
+				}
+				// catch(error => console.error("Error:", error));
 			},
+
+
+
 
 
 
