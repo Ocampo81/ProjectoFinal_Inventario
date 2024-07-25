@@ -4,7 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: {},
 			isAuthenticated: false,
 			userToken: null,
-			user: {},
+			user: [],
 			demo: [
 				{
 					title: "FIRST",
@@ -84,24 +84,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await response.json();
 					console.log("VALOR DE DATA antes del IF",data)
 					if (response.ok) {
-						console.log(data.Message.token);
-						console.log(data.Message.email);
-						console.log(data.Message.id);
-						setStore({ message: data.token });
-						// resp = data.Message.token != ""
+						// console.log(data.Message.token);
+						// console.log(data.Message.email);
+						// console.log(data.Message.id);
+						setStore({ user: data.Message });
+						// setStore({ user: data.Message.id });
 						if (data.Message.token != undefined){
-							// localStorage.setItem('data.Message.token')
 							localStorage.setItem("accessToken", data.Message.token);
-
 							return true
 						}
 						else {
-							setStore({ message: data.Message.error });
+							setStore({ message: data.Message.Error });
 							return false
 						}
 					}
 					else {
-						setStore({ message: data.Message.error });
+						setStore({ message: data.Message.Error });
 					}
 
 				}

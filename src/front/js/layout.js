@@ -10,6 +10,7 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import { Alerta } from "./pages/Alert.jsx";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -24,6 +25,7 @@ const Layout = () => {
                         <Route element={<Login />} path="/" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<RegisterCompany />} path="/register-company" />
+                        <Route element={<Alerta />} path="/Alerta" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>

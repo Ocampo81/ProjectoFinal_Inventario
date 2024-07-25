@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 
+
 const Login = () => {
     const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
@@ -16,13 +17,15 @@ const Login = () => {
         console.log(" despues del flux success", success);
         console.log(" despues del flux store.message", store.message);
         if (success) {
-            console.log("ingrese a success", localStorage.getItem('accessToken'))
+            console.log("ingrese a success TOKEN", localStorage.getItem('accessToken'));
+            console.log("ingrese a success EMAIL", store.user.email);
+            console.log("ingrese a success ID ", store.user.id);
 
             navigate("/register-company"); // se debe redireccionar a ****
         }
         else {
             console.log(" FALLo!!!", store.message);
-            // Alerta();
+            navigate("/Alerta");
         }
     }
     return (
