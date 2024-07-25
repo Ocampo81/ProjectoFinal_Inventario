@@ -1,7 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
+
 
 const Login = () => {
+    const { store, actions } = useContext(Context);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
     return (
         <section className="vh-100">
             <div className="container py-5 h-100">
@@ -32,10 +39,12 @@ const Login = () => {
                                             <div data-mdb-input-init className="form-outline mb-4">
                                                 <input
                                                     type="email"
-                                                    id="form2Example17"
+                                                    id="InputEmail1"
                                                     className="form-control form-control-lg"
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
                                                 />
-                                                <label className="form-label" htmlFor="form2Example17">
+                                                <label className="form-label" htmlFor="InputEmail1">
                                                     Email address
                                                 </label>
                                             </div>
@@ -43,10 +52,12 @@ const Login = () => {
                                             <div data-mdb-input-init className="form-outline mb-4">
                                                 <input
                                                     type="password"
-                                                    id="form2Example27"
+                                                    id="InputPassword"
                                                     className="form-control form-control-lg"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
                                                 />
-                                                <label className="form-label" htmlFor="form2Example27">
+                                                <label className="form-label" htmlFor="InputPassword">
                                                     Password
                                                 </label>
                                             </div>
