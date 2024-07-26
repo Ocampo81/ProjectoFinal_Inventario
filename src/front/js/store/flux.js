@@ -37,23 +37,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			postSignup: async (email, password, date) => {
-				console.log(email, password, date)
+			postSignup: async (email, name, lastname, password, is_active, profile) => {
+				console.log("ANTES DE ENVIAR: ",email, name, lastname, password, is_active, profile)
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
 						method: "POST",
-						body: JSON.stringify({ email, password, date }), // data can be `string` or {object}!
+						body: JSON.stringify({email, name, lastname, password, is_active, profile }), // data can be `string` or {object}!
 						headers: {
 							"Content-Type": "application/json"
 						}
 					})
 					const data = await response.json();
-					console.log(data)
+					// console.log(data)
+					console.log("VALOR DE DATA  en SIGNUP antes del IF",data)
 					if (response.ok) {
-						console.log(data.Message.message);
+						console.log("data.Message.message despues de respuesta: ", data.Message.message);
 						setStore({ message: data.Message.message });
-						resp = data.Message.message == "User created successfully"
-						if (resp)
+						// resp = data.Message.message == "User created successfully"
+						if (data.Message.message == "User created successfully")
 							return true
 						else {
 							return false

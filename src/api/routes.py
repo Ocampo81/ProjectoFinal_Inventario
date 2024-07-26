@@ -25,6 +25,7 @@ def handle_hello():
 @api.route('/signup', methods=['POST'])
 def Signup1():
      data = request.json
+    #  print("data dentro de Signup1",data)
      respuesta = app.Signup(data)
      return jsonify({"Message" : respuesta}),200
 

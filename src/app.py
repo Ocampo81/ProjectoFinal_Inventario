@@ -67,11 +67,12 @@ def sitemap():
 #Función para realizar Signup devuelve mensaje
 def Signup(data):
     #data = request.json
+    # print("DATA DATA :", data.get("email"),'\n', data.get("password"), '\n', data.get("name"), '\n',  data.get("lastname"))
     newUser = User()
     newUser.email = data.get("email")
-    newUser.password = data.get("password")
     newUser.name = data.get("name")
-    newUser.lastName = data.get("lastName")
+    newUser.lastName = data.get("lastname")
+    newUser.password = data.get("password")
     newUser.is_active = data.get("is_active")
     newUser.profile = data.get("profile")
     if newUser.email == "" or newUser.password == "" :
