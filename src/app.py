@@ -67,7 +67,8 @@ def sitemap():
 #Función para realizar Signup devuelve mensaje
 def Signup(data):
     #data = request.json
-    # print("DATA DATA :", data.get("email"),'\n', data.get("password"), '\n', data.get("name"), '\n',  data.get("lastname"))
+    print("DATA DATA en APP SIN *****:", data)
+    print("DATA DATA en APP:", data.get("email"),'\n', data.get("password"), '\n', data.get("name"), '\n',  data.get("lastname"))
     newUser = User()
     newUser.email = data.get("email")
     newUser.name = data.get("name")

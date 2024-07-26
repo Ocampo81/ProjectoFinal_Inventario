@@ -1,24 +1,38 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 const Signup = () => {
     const { store, actions } = useContext(Context);
-    const [name, setName] = useState("");
-    const [lastname, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    // const [name, setName] = useState("");
+    // const [lastname, setLastName] = useState("");
+    // const [email, setEmail] = useState("");
+    // const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const is_active = true;
-    const profile = 1;
 
+    const params = useParams();
 
-    const handleLogin = async (event) => {
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+        name: "",
+        lastname: "",
+        "profile": 1,
+        "is_active": true
+    });
+
+    const info = event => {
+        setData({
+            ...data, [event.target.name]: event.target.value
+        })
+    }
+
+    const handleSignup = async (event) => {
         event.preventDefault();
-        const success = await actions.postSignup(email, name, lastname, password, is_active, profile);
+        const success = await actions.postSignup(data);
         // console.log(" despues del flux store.message", store.message);
         if (success) {
-            navigate("/login"); // se debe redireccionar a ****
+            navigate("/login"); // se debe redireccionar a login
         }
         else {
             console.log(" FALLo!!!", store.message);
@@ -48,67 +62,36 @@ const Signup = () => {
                             }}>
                             <div className="card-body p-5 shadow-5 text-center">
                                 <h2 className="fw-bold mb-5">Sign up now</h2>
-                                <form onSubmit={handleLogin}>
-                                    <fieldset >
-                                        <div className="row">
-                                            <div className="col-md-6 mb-4">
-                                                <div data-mdb-input-init className="form-outline">
+                                <form>
 
-                                                    <input
-                                                        type="text"
-                                                        id="InputName"
-                                                        className="form-control"
-                                                        //  className="form-control form-control-lg"
-                                                        value={name}
-                                                        onChange={(e) => setName(e.target.value)}
-
-                                                    />
-                                                    <label className="form-label" htmlFor="InputName">First name</label>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-6 mb-4">
-                                                <div data-mdb-input-init className="form-outline">
-                                                    <input
-                                                        type="text"
-                                                        id="InputLastName"
-                                                        className="form-control"
-                                                        //  className="form-control form-control-lg"
-                                                        value={lastname}
-                                                        onChange={(e) => setLastName(e.target.value)}
-
-                                                    />
-                                                    <label className="form-label" htmlFor="InputLastName">Last name</label>
-                                                </div>
+                                    <div className="row">
+                                        <div className="col-md-6 mb-4">
+                                            <label className="col-sm-2 col-form-label">Firstname</label>
+                                            <div className="col-sm-10">
+                                                <input type="text" className="form-control" onChange={info} name="name" value={data.name} />
                                             </div>
                                         </div>
-                                    </fieldset>
-
-                                    <div data-mdb-input-init className="form-outline mb-4">
-                                        <input type="email" id="form3Example3" className="form-control" />
-                                        <input
-                                            type="text"
-                                            id="InputEmail"
-                                            className="form-control"
-                                            //  className="form-control form-control-lg"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-
-                                        />
-                                        <label className="form-label" htmlFor="InputEmail">Email address</label>
+                                        <div className="col-md-6 mb-4">
+                                            <label className="col-sm-2 col-form-label">Lastname</label>
+                                            <div className="col-sm-10">
+                                                <input type="text" className="form-control" onChange={info} name="lastname" value={data.lastname} />
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div data-mdb-input-init className="form-outline mb-4">
-                                        {/* <input type="password" id="form3Example4" className="form-control" /> */}
-                                        <input
-                                            type="password"
-                                            id="InputPassword"
-                                            className="form-control"
-                                            //  className="form-control form-control-lg"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                    <div className="col-md-6 mb-4">
+                                        <label className="col-sm-2 col-form-label">email</label>
+                                        <div className="col-sm-10">
+                                            <input type="email" className="form-control" onChange={info} name="email" value={data.email} />
+                                        </div>
+                                    </div>
 
-                                        />
-                                        <label className="form-label" htmlFor="form3Example4">Password</label>
+                                    <div className="row mb-3">
+                                        <label className="col-sm-2 col-form-label">Password</label>
+                                        <div className="col-sm-10">
+                                            <input type="password" className="form-control" onChange={info} name="password" value={data.password} autoComplete="on" />
+
+                                        </div>
                                     </div>
 
                                     {/* <div className="form-check d-flex justify-content-center mb-4">
@@ -118,7 +101,7 @@ const Signup = () => {
                                         </label>
                                     </div> */}
 
-                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-block mb-4">
+                                    <button type="submit" onClick={handleSignup} className="btn btn-primary btn-block mb-4">
                                         Sign up
                                     </button>
                                 </form>
