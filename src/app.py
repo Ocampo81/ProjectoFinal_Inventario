@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User
+from api.models import db, User, Customer
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -120,7 +120,13 @@ def Login(data):
             return response_body
 
 
-
+# def funCustomer(data):
+#     newCustomer = Customer()
+#     newCustomer.nit = data.get("nit")
+#     newCustomer.phone = data.get("phone")
+#     newCustomer.date = data.get("date")
+#         idUser 
+#     idAddr = db.Column(db.Integer, db.ForeignKey('address.id'))
 
 
 

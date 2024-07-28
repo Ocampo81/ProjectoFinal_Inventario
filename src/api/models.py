@@ -46,8 +46,8 @@ class Provider(db.Model):
     __tablename__ = 'provider'
     nit = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(60), nullable=False)
-    id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id = db.Column(db.Integer, db.ForeignKey('address.id'))
+    idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
+    idAddr = db.Column(db.Integer, db.ForeignKey('address.id'))
 
     def __repr__(self):
         return '<Objective %r>' %self.nit
@@ -64,8 +64,8 @@ class Customer(db.Model):
     nit = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(60), nullable=False)
     date = db.Column(db.String(15), nullable=False)
-    id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id = db.Column(db.Integer, db.ForeignKey('address.id'))
+    idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
+    idAddr = db.Column(db.Integer, db.ForeignKey('address.id'))
 
     def __repr__(self):
         return '<Objective %r>' %self.nit
