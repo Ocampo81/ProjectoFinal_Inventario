@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
+import Alert from "../component/Alert";
 
 const Signup = () => {
     const { store, actions } = useContext(Context);
@@ -55,6 +56,7 @@ const Signup = () => {
                         <div className="card cascading-right bg-body-tertiary" style={{ backdropFilter: 'blur(30px)' }}>
                             <div className="card-body p-5 shadow-5 text-center">
                                 <h2 className="fw-bold mb-5">Sign up now</h2>
+                                {store.message && <Alert message={store.message} />}
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
                                         <div className="col-md-6 mb-4">

@@ -36,7 +36,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             postSignup: async (data) => {
                 try {
-                    const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/signup`, {
                         method: "POST",
                         body: JSON.stringify(data),
                         headers: {
@@ -49,15 +49,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                         return dataRes.Message.message === "User created successfully";
                     } else {
                         setStore({ message: dataRes.Message.message });
+                        return false;
                     }
                 } catch (error) {
                     console.log("Error loading message from backend", error);
+                    return false;
                 }
             },
 
             postLogin: async (email, password) => {
                 try {
-                    const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
                         method: "POST",
                         body: JSON.stringify({ email, password }),
                         headers: {
