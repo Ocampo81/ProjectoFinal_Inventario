@@ -1,15 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
+import Alert from "../component/Alert";
 
 const Signup = () => {
     const { store, actions } = useContext(Context);
-    // const [name, setName] = useState("");
-    // const [lastname, setLastName] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
     const params = useParams();
 
     const [data, setData] = useState({
@@ -17,93 +13,77 @@ const Signup = () => {
         password: "",
         name: "",
         lastname: "",
-        "profile": 1,
-        "is_active": true
+        profile: 1,
+        is_active: true
     });
 
-    const info = event => {
+    const handleChange = (e) => {
+        const { name, value } = e.target;
         setData({
-            ...data, [event.target.name]: event.target.value
-        })
-    }
+            ...data,
+            [name]: value
+        });
+    };
 
-    const handleSignup = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const success = await actions.postSignup(data);
-        // console.log(" despues del flux store.message", store.message);
         if (success) {
-            navigate("/login"); // se debe redireccionar a login
+            navigate("/login");
+        } else {
+            console.log("Fallo", store.message);
         }
-        else {
-            console.log(" FALLo!!!", store.message);
-            // navigate("/Alerta");
-        }
-    }
+    };
+
     return (
         <section className="text-center text-lg-start">
             <style>
-                {`.cascading-right {
-          margin-right: -50px;
-        }
-
-        @media (max-width: 991.98px) {
-          .cascading-right {
-            margin-right: 0;
-          }
-        }`}
+                {`
+                .cascading-right {
+                    margin-right: -50px;
+                }
+                @media (max-width: 991.98px) {
+                    .cascading-right {
+                        margin-right: 0;
+                    }
+                }
+                `}
             </style>
 
             <div className="container py-4">
                 <div className="row g-0 align-items-center">
                     <div className="col-lg-6 mb-5 mb-lg-0">
-                        <div className="card cascading-right bg-body-tertiary"
-                            style={{
-                                backdropFilter: 'blur(30px)',
-                            }}>
+                        <div className="card cascading-right bg-body-tertiary" style={{ backdropFilter: 'blur(30px)' }}>
                             <div className="card-body p-5 shadow-5 text-center">
                                 <h2 className="fw-bold mb-5">Sign up now</h2>
-                                <form>
-
+                                {store.message && <Alert message={store.message} />}
+                                <form onSubmit={handleSubmit}>
                                     <div className="row">
                                         <div className="col-md-6 mb-4">
-                                            <label className="col-sm-2 col-form-label">Firstname</label>
-                                            <div className="col-sm-10">
-                                                <input type="text" className="form-control" onChange={info} name="name" value={data.name} />
+                                            <div data-mdb-input-init className="form-outline">
+                                                <input type="text" name="name" className="form-control" value={data.name} onChange={handleChange} required />
+                                                <label className="form-label" htmlFor="name">First name</label>
                                             </div>
                                         </div>
                                         <div className="col-md-6 mb-4">
-                                            <label className="col-sm-2 col-form-label">Lastname</label>
-                                            <div className="col-sm-10">
-                                                <input type="text" className="form-control" onChange={info} name="lastname" value={data.lastname} />
+                                            <div data-mdb-input-init className="form-outline">
+                                                <input type="text" name="lastname" className="form-control" value={data.lastname} onChange={handleChange} required />
+                                                <label className="form-label" htmlFor="lastname">Last name</label>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="col-md-6 mb-4">
-                                        <label className="col-sm-2 col-form-label">email</label>
-                                        <div className="col-sm-10">
-                                            <input type="email" className="form-control" onChange={info} name="email" value={data.email} />
-                                        </div>
+                                    <div data-mdb-input-init className="form-outline mb-4">
+                                        <input type="email" name="email" className="form-control" value={data.email} onChange={handleChange} required />
+                                        <label className="form-label" htmlFor="email">Email address</label>
                                     </div>
 
-                                    <div className="row mb-3">
-                                        <label className="col-sm-2 col-form-label">Password</label>
-                                        <div className="col-sm-10">
-                                            <input type="password" className="form-control" onChange={info} name="password" value={data.password} autoComplete="on" />
-
-                                        </div>
+                                    <div data-mdb-input-init className="form-outline mb-4">
+                                        <input type="password" name="password" className="form-control" value={data.password} onChange={handleChange} required />
+                                        <label className="form-label" htmlFor="password">Password</label>
                                     </div>
 
-                                    {/* <div className="form-check d-flex justify-content-center mb-4">
-                                        <input className="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-                                        <label className="form-check-label" htmlFor="form2Example33">
-                                            Subscribe to our newsletter
-                                        </label>
-                                    </div> */}
-
-                                    <button type="submit" onClick={handleSignup} className="btn btn-primary btn-block mb-4">
-                                        Sign up
-                                    </button>
+                                    <button type="submit" className="btn btn-primary btn-block mb-4">Sign up</button>
                                 </form>
                             </div>
                         </div>
