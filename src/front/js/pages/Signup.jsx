@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
+import SuccessModal from "../component/SuccessModal";
 import Alert from "../component/Alert";
 
 const Signup = () => {
@@ -17,6 +18,9 @@ const Signup = () => {
         is_active: true
     });
 
+    const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState("");
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData({
@@ -29,10 +33,15 @@ const Signup = () => {
         event.preventDefault();
         const success = await actions.postSignup(data);
         if (success) {
-            navigate("/login");
+            setShowModal(true);
         } else {
-            console.log("Fallo", store.message);
+            setError(store.message);
         }
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+        navigate("/login");
     };
 
     return (
@@ -56,7 +65,7 @@ const Signup = () => {
                         <div className="card cascading-right bg-body-tertiary" style={{ backdropFilter: 'blur(30px)' }}>
                             <div className="card-body p-5 shadow-5 text-center">
                                 <h2 className="fw-bold mb-5">Sign up now</h2>
-                                {store.message && <Alert message={store.message} />}
+                                {error && <Alert message={error} />}
                                 <form onSubmit={handleSubmit}>
                                     <div className="row">
                                         <div className="col-md-6 mb-4">
@@ -94,6 +103,7 @@ const Signup = () => {
                     </div>
                 </div>
             </div>
+            <SuccessModal show={showModal} handleClose={handleClose} />
         </section>
     );
 };
