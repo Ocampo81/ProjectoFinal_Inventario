@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import declarative_base, relationship
 
 db = SQLAlchemy()
 
@@ -47,7 +48,7 @@ class Provider(db.Model):
     nit = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(60), nullable=False)
     idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
-    idAddr = db.Column(db.Integer, db.ForeignKey('address.id'))
+    id = db.Column(db.Integer, db.ForeignKey('address.nit'))
 
     def __repr__(self):
         return '<Objective %r>' %self.nit
@@ -65,7 +66,9 @@ class Customer(db.Model):
     phone = db.Column(db.String(60), nullable=False)
     date = db.Column(db.String(15), nullable=False)
     idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
-    idAddr = db.Column(db.Integer, db.ForeignKey('address.id'))
+    id = db.Column(db.Integer, db.ForeignKey('address.nit'))
+    # address = relationship("address", back_populates="customer")
+
 
     def __repr__(self):
         return '<Objective %r>' %self.nit
@@ -86,18 +89,19 @@ class Customer(db.Model):
     
 class Address(db.Model):
     __tablename__ = 'address'
-    id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
+    nit = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(60), nullable=False)
     city = db.Column(db.String(60), nullable=False)
     country = db.Column(db.String(60), nullable=False)
-    # nit = db.Column(db.Integer, db.ForeignKey('customer.nit'))
+    
 
     def __repr__(self):
         return '<Objective %r>' %self.id
 
     def serialize(self):
         return {
-            "id": self.id,
+            "nit": self.nit,
             "address": self.address,
             "city": self.city,
             "address": self.country

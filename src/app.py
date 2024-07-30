@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, Customer
+from api.models import db, User, Customer, Address
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -120,15 +120,35 @@ def Login(data):
             return response_body
 
 
-# def funCustomer(data):
-#     newCustomer = Customer()
-#     newCustomer.nit = data.get("nit")
-#     newCustomer.phone = data.get("phone")
-#     newCustomer.date = data.get("date")
-#         idUser 
-#     idAddr = db.Column(db.Integer, db.ForeignKey('address.id'))
+def funCustomer(data):
+    newCustomer = Customer()
+    newAddr = Address()
+    newCustomer.nit = data.get("nit")
+    newCustomer.phone = data.get("phone")
+    newCustomer.date = data.get("date")
+    newCustomer.idUser = data.get("idUser")
+    newCustomer.idAddr = data.get("idAddr")
 
-
+    newAddr.id = data.get("id")
+    newAddr.address = data.get("address")
+    newAddr.city = data.get("city")
+    newAddr.country = data.get("country")
+    
+    if newCustomer.nit == "" :
+        response_body = {"message": "Nit required"}
+        return response_body
+    else:
+        user_result = db.session.execute(db.select(Customer).filter_by(nit=newCustomer.nit)).one_or_none()
+        if user_result != None and user_result[0].nit == newCustomer.nit:
+            response_body = {"message": "Customer already exists"}
+            return response_body
+        else:
+            db.session.add(newAddr)
+            db.session.commit()
+            db.session.add(newCustomer)
+            db.session.commit()
+            response_body = {"message": "Customer created successfully"}
+            return response_body
 
 
 
