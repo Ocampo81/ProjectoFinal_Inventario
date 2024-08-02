@@ -6,12 +6,15 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, Customer, Address
+from api.models import db, User, Customer, Address, Provider
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from datetime import datetime
+from sqlalchemy.orm import relationship, join, sessionmaker
+from sqlalchemy import create_engine, engine, join
+import json
 
 
 # from models import Person
@@ -33,6 +36,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
+
 
 #se inicia JWT
 #app.config["JWT_SECRET_KEY"] = secrets.token_urlsafe(32) # Generate a 32-character URL-safe string
@@ -119,17 +123,19 @@ def Login(data):
                             }
             return response_body
 
+#Funciones para Customers
 
-def funCustomer(data):
+def addCustomer(data):
     newCustomer = Customer()
     newAddr = Address()
     newCustomer.nit = data.get("nit")
     newCustomer.phone = data.get("phone")
     newCustomer.date = data.get("date")
     newCustomer.idUser = data.get("idUser")
-    newCustomer.idAddr = data.get("idAddr")
+    newCustomer.addrNit = data.get("nit")
 
-    newAddr.id = data.get("id")
+    # newAddr.id = data.get("id")
+    newAddr.nit = data.get("nit")
     newAddr.address = data.get("address")
     newAddr.city = data.get("city")
     newAddr.country = data.get("country")
@@ -143,14 +149,80 @@ def funCustomer(data):
             response_body = {"message": "Customer already exists"}
             return response_body
         else:
-            db.session.add(newAddr)
-            db.session.commit()
             db.session.add(newCustomer)
+            db.session.commit()
+            db.session.add(newAddr)
             db.session.commit()
             response_body = {"message": "Customer created successfully"}
             return response_body
 
+def delCustomer(data):
+    delnit = db.session.execute(db.select(Customer).filter_by(nit=data)).one_or_none()
+    
+    if delnit != None:
+        delnit = Customer.query.filter_by(nit=data).one()
+        db.session.delete(delnit)
+        db.session.commit()
+        response_body = {"message": "Customer deleted successfully"}
+        return response_body
+    else:
+        response_body = {"message": "Customer not found", "nit": data}
+        return response_body
 
+def getCustomer():
+    customerList=[]
+    query = db.select(Customer.nit,Customer.phone,Customer.date, Address.address,Address.country,Address.city).join(Address, Customer.nit == Address.nit)
+    result = db.session.execute(query)
+
+    for customer in result.fetchall():
+        customerList.append(dict(customer._mapping))
+
+    return tuple(customerList)
+
+
+def getOneCustomer(data):
+    customerList=[]
+    query = db.select(Customer.nit,Customer.phone,Customer.date, Address.address,Address.country,Address.city).join(Address, Customer.nit == Address.nit).filter_by(nit=data)
+    result = db.session.execute(query)
+
+    for customer in result.fetchall():
+        print(dict(customer._mapping))
+        customerList.append(dict(customer._mapping))
+
+    return tuple(customerList)
+
+# Funciones para Providers
+
+def addProvider(data):
+    newProvider = Provider()
+    newAddr = Address()
+    newProvider.nit = data.get("nit")
+    newProvider.phone = data.get("phone")
+    #newProvider.date = data.get("date")
+    newProvider.idUser = data.get("idUser")
+    #newProvider.addrNit = data.get("nit")
+
+    # newAddr.id = data.get("id")
+    newAddr.nit = data.get("nit")
+    newAddr.address = data.get("address")
+    newAddr.city = data.get("city")
+    newAddr.country = data.get("country")
+    
+    if newProvider.nit == "" :
+        response_body = {"message": "Nit required"}
+        return response_body
+    else:
+        user_result = db.session.execute(db.select(Customer).filter_by(nit=newProvider.nit)).one_or_none()
+        if user_result != None and user_result[0].nit == newProvider.nit:
+            response_body = {"message": "Customer already exists"}
+            return response_body
+        else:
+            db.session.add(newProvider)
+            db.session.commit()
+            db.session.add(newAddr)
+            db.session.commit()
+            response_body = {"message": "Customer created successfully"}
+            return response_body
 
 
 @app.route('/<path:path>', methods=['GET'])

@@ -1,9 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base, relationship, backref
+from sqlalchemy import ForeignKey
 
 db = SQLAlchemy()
 
 class User(db.Model):
+        __tablename__ = 'user'
         id = db.Column(db.Integer, primary_key=True)
         email = db.Column(db.String(120), unique=True, nullable=False)
         name = db.Column(db.String(120), nullable=False)
@@ -48,63 +50,67 @@ class Provider(db.Model):
     nit = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(60), nullable=False)
     idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id = db.Column(db.Integer, db.ForeignKey('address.nit'))
+    # address = relationship("Address",
+    #                        cascade="all, delete, delete-orphan",
+    #                         # back_populates="provider"
+    #                        )
 
-        def __repr__(self):
-            return '<Objective %r>' %self.nit
+    def __repr__(self):
+        return '<Objective %r>' %self.nit
 
-        def serialize(self):
-            return {
-                "nit": self.nit,
-                "phone": self.phone
-                # do not serialize the password, its a security breach
-            }
-        
+    def serialize(self):
+        return {
+            "nit": self.nit,
+            "phone": self.phone
+            # do not serialize the password, its a security breach
+        }
+    
 class Customer(db.Model):
     __tablename__ = 'customer'
     nit = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(60), nullable=False)
     date = db.Column(db.String(15), nullable=False)
     idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
-    id = db.Column(db.Integer, db.ForeignKey('address.nit'))
-    # address = relationship("address", back_populates="customer")
+    address = relationship("Address",
+                           cascade="all, delete, delete-orphan",
+                           back_populates="customer"
+                           )
 
 
     def __repr__(self):
         return '<Objective %r>' %self.nit
 
     def serialize(self):
-        addr = Address
+
         return {
             "nit": self.nit,
             "phone": self.phone,
             "date": self.date,
-            #prueba que valores devuelve
-            "city": addr.city,
-            "address": addr.address,
-            "country": addr.country
-
+            "idUser": self.idUser
             # do not serialize the password, its a security breach
         }
         
 class Address(db.Model):
     __tablename__ = 'address'
     # id = db.Column(db.Integer, primary_key=True)
-    nit = db.Column(db.Integer, primary_key=True)
+    nit = db.Column(db.Integer, db.ForeignKey('customer.nit'), primary_key=True)
     address = db.Column(db.String(60), nullable=False)
     city = db.Column(db.String(60), nullable=False)
     country = db.Column(db.String(60), nullable=False)
-    
+    # relations
+    customer = relationship("Customer", back_populates="address")
+    # provider = relationship("Provider", back_populates="address")
+
 
     def __repr__(self):
-        return '<Objective %r>' %self.id
+        return '<Objective %r>' %self.nit
 
     def serialize(self):
         return {
             "nit": self.nit,
             "address": self.address,
             "city": self.city,
-            "address": self.country
+            "country": self.country
             # do not serialize the password, its a security breach
         }
 

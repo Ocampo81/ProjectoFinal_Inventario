@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Customer
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 import app
@@ -33,5 +33,41 @@ def Signup1():
 def Login1():
      data = request.json
      respuesta = app.Login(data)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+# Endpoint Customer
+@api.route('/customer', methods=['POST'])
+def addCustomer1():
+     data = request.json
+     respuesta = app.addCustomer(data)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
+@api.route('/customer/<int:nit>', methods=['DELETE'])
+def delCustomer1(nit):
+     # data = request.json
+     respuesta = app.delCustomer(nit)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
+@api.route('/customer/<int:nit>', methods=['GET'])
+def getOneCustomer1(nit):
+     respuesta = app.getOneCustomer(nit)
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
+
+@api.route('/customer', methods=['GET'])
+def getCustomer1():
+     # respuesta = app.getCustomer()
+     respuesta = app.getCustomerOtro()
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
+
+#Endponit Provider
+
+@api.route('/provider', methods=['POST'])
+def addprovider1():
+     data = request.json
+     respuesta = app.addProvider(data)
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
