@@ -3,9 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
-import Login from './pages/Login.jsx'
-import Signup from './pages/Signup.jsx'
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 import RegisterCompany from './pages/RegisterCompany.jsx';
+import MainMenu from './pages/MainMenu.jsx'; // Importar el nuevo componente
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
@@ -25,6 +26,7 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<RegisterCompany />} path="/register-company" />
+                        <Route element={<MainMenu />} path="/main-menu" /> {/* Nueva ruta */}
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>

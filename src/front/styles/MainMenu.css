@@ -1,0 +1,12 @@
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-top: 70px; /* Altura del navbar */
+}
+
+.centered-image {
+    max-width: 100%;
+    height: auto;
+}
