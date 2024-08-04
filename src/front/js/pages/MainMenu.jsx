@@ -1,28 +1,43 @@
-import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import '../../styles/MainMenu.css';
+import React from "react";
+import Navbar from "../component/Navbar";
+import "../../styles/MainMenu.css";
 
 const MainMenu = () => {
-    return (
-        <>
-            <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
-                <Container>
-                    <Navbar.Brand href="#">Inventario</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link as={Link} to="/create-product">Crear productos</Nav.Link>
-                            <Nav.Link as={Link} to="/view-inventory">Ver inventario</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-            <div className="main-content">
-                <img src="https://via.placeholder.com/800x400" alt="Imagen centrada" className="centered-image" />
-            </div>
-        </>
-    );
+  return (
+    <div className="main-menu">
+      <Navbar />
+      <div className="menu-container">
+        <div className="menu-grid">
+          <div className="menu-item">
+            <i className="fas fa-box-open fa-3x menu-icon"></i>
+            <h2>Productos</h2>
+            <p>Registra tus productos</p>
+          </div>
+          <div className="menu-item">
+            <i className="fas fa-users fa-3x menu-icon"></i>
+            <h2>Personal</h2>
+            <p>Ten el control de tu personal</p>
+          </div>
+          <div className="menu-item">
+            <i className="fas fa-cog fa-3x menu-icon"></i>
+            <h2>Configuración</h2>
+            <p>Configura tus opciones básicas</p>
+          </div>
+          <div className="menu-item">
+            <i className="fas fa-tags fa-3x menu-icon"></i>
+            <h2>Categoría de productos</h2>
+            <p>Asigna categorías a tus productos</p>
+          </div>
+          <div className="menu-item">
+            <i className="fas fa-boxes fa-3x menu-icon"></i>
+            <h2>Marca de productos</h2>
+            <p>Gestiona tus marcas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MainMenu;
+
