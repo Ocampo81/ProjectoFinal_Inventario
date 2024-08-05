@@ -86,7 +86,8 @@ class Customer(db.Model):
             "nit": self.nit,
             "phone": self.phone,
             "date": self.date,
-            "idUser": self.idUser
+            "idUser": self.idUser,
+            "address": self.address
             # do not serialize the password, its a security breach
         }
         
@@ -143,6 +144,7 @@ class DetailSales(db.Model):
         amount  = db.Column(db.Integer, nullable=False) 
         unitPrice  = db.Column(db.Integer, nullable=False)
         idSales = db.Column(db.Integer, db.ForeignKey('sales.idSales'))
+        id_prod = db.Column(db.Integer, db.ForeignKey('products.id_prod'))
 
         def __repr__(self):
             return '<Member %r>' %self.id_member
@@ -159,10 +161,17 @@ class Products(db.Model):
             
         __tablename__ = 'products'    
         id_prod = db.Column(db.Integer, primary_key=True)
-        prodname = db.Column(db.String(60), nullable=False) 
+        prodname = db.Column(db.String(60), unique=True, nullable=False)
+        brand = db.Column(db.String(100), nullable=False)
         salesPrice = db.Column(db.Integer, nullable=False)
         stock = db.Column(db.Integer, nullable=False)
         idCatProd = db.Column(db.Integer, db.ForeignKey('categoryproduct.idCatProd'))
+        Catproducts = relationship("CategoryProduct", back_populates="products")
+        
+        # address = relationship("Address",
+        #                    cascade="all, delete, delete-orphan",
+        #                    back_populates="customer"
+        #                    )
 
         def __repr__(self):
             return '<Member %r>' %self.id_prod
@@ -172,7 +181,9 @@ class Products(db.Model):
                 "id": self.id_prod,
                 "prodName": self.prodname,
                 "salesPrice": self.salesPrice,
-                "stock": self.stock
+                "stock": self.stock,
+                "brand": self.brand,
+                "Catproducts" : self.Catproducts
 
                 # do not serialize the password, its a security breach
             }  
@@ -180,9 +191,14 @@ class Products(db.Model):
 class CategoryProduct(db.Model):
         __tablename__ = 'categoryproduct'    
         idCatProd = db.Column(db.Integer, primary_key=True)
-        category  = db.Column(db.String(50), nullable=False) 
+        category  = db.Column(db.String(50), unique=True, nullable=False) 
         description  = db.Column(db.String(200), nullable=False)
-
+        
+        #products = relationship("Products", back_populates="CatProds")
+        products = relationship("Products",
+                           cascade="all, delete",
+                           back_populates="Catproducts"
+                           )
 
         def __repr__(self):
             return '<Member %r>' %self.idCatProd
@@ -191,7 +207,8 @@ class CategoryProduct(db.Model):
             return {
                 "id": self.idCatProd,
                 "category": self.category,
-                "description": self.description
+                "description": self.description,
+                "products": self.products
 
                 # do not serialize the password, its a security breach
             }

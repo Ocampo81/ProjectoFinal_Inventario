@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, Customer, Address, Provider
+from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -224,6 +224,66 @@ def addProvider(data):
             response_body = {"message": "Customer created successfully"}
             return response_body
 
+# Functions for Products
+
+def addProducts(data):
+    newProducts = Products()
+    # newCatProd = CategoryProduct()
+
+    newProducts.id_prod = data.get("id_prod")
+    newProducts.prodname = data.get("prodname").upper()
+    newProducts.brand = data.get("brand").upper()
+    newProducts.salesPrice = data.get("salesPrice")
+    newProducts.stock = data.get("stock")
+    newProducts.idCatProd = data.get("idCatProd")
+    
+
+    if newProducts.id_prod == "" :
+        response_body = {"message": "Id producto es requerido"}
+        return response_body
+    else:
+        Category_result = db.session.execute(db.select(CategoryProduct).filter_by(idCatProd=newProducts.idCatProd)).one_or_none()
+        if Category_result == None:
+            response_body = {"message": "Category doesn't exists"}
+            return response_body
+        else:
+            Product_result = db.session.execute(db.select(Products).filter_by(id_prod=newProducts.id_prod)).one_or_none()
+            if Product_result != None and Product_result[0].id_prod == newProducts.id_prod:
+                response_body = {"message": "PRODUCT already exists"}
+                return response_body
+            else:
+    
+                db.session.add(newProducts)
+                db.session.commit()
+                
+                response_body = {"message": "PRODUCT created successfully"}
+                return response_body
+
+
+# Functions for CategoryProduct
+
+def addCategoryProduct(data):
+ 
+    newCatProd = CategoryProduct()
+   
+    newCatProd.category = data.get("category").upper()
+    newCatProd.description = data.get("description").upper()
+
+    if newCatProd.category == "" :
+        response_body = {"message": "Category is necesary"}
+        return response_body
+    else:
+        Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=newCatProd.category)).one_or_none()
+        if Category_result != None:
+            response_body = {"message": "Category already exists"}
+            return response_body
+        else:
+            db.session.add(newCatProd)
+            db.session.commit()
+            response_body = {"message": "Category created successfully"}
+            return response_body
+            
+
 
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
@@ -232,6 +292,39 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
+
+# **** PRUEBA *****
+def getCustomerOtro():
+    customerList=[] 
+    query = db.session.query(Address).join(Customer, Address.nit == Customer.nit)
+    query1 = db.session.query(Customer).join(Address, Customer.nit == Address.nit)
+    print("query", query)
+
+    print("query1 ", query1 )
+    for customer in query1:
+        print(customer.serialize(), customer.address[0].serialize())
+        cust = customer.serialize()
+        addr = customer.address[0].serialize()
+        print(type(cust), type(addr))
+        print(cust.items(), addr.values())
+        print(cust.get('nit'), addr['city'])
+        # # print("customer: ", customer, type(customer))
+        # campo = customer[0].serialize()
+        # campo1= customer[1].serialize()
+        # print("campo: ", campo, campo1 )
+
+        # print(campo.get("nit")) 
+        #     #   campo[1], campo.phone, campo1[5])
+        #     #   , campo1.city, campo1.address)
+        # # print(customer.nit, customer.date, customer.phone, customer.addresses.country, customer.addresses.city, customer.addresses.address)
+        # # customerList.append(campo)
+
+    return None
+# tuple(customerList)
+
+
+
 
 
 # this only runs if `$ python src/main.py` is executed

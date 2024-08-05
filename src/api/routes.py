@@ -35,6 +35,7 @@ def Login1():
      respuesta = app.Login(data)
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
+
 # Endpoint Customer
 @api.route('/customer', methods=['POST'])
 def addCustomer1():
@@ -59,11 +60,41 @@ def getOneCustomer1(nit):
 @api.route('/customer', methods=['GET'])
 def getCustomer1():
      # respuesta = app.getCustomer()
-     respuesta = app.getCustomerOtro()
+     respuesta = app.getCustomer()
      # print("respuesta en route", type(respuesta), respuesta)
      return  jsonify(respuesta),200 
 
 #Endponit Provider
+
+
+# EndPoint Products
+@api.route('/products', methods=['POST'])
+def addProducts1():
+     data = request.json
+     respuesta = app.addProducts(data)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
+
+
+# Endponit Category
+@api.route('/category', methods=['POST'])
+def addCategoryProduct():
+     data = request.json
+     respuesta = app.addCategoryProduct(data)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
+# ******   Endpoint prueba
+
+@api.route('/customerotro', methods=['GET'])
+def getCustomerOtro1():
+     # respuesta = app.getCustomer()
+     respuesta = app.getCustomerOtro()
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
+
+
 
 @api.route('/provider', methods=['POST'])
 def addprovider1():

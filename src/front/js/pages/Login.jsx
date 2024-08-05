@@ -14,7 +14,7 @@ const Login = () => {
         event.preventDefault();
         const success = await actions.postLogin(email, password);
         if (success) {
-            navigate("/register-company");
+            navigate("/main-menu");
         } else {
             if (store.message.includes("email") || store.message.includes("password")) {
                 setError({ email: "Incorrect email or password", password: "Incorrect email or password" });
