@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import declarative_base, relationship, backref
 from sqlalchemy import ForeignKey
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -120,20 +121,23 @@ class Address(db.Model):
 class Sales(db.Model):
         __tablename__ = 'sales'    
         idSales = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.String(15), nullable=False) 
+        date = db.Column(db.DateTime(), default=datetime.now()) 
         totalPrice = db.Column(db.Integer, nullable=False)
-        id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        iduser = db.Column(db.Integer, db.ForeignKey('user.id'))
         nit = db.Column(db.Integer, db.ForeignKey('customer.nit'))
+        details = relationship('DetailSales',backref='sales')
 
         def __repr__(self):
-            return '<Member %r>' %self.id
+            return '<Member %r>' %self.idSales
 
         def serialize(self):
             return {
-                "id": self.id,
+                "idSales": self.idSales,
                 "date": self.date,
                 "totalPrice": self.totalPrice,
-                "nit": self.nit
+                "iduser": self.iduser,
+                "nit": self.nit,
+                "details": self.details
 
                 # do not serialize the password, its a security breach
             }  
@@ -145,16 +149,20 @@ class DetailSales(db.Model):
         unitPrice  = db.Column(db.Integer, nullable=False)
         idSales = db.Column(db.Integer, db.ForeignKey('sales.idSales'))
         id_prod = db.Column(db.Integer, db.ForeignKey('products.id_prod'))
+        products = relationship('Products',backref='Detailsales')
 
         def __repr__(self):
-            return '<Member %r>' %self.id_member
+            return '<Member %r>' %self.id
 
         def serialize(self):
             return {
                 "id": self.id,
                 "amount": self.amount,
-                "unitPrice": self.unitPrice
-                # do not serialize the password, its a security breach
+                "unitPrice": self.unitPrice,
+                "idSales" : self.idSales,
+                "id_prod" : self.id_prod,
+                "products" :self.products
+
             }
         
 class Products(db.Model):

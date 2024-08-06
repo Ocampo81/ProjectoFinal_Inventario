@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct
+from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct, Sales, DetailSales
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -284,6 +284,47 @@ def addCategoryProduct(data):
             return response_body
             
 
+
+
+# Functions for CategoryProduct
+
+def addSales(data):
+ 
+    newSales = Sales()
+    newDtSales = DetailSales()
+   
+    # Sales
+    newSales.idSales  = data.get("idSales")
+    newSales.iduser  = data.get("iduser")
+    #   date  = data.get("amount")
+    newSales.totalPrice  = data.get("totalPrice")
+    #  newSales.details  = data.get("amount")
+    db.session.add(newSales)
+    db.session.commit()
+    
+    # DetailSales
+    newDtSales.amount  = data.get("amount")
+    newDtSales.unitPrice =  data.get("unitPrice")
+    newDtSales.idSales = data.get("idSales")
+    newDtSales.id_prod  = data.get("amount") ### Verificar STOCK antes de la venta
+    # newDtSales.products =  data.get("amount")
+
+    # Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=newSales.category)).one_or_none()
+    # if Category_result != None:
+    #     response_body = {"message": "Category already exists"}
+    #     return response_body
+    # else:
+    
+    db.session.add(newDtSales)
+    db.session.commit()
+    # db.session.add(newSales)
+    # db.session.commit()
+    response_body = {"message": "Sales created successfully"}
+    return response_body
+
+
+
+######## 
 
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):

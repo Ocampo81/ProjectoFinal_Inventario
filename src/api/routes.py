@@ -85,6 +85,16 @@ def addCategoryProduct():
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
 
+# Endponit Sales
+@api.route('/sales', methods=['POST'])
+def addSales():
+     data = request.json
+     print("DATA", data)
+     respuesta = app.addSales(data)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
+
 # ******   Endpoint prueba
 
 @api.route('/customerotro', methods=['GET'])
