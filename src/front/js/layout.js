@@ -3,10 +3,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
-import Login from './pages/Login.jsx'
-import Signup from './pages/Signup.jsx'
-import MainMenu from './pages/MainMenu.jsx'
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 import RegisterCompany from './pages/RegisterCompany.jsx';
+import Products from './pages/Products.jsx';
+import Clients from './pages/Clients.jsx';
+import Employees from './pages/Employees.jsx';
+import Sales from './pages/Sales.jsx';
+import Reports from './pages/Reports.jsx';
+import MainMenu from './pages/MainMenu.jsx';
 import injectContext from "./store/appContext";
 
 const Layout = () => {
@@ -24,6 +29,11 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<RegisterCompany />} path="/register-company" />
                         <Route element={<MainMenu />} path="/main-menu" />
+                        <Route element={<Products />} path="/products" />
+                        <Route element={<Clients />} path="/clients" />
+                        <Route element={<Employees />} path="/employees" />
+                        <Route element={<Sales />} path="/sales" />
+                        <Route element={<Reports />} path="/reports" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>
@@ -33,4 +43,3 @@ const Layout = () => {
 };
 
 export default injectContext(Layout);
-

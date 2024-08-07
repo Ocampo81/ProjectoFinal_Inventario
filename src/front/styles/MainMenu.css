@@ -9,7 +9,7 @@
     width: 100%;
     height: 100vh;
     background-color: #2d2d2d;
-    padding-left: 150px; /* Ajustado para el ancho del navbar */
+    padding-left: 150px; 
 }
 
 .menu-grid {
@@ -24,17 +24,37 @@
     border-radius: 10px;
     text-align: center;
     padding: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu-item:hover {
+    background-color: #444444; 
 }
 
 .menu-icon {
     margin-bottom: 10px;
+    transition: color 0.3s;
 }
 
-.menu-item h2 {
+.menu-item:hover .menu-icon {
+    color: #ffb700;
+}
+
+.menu-item h2,
+.menu-item p {
     font-size: 1.5rem;
     margin-bottom: 10px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.menu-item:hover h2,
+.menu-item:hover p {
+    color: #ffb700;
 }
 
 .menu-item p {
     font-size: 1rem;
+    text-decoration: none;
 }

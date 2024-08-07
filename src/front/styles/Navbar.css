@@ -1,29 +1,69 @@
 .navbar {
-    background-color: #1c1c1c; 
-    width: 150px; 
+    background-color: #1a1a1a;
+    width: 100px;
     height: 100vh;
-    padding: 20px;
+    padding: 20px 0;
     position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .navbar ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
 .navbar ul li {
     margin: 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .navbar ul li a {
     color: #ffffff;
     text-decoration: none;
-    font-size: 18px;
-    transition: color 0.3s;
-    display: block;
-    text-align: center;
+    font-size: 16px;
+    transition: color 0.3s, background-color 0.3s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 10px; 
 }
 
 .navbar ul li a:hover {
     color: #ffb700;
+    background-color: #333333;
+}
+
+.navbar ul li a .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    left: 125%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.navbar ul li a:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.navbar ul li a .tooltiptext::before {
+    content: attr(data-tooltip);
+    display: none;
 }
