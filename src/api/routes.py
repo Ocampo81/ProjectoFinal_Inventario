@@ -95,6 +95,23 @@ def addSales():
      return jsonify({"Message" : respuesta}),200
 
 
+# Endponit DetailSales
+@api.route('/detailsales', methods=['POST'])
+def addDetailSales():
+     data = request.json
+     print("DATA", data)
+     respuesta = app.addDetailSales(data)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
+
+@api.route('/sales/<int:idsales>', methods=['GET'])
+def getOneSales(idsales):
+     respuesta = app.getOneSales(idsales)
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
+
+
 # ******   Endpoint prueba
 
 @api.route('/customerotro', methods=['GET'])

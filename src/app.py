@@ -13,7 +13,7 @@ from api.commands import setup_commands
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from datetime import datetime
 from sqlalchemy.orm import relationship, join, sessionmaker
-from sqlalchemy import create_engine, engine, join
+from sqlalchemy import create_engine, engine, join, and_, or_
 import json
 
 
@@ -286,43 +286,73 @@ def addCategoryProduct(data):
 
 
 
-# Functions for CategoryProduct
+# Functions for Sales
 
 def addSales(data):
  
     newSales = Sales()
-    newDtSales = DetailSales()
-   
+  
     # Sales
     newSales.idSales  = data.get("idSales")
     newSales.iduser  = data.get("iduser")
-    #   date  = data.get("amount")
     newSales.totalPrice  = data.get("totalPrice")
-    #  newSales.details  = data.get("amount")
-    db.session.add(newSales)
-    db.session.commit()
+    newSales.nit  = data.get("nit")
     
+    sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newSales.idSales)).one_or_none()
+    if sales_exists == None:
+        db.session.add(newSales)
+        db.session.commit()
+        response_body = addDetailSales(data)
+        return response_body
+    else:
+        response_body = {"message": "Sales receipts alredy exists"}
+        return response_body   
+        
+    
+
+def addDetailSales(data):
+    newDtSales = DetailSales()
+    print("DATA dentro de addDetailSales! ", data)
     # DetailSales
     newDtSales.amount  = data.get("amount")
     newDtSales.unitPrice =  data.get("unitPrice")
     newDtSales.idSales = data.get("idSales")
-    newDtSales.id_prod  = data.get("amount") ### Verificar STOCK antes de la venta
-    # newDtSales.products =  data.get("amount")
+    newDtSales.id_prod  = data.get("id_prod") ### Verificar STOCK antes de la venta
 
-    # Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=newSales.category)).one_or_none()
-    # if Category_result != None:
-    #     response_body = {"message": "Category already exists"}
-    #     return response_body
-    # else:
-    
-    db.session.add(newDtSales)
-    db.session.commit()
-    # db.session.add(newSales)
-    # db.session.commit()
-    response_body = {"message": "Sales created successfully"}
-    return response_body
+    sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newDtSales.idSales)).one_or_none()
+    if sales_exists == None:
+        response_body = {"message": "Sales receipts not  exists"}
+        return response_body
+    else:
+        stock_available = db.session.execute(db.select(Products.stock).filter((Products.id_prod == newDtSales.id_prod))).one_or_none()
+        # Prueba ---> stock_available = db.session.execute(db.select(DetailSales.products.stock).filter((DetailSales.products.id_prod == newDtSales.id_prod))).one_or_none()
+        print(stock_available[0], type(stock_available))
+        if stock_available[0] >= int(newDtSales.amount) :
+            newstock = stock_available[0] - int(newDtSales.amount)
+            db.session.query(Products).filter(Products.id_prod == newDtSales.id_prod).update({Products.stock : newstock})
+            
+            db.session.add(newDtSales)
+            db.session.commit()
+            response_body = {"message": "Sales created successfully"}
+            return response_body
+        else:
+            response_body = {"message": "Stock not available ", "Stock": stock_available[0] }
+            return response_body
 
+def getOneSales(data):
+    customerList=[]
+    # query = db.select(Sales.iduser, Sales.nit, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).filter_by(idSales=data)
+    query = db.select(User.name, User.lastName, Products.prodname, Sales.iduser, Sales.nit, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales)\
+        .filter_by(idSales=data)\
+        .join(User, User.id == Sales.iduser)\
+        .join(Products, Products.id_prod == DetailSales.id_prod)
+    result = db.session.execute(query)
 
+    for customer in result.fetchall():
+        print(dict(customer._mapping))
+        customerList.append(dict(customer._mapping))
+
+    return tuple(customerList)
 
 ######## 
 
