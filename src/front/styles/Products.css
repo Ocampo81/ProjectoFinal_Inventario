@@ -1,0 +1,36 @@
+.products-page {
+    background-color: #2d2d2d; 
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-container {
+    background-color: #3b3b3b; 
+    color: #ffffff;
+    border-radius: 10px;
+    text-align: center;
+    padding: 40px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.product-form input, .product-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+}
+
+.product-form button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.product-form button:hover {
+    background-color: #0056b3;
+}

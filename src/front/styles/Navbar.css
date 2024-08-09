@@ -1,13 +1,16 @@
 .navbar {
     background-color: #1a1a1a;
-    width: 100px;
+    width: 120px;
     height: 100vh;
     padding: 20px 0;
     position: fixed;
+    left: 0;
+    top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    z-index: 1000; 
 }
 
 .navbar ul {

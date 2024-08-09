@@ -5,18 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             isAuthenticated: false,
             userToken: null,
             user: [],
-            demo: [
-                {
-                    title: "FIRST",
-                    background: "white",
-                    initial: "white"
-                },
-                {
-                    title: "SECOND",
-                    background: "white",
-                    initial: "white"
-                }
-            ]
+            products: [],
         },
         actions: {
             exampleFunction: () => {
@@ -86,14 +75,90 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            changeColor: (index, color) => {
-                const store = getStore();
-                const demo = store.demo.map((elm, i) => {
-                    if (i === index) elm.background = color;
-                    return elm;
-                });
-                setStore({ demo: demo });
-            }
+            getProducts: async () => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/products`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setStore({ products: data });
+                    } else {
+                        console.log("Error loading products from backend", data);
+                    }
+                } catch (error) {
+                    console.log("Error loading products from backend", error);
+                }
+            },
+
+            addProduct: async (productData) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/products`, {
+                        method: "POST",
+                        body: JSON.stringify(productData),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        getActions().getProducts();  // Refresh the product list
+                        return true;
+                    } else {
+                        console.log("Error adding product", data);
+                        return false;
+                    }
+                } catch (error) {
+                    console.log("Error adding product", error);
+                    return false;
+                }
+            },
+
+            updateProduct: async (id, productData) => {
+                try {
+                    const response = await fetch(
+                        `${process.env.BACKEND_URL}/api/products/${id}`,
+                        {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(productData),
+                        }
+                    );
+
+                    if (response.ok) {
+                        const updatedProduct = await response.json();
+                        const updatedProducts = getStore().products.map((product) =>
+                            product.id === id ? updatedProduct : product
+                        );
+                        setStore({ products: updatedProducts });
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error("Error updating product:", error);
+                    return false;
+                }
+            },
+
+            deleteProduct: async (id) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/products/${id}`, {
+                        method: "DELETE",
+                    });
+
+                    if (response.ok) {
+                        const filteredProducts = getStore().products.filter(
+                            (product) => product.id !== id
+                        );
+                        setStore({ products: filteredProducts });
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                    return false;
+                }
+            },
         }
     };
 };

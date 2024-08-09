@@ -6,6 +6,12 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <ul>
+            <li>
+                <Link to="/main-menu" className="navbar-icon">
+                    <i className="fas fa-home fa-2x" data-tooltip="Main Menu"></i>
+                        <span className="tooltiptext">Main Menu</span>
+                </Link>
+            </li>
                 <li>
                     <Link to="/products" className="navbar-icon">
                         <i className="fas fa-box-open fa-2x" data-tooltip="Products"></i>
