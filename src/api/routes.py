@@ -75,6 +75,18 @@ def addProducts1():
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
 
+@api.route('/products', methods=['GET'])
+def getProducts():
+     respuesta = app.getProducts()
+     #respuesta =  {"message": "NADA DNADA "}
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
+
+@api.route('/products/<int:id>', methods=['GET'])
+def getOneProducts1(id):
+     respuesta = app.getOneProducts(id)
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
 
 
 # Endponit Category

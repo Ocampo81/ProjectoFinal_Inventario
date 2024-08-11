@@ -259,6 +259,28 @@ def addProducts(data):
                 response_body = {"message": "PRODUCT created successfully"}
                 return response_body
 
+def getProducts():
+    productsList=[]
+    # query = db.select(Customer.nit,Customer.phone,Customer.date, Address.address,Address.country,Address.city).join(Address, Customer.nit == Address.nit)
+    query = db.select(Products.id_prod,Products.prodname,Products.brand, Products.salesPrice, Products.stock, Products.Catproducts, CategoryProduct.category,CategoryProduct.description).join(CategoryProduct, Products.idCatProd == CategoryProduct.idCatProd)
+    result = db.session.execute(query)
+
+    for products in result.fetchall():
+        print("GETPRODUCTS: ", products._mapping)
+        productsList.append(dict(products._mapping))
+
+    return tuple(productsList)
+
+def getOneProducts(data):
+    customerList=[]
+    query = db.select(Products.id_prod,Products.prodname,Products.brand, Products.salesPrice, Products.stock, Products.Catproducts, CategoryProduct.category,CategoryProduct.description).filter_by(id_prod=data).join(CategoryProduct, Products.idCatProd == CategoryProduct.idCatProd)
+    result = db.session.execute(query)
+
+    for customer in result.fetchall():
+        print(dict(customer._mapping))
+        customerList.append(dict(customer._mapping))
+
+    return tuple(customerList)
 
 # Functions for CategoryProduct
 
