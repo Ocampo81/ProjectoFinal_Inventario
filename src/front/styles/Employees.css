@@ -1,0 +1,44 @@
+.employees-page {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.employee-container {
+    background-color: #3b3b3b;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.employee-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.employee-form input, .employee-form button {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.employee-form button {
+    background-color: #ffb700;
+    color: #2d2d2d;
+    cursor: pointer;
+    width: 100%;
+}
+
+.employee-form button:hover {
+    background-color: #ffa500;
+}

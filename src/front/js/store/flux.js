@@ -6,6 +6,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             userToken: null,
             user: [],
             products: [],
+            employees: [],
         },
         actions: {
             exampleFunction: () => {
@@ -88,7 +89,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.log("Error loading products from backend", error);
                 }
             },
-
             addProduct: async (productData) => {
                 try {
                     const response = await fetch(`${process.env.BACKEND_URL}/api/products`, {
@@ -100,7 +100,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     });
                     const data = await response.json();
                     if (response.ok) {
-                        getActions().getProducts();  // Refresh the product list
+                        getActions().getProducts(); 
                         return true;
                     } else {
                         console.log("Error adding product", data);
@@ -111,6 +111,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
+            
 
             updateProduct: async (id, productData) => {
                 try {
@@ -128,12 +129,15 @@ const getState = ({ getStore, getActions, setStore }) => {
                     if (response.ok) {
                         const updatedProduct = await response.json();
                         const updatedProducts = getStore().products.map((product) =>
-                            product.id === id ? updatedProduct : product
+                            product.id_prod === id ? updatedProduct : product
                         );
                         setStore({ products: updatedProducts });
                         return true;
+                    } else {
+                        const errorData = await response.json();
+                        console.error("Error updating product:", errorData);
+                        return false;
                     }
-                    return false;
                 } catch (error) {
                     console.error("Error updating product:", error);
                     return false;
@@ -148,14 +152,105 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     if (response.ok) {
                         const filteredProducts = getStore().products.filter(
-                            (product) => product.id !== id
+                            (product) => product.id_prod !== id
                         );
                         setStore({ products: filteredProducts });
                         return true;
+                    } else {
+                        const errorData = await response.json();
+                        console.error("Error deleting product:", errorData);
+                        return false;
                     }
-                    return false;
                 } catch (error) {
                     console.error("Error deleting product:", error);
+                    return false;
+                }
+            },
+
+            // Empleados
+            getEmployees: async () => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/employees`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setStore({ employees: data });
+                    } else {
+                        console.log("Error loading employees from backend", data);
+                    }
+                } catch (error) {
+                    console.log("Error loading employees from backend", error);
+                }
+            },
+
+            addEmployee: async (employeeData) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/employees`, {
+                        method: "POST",
+                        body: JSON.stringify(employeeData),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        getActions().getEmployees(); 
+                        return true;
+                    } else {
+                        console.log("Error adding employee", data);
+                        return false;
+                    }
+                } catch (error) {
+                    console.log("Error adding employee", error);
+                    return false;
+                }
+            },
+
+            updateEmployee: async (id, employeeData) => {
+                try {
+                    const response = await fetch(
+                        `${process.env.BACKEND_URL}/api/employees/${id}`,
+                        {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(employeeData),
+                        }
+                    );
+
+                    if (response.ok) {
+                        getActions().getEmployees(); 
+                        return true;
+                    } else {
+                        const errorData = await response.json();
+                        console.error("Error updating employee:", errorData);
+                        return false;
+                    }
+                } catch (error) {
+                    console.error("Error updating employee:", error);
+                    return false;
+                }
+            },
+
+            deleteEmployee: async (id) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/employees/${id}`, {
+                        method: "DELETE",
+                    });
+
+                    if (response.ok) {
+                        const filteredEmployees = getStore().employees.filter(
+                            (employee) => employee.id !== id
+                        );
+                        setStore({ employees: filteredEmployees });
+                        return true;
+                    } else {
+                        const errorData = await response.json();
+                        console.error("Error deleting employee:", errorData);
+                        return false;
+                    }
+                } catch (error) {
+                    console.error("Error deleting employee:", error);
                     return false;
                 }
             },
