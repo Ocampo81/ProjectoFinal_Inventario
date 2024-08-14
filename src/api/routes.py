@@ -88,6 +88,14 @@ def getOneProducts1(id):
      # print("respuesta en route", type(respuesta), respuesta)
      return  jsonify(respuesta),200 
 
+@api.route('/products/<int:id_prod>', methods=['DELETE'])
+def delProducts(id_prod):
+     print(id_prod)
+     # data = request.json
+     respuesta = app.delProducts(id_prod)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
+
 
 # Endponit Category
 @api.route('/category', methods=['POST'])
@@ -116,6 +124,16 @@ def addDetailSales():
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
 
+@api.route('/sales_nextid', methods=['GET'])
+def getNextId():
+     respuesta = app.getNextId()
+     return  jsonify(respuesta),200
+
+@api.route('/sales', methods=['GET'])
+def getSales():
+     respuesta = app.getSales()
+     # print("respuesta en route", type(respuesta), respuesta)
+     return  jsonify(respuesta),200 
 
 @api.route('/sales/<int:idsales>', methods=['GET'])
 def getOneSales(idsales):
@@ -123,6 +141,13 @@ def getOneSales(idsales):
      # print("respuesta en route", type(respuesta), respuesta)
      return  jsonify(respuesta),200 
 
+@api.route('/sales/<int:idsales>', methods=['DELETE'])
+def delSales(idsales):
+     print(idsales)
+     # data = request.json
+     respuesta = app.delSales(idsales)
+     print(respuesta)
+     return jsonify({"Message" : respuesta}),200
 
 # ******   Endpoint prueba
 

@@ -272,15 +272,30 @@ def getProducts():
     return tuple(productsList)
 
 def getOneProducts(data):
-    customerList=[]
+    productsList=[]
     query = db.select(Products.id_prod,Products.prodname,Products.brand, Products.salesPrice, Products.stock, Products.Catproducts, CategoryProduct.category,CategoryProduct.description).filter_by(id_prod=data).join(CategoryProduct, Products.idCatProd == CategoryProduct.idCatProd)
     result = db.session.execute(query)
 
-    for customer in result.fetchall():
-        print(dict(customer._mapping))
-        customerList.append(dict(customer._mapping))
+    for products in result.fetchall():
+        print(products._mapping, type())
+        productsList.append(dict(products._mapping))
 
-    return tuple(customerList)
+    return tuple(productsList)
+
+def delProducts(data):
+    delIdProd = db.session.execute(db.select(Products).filter_by(id_prod=data)).one_or_none()
+    
+    if delIdProd != None:
+        delIdProd = Products.query.filter_by(id_prod=data).one()
+        db.session.delete(delIdProd)
+        db.session.commit()
+        response_body = {"message": "Products deleted successfully"}
+        return response_body
+    else:
+        response_body = {"message": "Products not found", "nit": data}
+        return response_body
+
+
 
 # Functions for CategoryProduct
 
@@ -330,7 +345,12 @@ def addSales(data):
         response_body = {"message": "Sales receipts alredy exists"}
         return response_body   
         
-    
+def getNextId():
+     obj = db.session.query(Sales).order_by(Sales.idSales.desc()).first()
+     nextId = obj.idSales + 1
+    #  print("Nex ID: ",obj, type(obj.idSales), nextId+1) 
+     response_body = {"ID": nextId}
+     return response_body
 
 def addDetailSales(data):
     newDtSales = DetailSales()
@@ -361,6 +381,21 @@ def addDetailSales(data):
             response_body = {"message": "Stock not available ", "Stock": stock_available[0] }
             return response_body
 
+
+def getSales():
+    customerList=[]
+    # query = db.select(Sales.iduser, Sales.nit, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).filter_by(idSales=data)
+    query = db.select(User.name, User.lastName, Products.prodname, Sales.iduser, Sales.nit, Sales.date, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales)\
+        .join(User, User.id == Sales.iduser)\
+        .join(Products, Products.id_prod == DetailSales.id_prod)
+    result = db.session.execute(query)
+
+    for customer in result.fetchall():
+        print(dict(customer._mapping))
+        customerList.append(dict(customer._mapping))
+
+    return tuple(customerList)
+
 def getOneSales(data):
     customerList=[]
     # query = db.select(Sales.iduser, Sales.nit, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).filter_by(idSales=data)
@@ -375,6 +410,21 @@ def getOneSales(data):
         customerList.append(dict(customer._mapping))
 
     return tuple(customerList)
+
+def delSales(data):
+    delSales = db.session.execute(db.select(Sales).filter_by(idSales=data)).one_or_none()
+    
+    if delSales != None:
+        delSales = Sales.query.filter_by(idSales=data).one()
+        db.session.delete(delSales)
+        db.session.commit()
+        response_body = {"message": "Sale deleted successfully"}
+        return response_body
+    else:
+        response_body = {"message": "Sale not found", "ID": data}
+        return response_body
+
+
 
 ######## 
 
