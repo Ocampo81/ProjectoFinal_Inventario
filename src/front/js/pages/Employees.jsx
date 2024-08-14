@@ -4,24 +4,7 @@ import Navbar from "../component/Navbar";
 import "../../styles/Employees.css";
 
 const Employees = () => {
-    const { store, actions } = useContext(Context);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [position, setPosition] = useState("");
 
-    useEffect(() => {
-        actions.getEmployees();
-    }, []);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const employeeData = {
-            name: name,
-            email: email,
-            position: position,
-        };
-        actions.addEmployee(employeeData);
-    };
 
     return (
         <div className="employees-page">

@@ -7,252 +7,117 @@ const getState = ({ getStore, getActions, setStore }) => {
             user: [],
             products: [],
             employees: [],
+            customers: [],
+            categories: [],
         },
         actions: {
-            exampleFunction: () => {
-                getActions().changeColor(0, "green");
+            fetchWithCheck: async (url, options = {}) => {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(JSON.stringify(errorData));
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error("Error in fetch:", error.message);
+                    return null;
+                }
             },
 
             getMessage: async () => {
-                try {
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
-                    const data = await resp.json();
-                    setStore({ message: data.message });
-                    return data;
-                } catch (error) {
-                    console.log("Error loading message from backend", error);
-                }
+                const data = await getActions().fetchWithCheck(process.env.BACKEND_URL + "/api/hello");
+                if (data) setStore({ message: data.message });
             },
 
             postSignup: async (data) => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/signup`, {
-                        method: "POST",
-                        body: JSON.stringify(data),
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    const dataRes = await response.json();
-                    if (response.ok) {
-                        setStore({ message: dataRes.Message.message });
-                        return dataRes.Message.message === "User created successfully";
-                    } else {
-                        setStore({ message: dataRes.Message.message });
-                        return false;
-                    }
-                } catch (error) {
-                    console.log("Error loading message from backend", error);
-                    return false;
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/signup`, {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: { "Content-Type": "application/json" }
+                });
+                if (response) {
+                    setStore({ message: response.Message.message });
+                    return response.Message.message === "User created successfully";
                 }
+                return false;
             },
 
             postLogin: async (email, password) => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/login`, {
-                        method: "POST",
-                        body: JSON.stringify({ email, password }),
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        setStore({ user: data.Message });
-                        if (data.Message.token) {
-                            localStorage.setItem("accessToken", data.Message.token);
-                            return true;
-                        } else {
-                            setStore({ message: data.Message.Error });
-                            return false;
-                        }
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/login`, {
+                    method: "POST",
+                    body: JSON.stringify({ email, password }),
+                    headers: { "Content-Type": "application/json" }
+                });
+                if (response) {
+                    if (response.Message.token) {
+                        setStore({ user: response.Message });
+                        localStorage.setItem("accessToken", response.Message.token);
+                        return true;
                     } else {
-                        setStore({ message: data.Message.Error });
-                        return false;
+                        setStore({ message: response.Message.Error });
                     }
-                } catch (error) {
-                    console.log("Error loading message from backend", error);
-                    return false;
                 }
+                return false;
+            },
+
+            getCategories: async () => {
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/categories`);
+                if (data) setStore({ categories: data });
+            },
+
+            addCategory: async (categoryData) => {
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/category`, {
+                    method: "POST",
+                    body: JSON.stringify(categoryData),
+                    headers: { "Content-Type": "application/json" }
+                });
+                if (response && response.Message.message === "Category created successfully") {
+                    await getActions().getCategories(); // Actualiza las categorías después de agregar una nueva
+                    return true;
+                }
+                return false;
+            },
+
+            addProduct: async (productData) => {
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products`, {
+                    method: "POST",
+                    body: JSON.stringify(productData),
+                    headers: { "Content-Type": "application/json" }
+                });
+                if (response && response.Message.message !== "Category doesn't exist") {
+                    await getActions().getProducts(); 
+                    return true;
+                }
+                return "Category doesn't exist";
             },
 
             getProducts: async () => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/products`);
-                    const data = await response.json();
-                    if (response.ok) {
-                        setStore({ products: data });
-                    } else {
-                        console.log("Error loading products from backend", data);
-                    }
-                } catch (error) {
-                    console.log("Error loading products from backend", error);
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products`);
+                if (data) {
+                    console.log("Productos recibidos del servidor:", data); 
+                    setStore({ products: data });
                 }
             },
-            addProduct: async (productData) => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/products`, {
-                        method: "POST",
-                        body: JSON.stringify(productData),
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        getActions().getProducts(); 
-                        return true;
-                    } else {
-                        console.log("Error adding product", data);
-                        return false;
-                    }
-                } catch (error) {
-                    console.log("Error adding product", error);
-                    return false;
-                }
-            },
-            
 
             updateProduct: async (id, productData) => {
-                try {
-                    const response = await fetch(
-                        `${process.env.BACKEND_URL}/api/products/${id}`,
-                        {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(productData),
-                        }
-                    );
-
-                    if (response.ok) {
-                        const updatedProduct = await response.json();
-                        const updatedProducts = getStore().products.map((product) =>
-                            product.id_prod === id ? updatedProduct : product
-                        );
-                        setStore({ products: updatedProducts });
-                        return true;
-                    } else {
-                        const errorData = await response.json();
-                        console.error("Error updating product:", errorData);
-                        return false;
-                    }
-                } catch (error) {
-                    console.error("Error updating product:", error);
-                    return false;
-                }
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(productData)
+                });
+                if (response) await getActions().getProducts();
+                return !!response;
             },
 
             deleteProduct: async (id) => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/products/${id}`, {
-                        method: "DELETE",
-                    });
-
-                    if (response.ok) {
-                        const filteredProducts = getStore().products.filter(
-                            (product) => product.id_prod !== id
-                        );
-                        setStore({ products: filteredProducts });
-                        return true;
-                    } else {
-                        const errorData = await response.json();
-                        console.error("Error deleting product:", errorData);
-                        return false;
-                    }
-                } catch (error) {
-                    console.error("Error deleting product:", error);
-                    return false;
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`, {
+                    method: "DELETE"
+                });
+                if (response) {
+                    await getActions().getProducts();
                 }
-            },
-
-            // Empleados
-            getEmployees: async () => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/employees`);
-                    const data = await response.json();
-                    if (response.ok) {
-                        setStore({ employees: data });
-                    } else {
-                        console.log("Error loading employees from backend", data);
-                    }
-                } catch (error) {
-                    console.log("Error loading employees from backend", error);
-                }
-            },
-
-            addEmployee: async (employeeData) => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/employees`, {
-                        method: "POST",
-                        body: JSON.stringify(employeeData),
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    const data = await response.json();
-                    if (response.ok) {
-                        getActions().getEmployees(); 
-                        return true;
-                    } else {
-                        console.log("Error adding employee", data);
-                        return false;
-                    }
-                } catch (error) {
-                    console.log("Error adding employee", error);
-                    return false;
-                }
-            },
-
-            updateEmployee: async (id, employeeData) => {
-                try {
-                    const response = await fetch(
-                        `${process.env.BACKEND_URL}/api/employees/${id}`,
-                        {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(employeeData),
-                        }
-                    );
-
-                    if (response.ok) {
-                        getActions().getEmployees(); 
-                        return true;
-                    } else {
-                        const errorData = await response.json();
-                        console.error("Error updating employee:", errorData);
-                        return false;
-                    }
-                } catch (error) {
-                    console.error("Error updating employee:", error);
-                    return false;
-                }
-            },
-
-            deleteEmployee: async (id) => {
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/employees/${id}`, {
-                        method: "DELETE",
-                    });
-
-                    if (response.ok) {
-                        const filteredEmployees = getStore().employees.filter(
-                            (employee) => employee.id !== id
-                        );
-                        setStore({ employees: filteredEmployees });
-                        return true;
-                    } else {
-                        const errorData = await response.json();
-                        console.error("Error deleting employee:", errorData);
-                        return false;
-                    }
-                } catch (error) {
-                    console.error("Error deleting employee:", error);
-                    return false;
-                }
+                return !!response;
             },
         }
     };

@@ -228,36 +228,43 @@ def addProvider(data):
 
 def addProducts(data):
     newProducts = Products()
-    # newCatProd = CategoryProduct()
+    category_name = data.get("category").upper()
 
+    # Obtener idCatProd basado en el nombre de la categoría
+    Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=category_name)).one_or_none()
+    
+    if not Category_result:
+        response_body = {"message": "Category doesn't exist"}
+        return response_body
+    
     newProducts.id_prod = data.get("id_prod")
     newProducts.prodname = data.get("prodname").upper()
     newProducts.brand = data.get("brand").upper()
     newProducts.salesPrice = data.get("salesPrice")
     newProducts.stock = data.get("stock")
-    newProducts.idCatProd = data.get("idCatProd")
-    
 
-    if newProducts.id_prod == "" :
-        response_body = {"message": "Id producto es requerido"}
+    newProducts.idCatProd = Category_result[0].idCatProd
+
+    # Verificar si el producto ya existe
+    Product_result = db.session.execute(db.select(Products).filter_by(id_prod=newProducts.id_prod)).one_or_none()
+    if Product_result is not None:
+        response_body = {"message": "PRODUCT already exists"}
         return response_body
-    else:
-        Category_result = db.session.execute(db.select(CategoryProduct).filter_by(idCatProd=newProducts.idCatProd)).one_or_none()
-        if Category_result == None:
-            response_body = {"message": "Category doesn't exists"}
-            return response_body
-        else:
-            Product_result = db.session.execute(db.select(Products).filter_by(id_prod=newProducts.id_prod)).one_or_none()
-            if Product_result != None and Product_result[0].id_prod == newProducts.id_prod:
-                response_body = {"message": "PRODUCT already exists"}
-                return response_body
-            else:
+
+    # Guardar el nuevo producto
+    db.session.add(newProducts)
+    db.session.commit()
     
-                db.session.add(newProducts)
-                db.session.commit()
-                
-                response_body = {"message": "PRODUCT created successfully"}
-                return response_body
+    response_body = {"message": "PRODUCT created successfully"}
+    return response_body
+
+
+    # Guardar el nuevo producto
+    db.session.add(newProducts)
+    db.session.commit()
+    
+    response_body = {"message": "PRODUCT created successfully"}
+    return response_body
 
 def getProducts():
     productsList=[]
@@ -300,18 +307,17 @@ def delProducts(data):
 # Functions for CategoryProduct
 
 def addCategoryProduct(data):
- 
     newCatProd = CategoryProduct()
    
     newCatProd.category = data.get("category").upper()
-    newCatProd.description = data.get("description").upper()
+    newCatProd.description = data.get("description", "").upper()
 
-    if newCatProd.category == "" :
-        response_body = {"message": "Category is necesary"}
+    if not newCatProd.category:
+        response_body = {"message": "Category is necessary"}
         return response_body
     else:
         Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=newCatProd.category)).one_or_none()
-        if Category_result != None:
+        if Category_result:
             response_body = {"message": "Category already exists"}
             return response_body
         else:
@@ -319,6 +325,31 @@ def addCategoryProduct(data):
             db.session.commit()
             response_body = {"message": "Category created successfully"}
             return response_body
+
+def delProducts(data):
+    delIdProd = db.session.execute(db.select(Products).filter_by(id_prod=data)).one_or_none()
+    if delIdProd != None:
+        delIdProd = Products.query.filter_by(id_prod=data).one()
+        db.session.delete(delIdProd)
+        db.session.commit()
+        response_body = {"message": "Products deleted successfully"}
+        return response_body
+    else:
+        response_body = {"message": "Products not found", "nit": data}
+        return response_body
+
+def getCategories():
+    categoriesList = []
+    query = db.select(CategoryProduct).order_by(CategoryProduct.category)
+    result = db.session.execute(query)
+
+    for category in result.fetchall():
+        categoriesList.append(category[0].serialize())
+
+    return categoriesList
+
+
+
             
 
 
@@ -474,3 +505,5 @@ def getCustomerOtro():
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
+
