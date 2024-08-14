@@ -197,26 +197,24 @@ class Products(db.Model):
             }  
 
 class CategoryProduct(db.Model):
-        __tablename__ = 'categoryproduct'    
-        idCatProd = db.Column(db.Integer, primary_key=True)
-        category  = db.Column(db.String(50), unique=True, nullable=False) 
-        description  = db.Column(db.String(200), nullable=False)
-        
-        #products = relationship("Products", back_populates="CatProds")
-        products = relationship("Products",
-                           cascade="all, delete",
-                           back_populates="Catproducts"
-                           )
+    __tablename__ = 'categoryproduct'    
+    idCatProd = db.Column(db.Integer, primary_key=True)
+    category  = db.Column(db.String(50), unique=True, nullable=False) 
+    description  = db.Column(db.String(200), nullable=False)
+    
+    #products = relationship("Products", back_populates="CatProds")
+    products = relationship("Products",
+                       cascade="all, delete",
+                       back_populates="Catproducts"
+                       )
 
-        def __repr__(self):
-            return '<Member %r>' %self.idCatProd
+    def __repr__(self):
+        return '<Member %r>' %self.idCatProd
 
-        def serialize(self):
-            return {
-                "id": self.idCatProd,
-                "category": self.category,
-                "description": self.description,
-                "products": self.products
-
-                # do not serialize the password, its a security breach
-            }
+    def serialize(self):
+        return {
+            "id": self.idCatProd,
+            "category": self.category,
+            "description": self.description
+            # do not serialize the products relationship
+        }
