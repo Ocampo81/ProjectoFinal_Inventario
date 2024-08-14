@@ -14,6 +14,8 @@ import Reports from './pages/Reports.jsx';
 import MainMenu from './pages/MainMenu.jsx';
 import injectContext from "./store/appContext";
 
+import PruebaSales_ from './pages/PruebaSales_.jsx';
+
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
@@ -34,6 +36,7 @@ const Layout = () => {
                         <Route element={<Employees />} path="/employees" />
                         <Route element={<Sales />} path="/sales" />
                         <Route element={<Reports />} path="/reports" />
+                        <Route element={<PruebaSales_ />} path="/PruebaSales" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>
