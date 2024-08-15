@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "../../styles/SuccessAlert.css";
 
-const SuccessAlert = ({ message, onClose }) => {
+const SuccessAlert = ({ title = "Success", message, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose();
@@ -13,7 +13,7 @@ const SuccessAlert = ({ message, onClose }) => {
     return (
         <div className="success-alert-overlay">
             <div className="success-alert-modal">
-                <h2>Success</h2>
+                <h2>{title}</h2>
                 <p>{message}</p>
                 <button onClick={onClose}>OK</button>
             </div>

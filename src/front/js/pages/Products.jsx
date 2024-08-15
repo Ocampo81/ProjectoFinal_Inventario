@@ -18,6 +18,8 @@ const Products = () => {
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
     const [isSuccessAlertVisible, setIsSuccessAlertVisible] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [successTitle, setSuccessTitle] = useState("Success");
     const [newCategoryDescription, setNewCategoryDescription] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -42,11 +44,21 @@ const Products = () => {
             await actions.updateProduct(editProductId, productData);
             setEditMode(false);
             setEditProductId(null);
+            setSuccessTitle("Product Updated");
+            setSuccessMessage("The product was updated successfully.");
+            setProductName("");
+            setBrand("");
+            setSalesPrice("");
+            setStock("");
+            setCategory("");
+            setIdProduct("");
         } else {
             const result = await actions.addProduct(productData);
             if (result === "Category doesn't exist") {
                 setIsCategoryModalOpen(true);
             } else {
+                setSuccessTitle("Product Added");
+                setSuccessMessage("The product was added successfully.");
                 setProductName("");
                 setBrand("");
                 setSalesPrice("");
@@ -55,6 +67,8 @@ const Products = () => {
                 setIdProduct("");
             }
         }
+
+        setIsSuccessAlertVisible(true);
     };
 
     const handleEdit = (product) => {
@@ -68,8 +82,11 @@ const Products = () => {
         setIdProduct(product.id_prod);
     };
 
-    const handleDelete = (id) => {
-        actions.deleteProduct(id);
+    const handleDelete = async (id) => {
+        await actions.deleteProduct(id);
+        setSuccessTitle("Product Deleted");
+        setSuccessMessage("The product was deleted successfully.");
+        setIsSuccessAlertVisible(true);
     };
 
     const toggleProductDetails = (id) => {
@@ -77,6 +94,12 @@ const Products = () => {
             setExpandedProductId(null);
         } else {
             setExpandedProductId(id);
+        }
+    };
+
+    const handleContainerClick = (id, event) => {
+        if (!event.target.closest(".edit-btn") && !event.target.closest(".delete-btn")) {
+            toggleProductDetails(id);
         }
     };
 
@@ -94,7 +117,7 @@ const Products = () => {
     const handleCategorySubmit = async () => {
         const categoryData = {
             category: newCategoryName,
-            description: newCategoryDescription, // Se incluye la descripción aquí
+            description: newCategoryDescription,
         };
         const result = await actions.addCategory(categoryData);
         if (result) {
@@ -172,6 +195,7 @@ const Products = () => {
                             placeholder="Product ID"
                             value={idProduct}
                             onChange={(e) => setIdProduct(e.target.value)}
+                            disabled={editMode}  // Deshabilita el input cuando estamos en modo edición
                         />
                     </div>
                     <button type="submit">
@@ -183,14 +207,17 @@ const Products = () => {
                         </button>
                     )}
                 </form>
-
+    
                 <div className="divider"></div> {/* Aquí está el divisor */}
-
+    
                 <h2>Product List</h2>
                 <div className="product-list">
                     {currentProducts.map((product) => (
                         <div key={product.id_prod}>
-                            <div className="product-item" onClick={() => toggleProductDetails(product.id_prod)}>
+                            <div
+                                className="product-item"
+                                onClick={(event) => handleContainerClick(product.id_prod, event)}
+                            >
                                 <span>{product.prodname}</span>
                                 <div className="product-actions">
                                     <button className="edit-btn" onClick={() => handleEdit(product)}>Edit</button>
@@ -237,16 +264,16 @@ const Products = () => {
                         Next Page
                     </button>
                 </div>
-
+    
                 {isSuccessAlertVisible && (
                     <SuccessAlert
-                        message="Category created successfully!"
+                        title={successTitle}
+                        message={successMessage}
                         onClose={() => setIsSuccessAlertVisible(false)}
                     />
                 )}
-
             </div>
-
+    
             {isCategoryModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
@@ -269,6 +296,6 @@ const Products = () => {
             )}
         </div>
     );
-};
+}    
 
 export default Products;

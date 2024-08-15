@@ -304,6 +304,27 @@ def delProducts(data):
 
 
 
+def updateProduct(id, data):
+    product = db.session.execute(db.select(Products).filter_by(id_prod=id)).one_or_none()
+
+    if product is None:
+        return {"message": "Product not found"}
+
+    product = product[0]  # Accede al objeto Products
+
+    product.prodname = data.get("prodname").upper()
+    product.brand = data.get("brand").upper()
+    product.salesPrice = data.get("salesPrice")
+    product.stock = data.get("stock")
+    
+    # No permitir cambiar el id_prod
+    # product.id_prod = data.get("id_prod")
+
+    db.session.commit()
+
+    return {"message": "Product updated successfully"}
+
+
 # Functions for CategoryProduct
 
 def addCategoryProduct(data):

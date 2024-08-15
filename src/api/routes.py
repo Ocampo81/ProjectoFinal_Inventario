@@ -66,6 +66,13 @@ def getOneProducts1(id):
     respuesta = app.getOneProducts(id)
     return jsonify(respuesta), 200
 
+@api.route('/products/<int:id>', methods=['PUT'])
+def updateProduct(id):
+    data = request.json
+    respuesta = app.updateProduct(id, data)
+    return jsonify({"Message": respuesta}), 200
+
+
 @api.route('/products/<int:id_prod>', methods=['DELETE'])
 def delProducts(id_prod):
      print(id_prod)
