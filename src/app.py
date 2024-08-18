@@ -191,6 +191,27 @@ def getOneCustomer(data):
 
     return tuple(customerList)
 
+def getOneCustomerID(data):
+    customerList=[]
+    print("VALOR de DATA", data, type(data))
+    query = db.select(User.id, User.name, User.lastName,Customer.nit,Customer.phone,Customer.date, Address.address,Address.country,Address.city)\
+         .join(Customer, Customer.idUser == User.id)\
+         .join(Address, Customer.nit == Address.nit)\
+         .filter(User.id == data)
+         
+    
+    # print("VALOR DE QUERY *******   ", query, '\n', '\n', '\n', '\n')
+
+    result = db.session.execute(query)
+    # result = db.session.execute('SELECT "user".id, "user".name, "user"."lastName", customer.nit, customer.phone, customer.date, address.address, address.country, address.city \
+                                # FROM "user" JOIN customer ON customer."idUser" = "user".id JOIN address ON customer.nit = address.nit where "user".id = ${data}')
+
+    # print("getOneCustomerID *******   ", result.serialize)
+    for customer in result.fetchall():
+        print(dict(customer._mapping))
+        customerList.append(dict(customer._mapping))
+
+    return tuple(customerList)
 # Funciones para Providers
 
 def addProvider(data):
@@ -284,7 +305,7 @@ def getOneProducts(data):
     result = db.session.execute(query)
 
     for products in result.fetchall():
-        print(products._mapping, type())
+        # print(products._mapping, type())
         productsList.append(dict(products._mapping))
 
     return tuple(productsList)
@@ -370,23 +391,19 @@ def getCategories():
     return categoriesList
 
 
-
-            
-
-
-
 # Functions for Sales
 
 def addSales(data):
- 
+    print("DATA dentro de ******* Sales! ", data)
     newSales = Sales()
   
     # Sales
-    newSales.idSales  = data.get("idSales")
+    newSales.idSales  = data.get("idsales")
     newSales.iduser  = data.get("iduser")
-    newSales.totalPrice  = data.get("totalPrice")
+    newSales.totalPrice  = int(data.get("unitPrice")) * int(data.get("amount"))
     newSales.nit  = data.get("nit")
     
+    print("DATA dentro de ******* Sales! ", newSales.idSales, '\n', newSales.iduser, '\n', newSales.totalPrice, '\n', newSales.nit )
     sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newSales.idSales)).one_or_none()
     if sales_exists == None:
         db.session.add(newSales)
@@ -397,12 +414,6 @@ def addSales(data):
         response_body = {"message": "Sales receipts alredy exists"}
         return response_body   
         
-def getNextId():
-     obj = db.session.query(Sales).order_by(Sales.idSales.desc()).first()
-     nextId = obj.idSales + 1
-    #  print("Nex ID: ",obj, type(obj.idSales), nextId+1) 
-     response_body = {"ID": nextId}
-     return response_body
 
 def addDetailSales(data):
     newDtSales = DetailSales()
@@ -410,7 +421,7 @@ def addDetailSales(data):
     # DetailSales
     newDtSales.amount  = data.get("amount")
     newDtSales.unitPrice =  data.get("unitPrice")
-    newDtSales.idSales = data.get("idSales")
+    newDtSales.idSales = data.get("idsales")
     newDtSales.id_prod  = data.get("id_prod") ### Verificar STOCK antes de la venta
 
     sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newDtSales.idSales)).one_or_none()
@@ -433,6 +444,12 @@ def addDetailSales(data):
             response_body = {"message": "Stock not available ", "Stock": stock_available[0] }
             return response_body
 
+def getNextId():
+     obj = db.session.query(Sales).order_by(Sales.idSales.desc()).first()
+     nextId = obj.idSales + 1
+    #  print("Nex ID: ",obj, type(obj.idSales), nextId+1) 
+     response_body = {"ID": nextId}
+     return response_body
 
 def getSales():
     customerList=[]

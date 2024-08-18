@@ -1,3 +1,5 @@
+import { Next } from "react-bootstrap/esm/PageItem";
+
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
@@ -6,9 +8,13 @@ const getState = ({ getStore, getActions, setStore }) => {
             userToken: null,
             user: [],
             products: [],
+            prodOne: [],
             employees: [],
             customers: [],
+            customer: [],
             categories: [],
+            nextid: [],
+            sales: [],
         },
         actions: {
             fetchWithCheck: async (url, options = {}) => {
@@ -53,6 +59,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     if (response.Message.token) {
                         setStore({ user: response.Message });
                         localStorage.setItem("accessToken", response.Message.token);
+                        localStorage.setItem("userId", response.Message.id);
                         return true;
                     } else {
                         setStore({ message: response.Message.Error });
@@ -92,6 +99,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 return "Category doesn't exist";
             },
 
+            
             getProducts: async () => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products`);
                 if (data) {
@@ -119,6 +127,38 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
                 return !!response;
             },
+
+            getProductId: async (id) => {
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`);
+                if (data) setStore({ prodOne: data[0] });
+            },
+
+            getOneCustomer: async (id) => {
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/customerid/${id}`);
+                if (data) {
+                    console.log("Productos recibidos del servidor:", data); 
+                    setStore({ customer: data[0] });
+                }
+            },
+
+            getSalesNextId: async () => {
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/salesNextid`);
+                if (data) setStore({ nextid: data });
+            },
+
+            postAddSales: async (salesData) => {
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/sales`, {
+                    method: "POST",
+                    body: JSON.stringify(salesData),
+                    headers: { "Content-Type": "application/json" }
+                });
+                if (response && response.Message.message === "Category created successfully") {
+                    // await getActions().getCategories(); // Actualiza las categorías después de agregar una nueva
+                    return true;
+                }
+                return false;
+            },
+
         }
     };
 };

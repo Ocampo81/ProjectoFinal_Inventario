@@ -24,7 +24,8 @@ const MainMenu = () => {
             <h2>Employees</h2>
             <p>Manage your employees</p>
           </Link>
-          <Link to="/sales" className="menu-item">
+          {/* <Link to="/sales" className="menu-item"> */}
+          <Link to="/PruebaSales" className="menu-item">
             <i className="fas fa-shopping-cart fa-3x menu-icon"></i>
             <h2>Sales</h2>
             <p>Manage your sales</p>

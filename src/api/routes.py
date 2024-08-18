@@ -44,6 +44,12 @@ def getOneCustomer1(nit):
     respuesta = app.getOneCustomer(nit)
     return jsonify(respuesta), 200
 
+@api.route('/customerid/<int:userId>', methods=['GET'])
+def getOneCustomerID(userId):
+    respuesta = app.getOneCustomerID(userId)
+    return jsonify(respuesta), 200
+
+
 @api.route('/customer', methods=['GET'])
 def getCustomer1():
     respuesta = app.getCustomer()
@@ -73,13 +79,6 @@ def updateProduct(id):
     return jsonify({"Message": respuesta}), 200
 
 
-@api.route('/products/<int:id_prod>', methods=['DELETE'])
-def delProducts(id_prod):
-     print(id_prod)
-     # data = request.json
-     respuesta = app.delProducts(id_prod)
-     print(respuesta)
-     return jsonify({"Message" : respuesta}),200
 @api.route('/products/<int:id_prod>', methods=['DELETE'])
 def delProducts(id_prod):
      print(id_prod)
@@ -127,6 +126,11 @@ def delSales(idsales):
      respuesta = app.delSales(idsales)
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
+
+@api.route('/salesNextid/', methods=['GET'])
+def getNextId():
+    respuesta = app.getNextId()
+    return jsonify(respuesta), 200
 
 # ******   Endpoint prueba
 
