@@ -32,6 +32,7 @@ const PruebaSales = () => {
             amount: amount,
             unitPrice: store.prodOne.salesPrice,
             id_prod: store.prodOne.id_prod,
+
             prodname: store.prodOne.prodname
         };
 
@@ -136,7 +137,7 @@ const PruebaSales = () => {
                         <button type="submit" className="btn btn-primary btn-block mb-4">Confirm</button>
                         {listSales.map((item, index) => (
                             <li key={index}>
-                                {/* **********   quedo acá revisando como imprimir un objeto */}
+                                {/* ********** imprime un objeto  como un TODOLIST*/}
                                 <p>{listSales[index].prodname}
                                 </p>
                                 <i className="fas fa-trash-alt" onClick={() =>
