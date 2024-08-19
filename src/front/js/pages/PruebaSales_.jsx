@@ -20,7 +20,7 @@ const PruebaSales = () => {
     const [idprod, setIdprod] = useState();
     const [amount, setAmount] = useState(0);
     const [unitPrice, setUnitPrice] = useState(0);
-
+    const [listSales, setListSales] = useState([]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -31,18 +31,26 @@ const PruebaSales = () => {
             nit: store.customer.nit,
             amount: amount,
             unitPrice: store.prodOne.salesPrice,
-            id_prod: store.prodOne.id_prod
+            id_prod: store.prodOne.id_prod,
+            prodname: store.prodOne.prodname
         };
 
-
+        setListSales(listSales.concat([salesData]));
         console.log("valor de SALE-salesData", salesData)
-        const success = await actions.postAddSales(salesData);
+        console.log("****** valor de listSales", listSales)
+
+        // se comenta temporalmente: envía la información al backend --- const success = await actions.postAddSales(salesData);
+
+
         // if (success) {
         //     setShowModal(true);
         // } else {
         //     setError(store.message);
         // }
     };
+
+
+
     console.log(store.prodOne.prodname)
     return (
         <section className="text-center text-lg-start">
@@ -70,9 +78,9 @@ const PruebaSales = () => {
                     <h1>Phone: {store.customer.phone} </h1>
 
                     <form className="sales-form" onSubmit={handleSubmit}>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-sm">
                                     <div data-mdb-input-init className="form-outline">
                                         <label className="form-label" htmlFor="id_prod">Product :  </label>
                                         <input
@@ -83,20 +91,20 @@ const PruebaSales = () => {
                                         />
                                     </div>
                                 </div>
-                                <div class="col-sm">
+                                <div className="col-sm">
                                     {/* <label>ID Product: {store.prodOne.id_prod} </label> */}
                                     <label>Product Name: {store.prodOne.prodname} </label>
                                 </div>
-                                <div class="col-sm">
+                                <div className="col-sm">
                                     <label>Category Name: {store.prodOne.category} </label>
                                 </div>
-                                <div class="col-sm">
+                                <div className="col-sm">
                                     <label>Brand Name: {store.prodOne.brand} </label>
                                 </div>
 
 
 
-                                <div class="col-sm">
+                                <div className="col-sm">
                                     <div data-mdb-input-init className="form-outline">
                                         <label className="form-label" htmlFor="amount"> Amount : </label>
                                         <input
@@ -108,7 +116,7 @@ const PruebaSales = () => {
                                         />
                                     </div>
                                 </div>
-                                <div class="col-sm">
+                                <div className="col-sm">
                                     <div data-mdb-input-init className="form-outline">
                                         <label className="form-label" htmlFor="unitPrice"> Unit Price : </label>
                                         <input
@@ -119,15 +127,30 @@ const PruebaSales = () => {
                                         />
                                     </div>
                                 </div>
-                                <div class="col-sm">
+                                <div className="col-sm">
                                     <label className="form-label" htmlFor="Sub Total"> Sub Total:  </label>
                                 </div>
-
-
-
                             </div>
                         </div>
+
                         <button type="submit" className="btn btn-primary btn-block mb-4">Confirm</button>
+                        {listSales.map((item, index) => (
+                            <li key={index}>
+                                {/* **********   quedo acá revisando como imprimir un objeto */}
+                                <p>{listSales[index].prodname}
+                                </p>
+                                <i className="fas fa-trash-alt" onClick={() =>
+                                    setListSales(
+                                        listSales.filter(
+                                            (t, currentIndex) => index != currentIndex
+                                        )
+                                    )
+                                }>
+                                </i>
+                            </li>
+                        ))}
+
+
                     </form>
 
                 </div>

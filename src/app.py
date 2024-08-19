@@ -119,7 +119,9 @@ def Login(data):
             token = create_access_token(identity=user_result.id)
             response_body = {"token": token,
                             "id": user_result.id,
-                            "email": user_result.email
+                            "email": user_result.email,
+                            "isActive": user_result.is_active,
+                            "profile": user_result.profile
                             }
             return response_body
 
@@ -412,7 +414,9 @@ def addSales(data):
         return response_body
     else:
         response_body = {"message": "Sales receipts alredy exists"}
-        return response_body   
+        response_body = addDetailSales(data)
+        return response_body
+           
         
 
 def addDetailSales(data):

@@ -7,6 +7,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             isAuthenticated: false,
             userToken: null,
             user: [],
+            // isActive: null,
+            // profile: null,
             products: [],
             prodOne: [],
             employees: [],
@@ -60,6 +62,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                         setStore({ user: response.Message });
                         localStorage.setItem("accessToken", response.Message.token);
                         localStorage.setItem("userId", response.Message.id);
+                        localStorage.setItem("isActive", response.Message.isActive);
+                        localStorage.setItem("profile", response.Message.profile);
                         return true;
                     } else {
                         setStore({ message: response.Message.Error });

@@ -14,12 +14,7 @@ const Login = () => {
         event.preventDefault();
         const success = await actions.postLogin(email, password);
         if (success) {
-            if (localStorage.getItem('isActive') == 'true') {
-                navigate("/main-menu");
-            }
-            else {
-                setError({ password: "User is not Active, Please contact System Admin" });
-            }
+            navigate("/main-menu");
         } else {
             if (store.message.includes("email") || store.message.includes("password")) {
                 setError({ email: "Incorrect email or password", password: "Incorrect email or password" });
