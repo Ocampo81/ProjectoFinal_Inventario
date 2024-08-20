@@ -26,21 +26,25 @@ const PruebaSales = () => {
         event.preventDefault();
 
         const salesData = {
+            // los siguientes campos se envian a la DB para crear la venta
             idsales: store.nextid.ID,
             iduser: localStorage.getItem('userId'),
             nit: store.customer.nit,
             amount: amount,
             unitPrice: store.prodOne.salesPrice,
             id_prod: store.prodOne.id_prod,
-
-            prodname: store.prodOne.prodname
+            // no son necesariaros para crear el producto, solo son informativos
+            prodname: store.prodOne.prodname,
+            category: store.prodOne.category,
+            brand: store.prodOne.brand
         };
 
         setListSales(listSales.concat([salesData]));
         console.log("valor de SALE-salesData", salesData)
         console.log("****** valor de listSales", listSales)
 
-        // se comenta temporalmente: envía la información al backend --- const success = await actions.postAddSales(salesData);
+        // se comenta temporalmente: envía la información al backend --- 
+        const success = await actions.postAddSales(salesData);
 
 
         // if (success) {
@@ -138,8 +142,23 @@ const PruebaSales = () => {
                         {listSales.map((item, index) => (
                             <li key={index}>
                                 {/* ********** imprime un objeto  como un TODOLIST*/}
-                                <p>{listSales[index].prodname}
-                                </p>
+                                <div className="row">
+                                    <div className="col-sm">
+                                        <p>{listSales[index].prodname}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <p>{listSales[index].category}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <p>{listSales[index].brand}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <p>{listSales[index].amount}</p>
+                                    </div>
+                                    <div className="col-sm">
+                                        <p>{listSales[index].unitPrice}</p>
+                                    </div>
+                                </div>
                                 <i className="fas fa-trash-alt" onClick={() =>
                                     setListSales(
                                         listSales.filter(
