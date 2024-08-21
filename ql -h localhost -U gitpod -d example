@@ -1,0 +1,21 @@
+                                     Table "public.user"
+  Column   |          Type          | Collation | Nullable |             Default              
+-----------+------------------------+-----------+----------+----------------------------------
+ id        | integer                |           | not null | nextval('user_id_seq'::regclass)
+ email     | character varying(120) |           | not null | 
+ name      | character varying(120) |           | not null | 
+ lastName  | character varying(120) |           | not null | 
+ password  | character varying(255) |           | not null | 
+ is_active | boolean                |           | not null | 
+ profile   | integer                |           | not null | 
+ idProfile | integer                |           |          | 
+Indexes:
+    "user_pkey" PRIMARY KEY, btree (id)
+    "user_email_key" UNIQUE CONSTRAINT, btree (email)
+Foreign-key constraints:
+    "user_idProfile_fkey" FOREIGN KEY ("idProfile") REFERENCES profile(id)
+Referenced by:
+    TABLE "customer" CONSTRAINT "customer_idUser_fkey" FOREIGN KEY ("idUser") REFERENCES "user"(id)
+    TABLE "provider" CONSTRAINT "provider_idUser_fkey" FOREIGN KEY ("idUser") REFERENCES "user"(id)
+    TABLE "sales" CONSTRAINT "sales_iduser_fkey" FOREIGN KEY (iduser) REFERENCES "user"(id)
+

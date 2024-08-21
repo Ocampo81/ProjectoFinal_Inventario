@@ -1,182 +1,157 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
-
+import Navbar from "../component/Navbar";
+import "../../styles/PruebaSales_.css";
 
 const PruebaSales = () => {
-
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
     const params = useParams();
 
     useEffect(() => {
-        actions.getSalesNextId();
-        actions.getOneCustomer(localStorage.getItem('userId'));
-    }, [])
+        async function fetchData() {
+            await actions.getSalesNextId();
+            await actions.getOneCustomer(localStorage.getItem('userId'));
+        }
+        fetchData();
+    }, [actions]);
 
-    // const [idsales, setIdsales] = useState(0);
-    // const [iduser, setIduser] = useState(0);
-    // const [nit, setNit] = useState(0);
     const [idprod, setIdprod] = useState();
     const [amount, setAmount] = useState(0);
     const [unitPrice, setUnitPrice] = useState(0);
     const [listSales, setListSales] = useState([]);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
+    const handleAddProduct = () => {
         const salesData = {
-            // los siguientes campos se envian a la DB para crear la venta
-            idsales: store.nextid.ID,
+            idsales: store.nextid ? store.nextid.ID : null,
             iduser: localStorage.getItem('userId'),
-            nit: store.customer.nit,
+            nit: store.customer ? store.customer.nit : null,
             amount: amount,
             unitPrice: store.prodOne.salesPrice,
             id_prod: store.prodOne.id_prod,
-            // no son necesariaros para crear el producto, solo son informativos
             prodname: store.prodOne.prodname,
             category: store.prodOne.category,
             brand: store.prodOne.brand
         };
 
         setListSales(listSales.concat([salesData]));
-        console.log("valor de SALE-salesData", salesData)
-        console.log("****** valor de listSales", listSales)
+        console.log("valor de SALE-salesData", salesData);
+        console.log("****** valor de listSales", listSales);
 
-        // se comenta temporalmente: envía la información al backend --- 
-        const success = await actions.postAddSales(salesData);
-
-
-        // if (success) {
-        //     setShowModal(true);
-        // } else {
-        //     setError(store.message);
-        // }
+        // Reset fields after adding product to the list
+        setIdprod('');
+        setAmount(0);
+        setUnitPrice(0);
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
+        for (let sale of listSales) {
+            const success = await actions.postAddSales(sale);
+            if (!success) {
+                console.error("Error al agregar la venta para el producto:", sale.prodname);
+            }
+        }
+        console.log("Factura enviada correctamente");
+        setListSales([]); // Clear the list after submission
+    };
 
-    console.log(store.prodOne.prodname)
     return (
         <section className="text-center text-lg-start">
-            <style>
-                {`
-                .cascading-right {
-                    margin-right: -50px;
-                }
-                @media (max-width: 991.98px) {
-                    .cascading-right {
-                        margin-right: 0;
-                    }
-                }
-                `}
-            </style>
+            <Navbar />
             <div className="sales-page">
-
-                <div className="sales-container">
-                    <h1>Sales Module </h1>
-                    <h1>Receipt: {store.nextid.ID}</h1>
-                    <h1> NIT: {store.customer.nit}</h1>
-                    <h1>MR: {store.customer.name} {store.customer.lastName}</h1>
-                    <h1>{store.customer.address} </h1>
-                    <h1>{store.customer.city} - {store.customer.country}</h1>
-                    <h1>Phone: {store.customer.phone} </h1>
-
+                <div className="invoice-container">
+                    <div className="invoice-header">
+                        <div className="company-info">
+                            <h2>Company Name</h2>
+                            <p>+57 300 300 300</p>
+                            <p>ejemplo@ejemplo.com</p>
+                            <p>USA</p>
+                        </div>
+                        <div className="invoice-title">
+                            <h1>INVOICE</h1>
+                            <p># {store.nextid ? store.nextid.ID : "N/A"}</p>
+                        </div>
+                    </div>
+                    
+                    <div className="customer-info">
+                        {store.customer ? (
+                            <>
+                                <h3>Customer Name: {store.customer.name} {store.customer.lastName}</h3>
+                                <p>Mobile: {store.customer.phone}</p>
+                                <p>Email: {store.customer.email}</p>
+                                <p>Address: {store.customer.address}, {store.customer.city} - {store.customer.country}</p>
+                            </>
+                        ) : (
+                            <h3>Customer information not available</h3>
+                        )}
+                    </div>
+                    
                     <form className="sales-form" onSubmit={handleSubmit}>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-sm">
-                                    <div data-mdb-input-init className="form-outline">
-                                        <label className="form-label" htmlFor="id_prod">Product :  </label>
+                        <table className="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Product Name</th>
+                                    <th>Category Name</th>
+                                    <th>Brand Name</th>
+                                    <th>Amount</th>
+                                    <th>Unit Price</th>
+                                    <th>Sub Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {listSales.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.id_prod}</td>
+                                        <td>{item.prodname}</td>
+                                        <td>{item.category}</td>
+                                        <td>{item.brand}</td>
+                                        <td>{item.amount}</td>
+                                        <td>{item.unitPrice}</td>
+                                        <td>{item.amount * item.unitPrice}</td>
+                                    </tr>
+                                ))}
+                                <tr>
+                                    <td>
                                         <input
                                             type="number"
-                                            // placeholder="Id Product"
                                             value={idprod}
                                             onChange={(e) => actions.getProductId(e.target.value)}
+                                            placeholder="Product ID"
                                         />
-                                    </div>
-                                </div>
-                                <div className="col-sm">
-                                    {/* <label>ID Product: {store.prodOne.id_prod} </label> */}
-                                    <label>Product Name: {store.prodOne.prodname} </label>
-                                </div>
-                                <div className="col-sm">
-                                    <label>Category Name: {store.prodOne.category} </label>
-                                </div>
-                                <div className="col-sm">
-                                    <label>Brand Name: {store.prodOne.brand} </label>
-                                </div>
-
-
-
-                                <div className="col-sm">
-                                    <div data-mdb-input-init className="form-outline">
-                                        <label className="form-label" htmlFor="amount"> Amount : </label>
+                                    </td>
+                                    <td>{store.prodOne ? store.prodOne.prodname : "N/A"}</td>
+                                    <td>{store.prodOne ? store.prodOne.category : "N/A"}</td>
+                                    <td>{store.prodOne ? store.prodOne.brand : "N/A"}</td>
+                                    <td>
                                         <input
                                             type="number"
-
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
                                             required
                                         />
-                                    </div>
-                                </div>
-                                <div className="col-sm">
-                                    <div data-mdb-input-init className="form-outline">
-                                        <label className="form-label" htmlFor="unitPrice"> Unit Price : </label>
-                                        <input
-                                            type="number"
-                                            value={store.prodOne.salesPrice}
-                                            onChange={(e) => setUnitPrice(e.target.value)}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-sm">
-                                    <label className="form-label" htmlFor="Sub Total"> Sub Total:  </label>
-                                </div>
-                            </div>
+                                    </td>
+                                    <td>{store.prodOne ? store.prodOne.salesPrice : 0}</td>
+                                    <td>{amount * store.prodOne.salesPrice}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div className="invoice-actions">
+                            <button type="button" className="btn btn-primary btn-block mb-4" onClick={handleAddProduct}>
+                                Next
+                            </button>
+                            <button type="submit" className="btn btn-success btn-block mb-4">
+                                Send Invoice
+                            </button>
                         </div>
-
-                        <button type="submit" className="btn btn-primary btn-block mb-4">Confirm</button>
-                        {listSales.map((item, index) => (
-                            <li key={index}>
-                                {/* ********** imprime un objeto  como un TODOLIST*/}
-                                <div className="row">
-                                    <div className="col-sm">
-                                        <p>{listSales[index].prodname}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].category}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].brand}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].amount}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].unitPrice}</p>
-                                    </div>
-                                </div>
-                                <i className="fas fa-trash-alt" onClick={() =>
-                                    setListSales(
-                                        listSales.filter(
-                                            (t, currentIndex) => index != currentIndex
-                                        )
-                                    )
-                                }>
-                                </i>
-                            </li>
-                        ))}
-
-
                     </form>
-
                 </div>
             </div>
-
-        </section >
+        </section>
     );
 };
 

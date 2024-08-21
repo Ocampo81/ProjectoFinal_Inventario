@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import Navbar from "../component/Navbar";
-import "../../styles/Employees.css";
 
 const Employees = () => {
 

@@ -12,8 +12,9 @@ import Employees from './pages/Employees.jsx';
 import Sales from './pages/Sales.jsx';
 import Reports from './pages/Reports.jsx';
 import MainMenu from './pages/MainMenu.jsx';
+import Profile from './pages/Profile.jsx';
 import injectContext from "./store/appContext";
-
+import UserApproval from './pages/UserApproval.jsx';
 import PruebaSales_ from './pages/PruebaSales_.jsx';
 
 const Layout = () => {
@@ -36,7 +37,9 @@ const Layout = () => {
                         <Route element={<Employees />} path="/employees" />
                         <Route element={<Sales />} path="/sales" />
                         <Route element={<Reports />} path="/reports" />
+                        <Route element={<Profile />} path="/profile" /> 
                         <Route element={<PruebaSales_ />} path="/PruebaSales" />
+                        <Route element={<UserApproval />} path="/user-approval" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>

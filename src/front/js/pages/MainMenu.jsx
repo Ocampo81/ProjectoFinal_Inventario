@@ -25,7 +25,6 @@ const MainMenu = () => {
               <h2>Employees</h2>
               <p>Manage your employees</p>
             </Link>
-            {/* <Link to="/sales" className="menu-item"> */}
             <Link to="/PruebaSales" className="menu-item">
               <i className="fas fa-shopping-cart fa-3x menu-icon"></i>
               <h2>Sales</h2>
@@ -36,11 +35,15 @@ const MainMenu = () => {
               <h2>Reports</h2>
               <p>Generate reports</p>
             </Link>
+            <Link to="/user-approval" className="menu-item">
+              <i className="fas fa-user-check fa-3x menu-icon"></i>
+              <h2>User Approval</h2>
+              <p>Approve new users</p>
+            </Link>
           </div>
         </div>
       </div>
     );
-
   }
   else if (localStorage.getItem('profile') == '2') {
     return (
@@ -48,8 +51,6 @@ const MainMenu = () => {
         <Navbar />
         <div className="menu-container">
           <div className="menu-grid">
-
-            {/* <Link to="/sales" className="menu-item"> */}
             <Link to="/PruebaSales" className="menu-item">
               <i className="fas fa-shopping-cart fa-3x menu-icon"></i>
               <h2>Sales</h2>
@@ -86,7 +87,6 @@ const MainMenu = () => {
       </div>
     );
   }
-
 };
 
 export default MainMenu;

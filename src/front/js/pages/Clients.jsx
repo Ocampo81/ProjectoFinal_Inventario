@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import Navbar from "../component/Navbar";
-import "../../styles/Clients.css"; 
 
 const Clients = () => {
     const { store, actions } = useContext(Context);
