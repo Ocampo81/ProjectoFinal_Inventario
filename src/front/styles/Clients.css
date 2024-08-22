@@ -1,0 +1,86 @@
+.clients-page {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.invoice-container {
+    background-color: #3b3b3b;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 900px;
+    width: 100%;
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #ffb700;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.company-info {
+    text-align: left;
+}
+
+.invoice-title {
+    text-align: right;
+}
+
+.customer-info {
+    margin-bottom: 20px;
+}
+
+.invoice-table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+.invoice-table th,
+.invoice-table td {
+    padding: 10px;
+    border: 1px solid #555;
+    text-align: left;
+}
+
+.invoice-table th {
+    background-color: #ffb700;
+    color: #2d2d2d;
+}
+
+.invoice-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.invoice-actions .btn {
+    margin-right: 10px;
+}
+
+.invoice-summary {
+    text-align: right;
+    border-top: 2px solid #ffb700;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.invoice-summary p {
+    margin: 5px 0;
+}
+
+.invoice-summary h2 {
+    color: #ffa500;
+}
+
+.invoice-footer {
+    text-align: left;
+    margin-top: 20px;
+    border-top: 1px solid #555;
+    padding-top: 10px;
+}

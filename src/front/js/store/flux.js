@@ -158,6 +158,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                 if (data) setStore({ prodOne: data[0] });
             },
 
+            getCustomer: async () => {
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/customer/`);
+                if (data) {
+                    console.log("Datos de cliente recibidos del servidor:", data);
+                    setStore({ customers: data });
+                } else {
+                    setStore({ customers: null });
+                }
+            },
+
             getOneCustomer: async (id) => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/customerid/${id}`);
                 if (data) {
