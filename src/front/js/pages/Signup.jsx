@@ -95,6 +95,11 @@ const Signup = () => {
                                         </div>
 
                                         <button type="submit" className="btn btn-primary btn-block mb-4">Sign up</button>
+
+                                        {/* Añadir el enlace para regresar al login */}
+                                        <div className="mt-3">
+                                            <Link to="/login" className="text-light">Back to login</Link>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

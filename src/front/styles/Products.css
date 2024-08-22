@@ -95,6 +95,10 @@
     cursor: pointer;
 }
 
+.product-item span {
+    margin-right: 300px; /* Añadir espacio entre el nombre del producto y los botones */
+}
+
 .product-item:hover {
     background-color: #555;
 }
@@ -150,6 +154,7 @@
 .page-numbers .page-button {
     margin: 5px;
 }
+
 .modal {
     position: fixed;
     top: 0;

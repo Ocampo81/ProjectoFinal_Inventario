@@ -1,25 +1,25 @@
-body, html {
-    height: 100%;
+/* Estilos específicos para la página de login */
+.login-page {
+    height: 100vh; /* Asegura que ocupe toda la altura de la pantalla */
     margin: 0;
     background-color: #2d2d2d; /* Fondo oscuro */
     font-family: Arial, sans-serif;
-}
-
-.login-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    padding: 20px 0; /* Añade un padding para el espacio superior e inferior */
 }
 
-.login-card {
+.login-page .login-card {
     background-color: #3b3b3b;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    margin: auto; /* Centra la tarjeta horizontalmente */
+    max-height: calc(100vh - 40px); /* Asegura que la tarjeta no supere la altura de la pantalla */
 }
 
-.form-control {
+.login-page .form-control {
     background-color: #ffffff;
     color: #2d2d2d;
     border: 1px solid #444444;
@@ -27,30 +27,34 @@ body, html {
     transition: background-color 0.3s;
 }
 
-.form-control:focus {
+.login-page .form-control:focus {
     border-color: #ffb700;
     box-shadow: 0 0 5px rgba(255, 183, 0, 0.5);
 }
 
-.form-label {
+.login-page .form-label {
     color: #ffb700;
 }
 
-.btn-dark {
+.login-page .btn-dark {
     background-color: #ffb700;
     color: #2d2d2d;
     border-radius: 5px;
 }
 
-.btn-dark:hover {
+.login-page .btn-dark:hover {
     background-color: #ffa500;
     color: #ffffff;
 }
 
-.small.text-muted {
+.login-page .small.text-muted {
     color: #ffffff !important;
 }
 
-.card-body {
-    padding: 2rem;
+.login-page .card-body {
+    padding: 0rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ajusta el contenido a la parte superior */
+    height: 100%;
 }
