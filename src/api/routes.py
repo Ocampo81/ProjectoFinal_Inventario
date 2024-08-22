@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from api.models import db
 import app
+from flask_jwt_extended import jwt_required
 
 api = Blueprint('api', __name__)
 
@@ -27,6 +28,26 @@ def Login1():
     respuesta = app.Login(data)
     return jsonify({"Message": respuesta}), 200
 
+# Endpoint para obtener usuarios pendientes de aprobación
+@api.route('/pending-users', methods=['GET'])
+def getPendingUsers():
+    return jsonify(app.getPendingUsers()), 200
+
+# Endpoint para aprobar un usuario y asignarle un rol
+@api.route('/approve-user/<int:userId>', methods=['POST'])
+def approveUser(userId):
+    data = request.json
+    role = data.get('role')
+    respuesta = app.approveUser(userId, role)
+    return jsonify(respuesta), 200
+
+# Endpoint para obtener el perfil de usuario
+@api.route('/profile', methods=['GET'])
+@jwt_required()
+def get_user_profile():
+    respuesta = app.get_user_profile()
+    return jsonify(respuesta), 200
+
 # Endpoint Customer
 @api.route('/customer', methods=['POST'])
 def addCustomer1():
@@ -48,7 +69,6 @@ def getOneCustomer1(nit):
 def getOneCustomerID(userId):
     respuesta = app.getOneCustomerID(userId)
     return jsonify(respuesta), 200
-
 
 @api.route('/customer', methods=['GET'])
 def getCustomer1():
@@ -78,7 +98,6 @@ def updateProduct(id):
     respuesta = app.updateProduct(id, data)
     return jsonify({"Message": respuesta}), 200
 
-
 @api.route('/products/<int:id_prod>', methods=['DELETE'])
 def delProducts(id_prod):
      print(id_prod)
@@ -86,7 +105,6 @@ def delProducts(id_prod):
      respuesta = app.delProducts(id_prod)
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
-
 
 # EndPoint Category
 @api.route('/category', methods=['POST'])

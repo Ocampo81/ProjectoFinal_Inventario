@@ -14,11 +14,12 @@ const Login = () => {
         event.preventDefault();
         const success = await actions.postLogin(email, password);
         if (success) {
-            if (localStorage.getItem('isActive') == 'true') {
+            if (localStorage.getItem('profile') == '0') {
+                setError({ password: "Your account is pending approval by the admin." });
+            } else if (localStorage.getItem('isActive') == 'false') {
+                setError({ password: "Your account is not active. Please contact the system admin." });
+            } else {
                 navigate("/main-menu");
-            }
-            else {
-                setError({ password: "User is not Active, Please contact System Admin" });
             }
         } else {
             if (store.message.includes("email") || store.message.includes("password")) {

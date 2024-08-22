@@ -11,7 +11,7 @@ class User(db.Model):
         email = db.Column(db.String(120), unique=True, nullable=False)
         name = db.Column(db.String(120), nullable=False)
         lastName = db.Column(db.String(120), nullable=False)
-        password = db.Column(db.String(80), unique=False, nullable=False)
+        password = db.Column(db.String(255), unique=False, nullable=False)
         is_active = db.Column(db.Boolean(), unique=False, nullable=False)
         profile = db.Column(db.Integer, nullable=False)
         idProfile = db.Column(db.Integer, db.ForeignKey('profile.id'))

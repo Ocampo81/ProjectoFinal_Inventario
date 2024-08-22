@@ -15,7 +15,7 @@ from datetime import datetime
 from sqlalchemy.orm import relationship, join, sessionmaker
 from sqlalchemy import create_engine, engine, join, and_, or_
 import json
-
+from werkzeug.security import check_password_hash
 
 # from models import Person
 
@@ -25,7 +25,7 @@ static_file_dir = os.path.join(os.path.dirname(
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-# database condiguration
+# database configuration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
@@ -37,15 +37,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
 
-
-#se inicia JWT
-#app.config["JWT_SECRET_KEY"] = secrets.token_urlsafe(32) # Generate a 32-character URL-safe string
+# Initialize JWT
 jwt = JWTManager(app)
 
-# add the admin
+# Add the admin
 setup_admin(app)
 
-# add the admin
+# Add the admin
 setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
@@ -57,18 +55,30 @@ app.register_blueprint(api, url_prefix='/api')
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
-# generate sitemap with all your endpoints
-
-
+# Generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
-# any other endpoint will try to serve it like a static file
+# Function to approve a user and assign a role
+def approveUser(userId, role):
+    user = User.query.get(userId)
+    if user:
+        user.profile = role
+        user.is_active = True
+        db.session.commit()
+        return {"message": "User approved successfully"}
+    else:
+        return {"message": "User not found"}
 
-#Función para realizar Signup devuelve mensaje
+# Function to get all pending users (users with profile 0)
+def getPendingUsers():
+    users = User.query.filter_by(profile=0).all()
+    return [user.serialize() for user in users]
+
+# Function to handle user signup and return a message
 def Signup(data):
     #data = request.json
     print("DATA DATA en APP SIN *****:", data)
@@ -78,14 +88,14 @@ def Signup(data):
     newUser.name = data.get("name")
     newUser.lastName = data.get("lastname")
     newUser.password = data.get("password")
-    newUser.is_active = data.get("is_active")
-    newUser.profile = data.get("profile")
-    if newUser.email == "" or newUser.password == "" :
+    newUser.is_active = False  
+    newUser.profile = 0  
+    if newUser.email == "" or newUser.password == "":
         response_body = {"message": "email and password are required"}
         return response_body
     else:
         user_result = db.session.execute(db.select(User).filter_by(email=newUser.email)).one_or_none()
-        if user_result != None and user_result[0].email == newUser.email:
+        if user_result is not None and user_result[0].email == newUser.email:
             response_body = {"message": "user already exists"}
             return response_body
         else:
@@ -94,19 +104,19 @@ def Signup(data):
             response_body = {"message": "User created successfully"}
             return response_body
 
-#Función para realizar Login devuelve token, Id, email
+# Function to handle user login and return token, id, and email
 def Login(data):
     newUser = User()
     print("Newuser dentro de Login",data.get("email"), data.get("password"))
     newUser.email = data.get("email")
     newUser.password = data.get("password")
 
-    if newUser.email == "" or newUser.password == "" :
+    if newUser.email == "" or newUser.password == "":
         response_body = {"Error": "email and password are required"}
         return response_body
     else:
         user_result = db.session.execute(db.select(User).filter_by(email=data.get("email"))).one_or_none()
-        if user_result == None:
+        if user_result is None:
             response_body = {"Error": "user doesn't exist please create user first"}
             return response_body
         else:
@@ -114,16 +124,27 @@ def Login(data):
             print("Newuser PASSWORD",user_result.password, newUser.password, "ID es: ", user_result.id)
             passwd_is_ok = user_result.password == newUser.password
             if not passwd_is_ok:
-                response_body = {"Error": "Password incorrect",}
+                response_body = {"Error": "Password incorrect"}
                 return response_body
             token = create_access_token(identity=user_result.id)
-            response_body = {"token": token,
-                            "id": user_result.id,
-                            "email": user_result.email,
-                            "isActive": user_result.is_active,
-                            "profile": user_result.profile
-                            }
+            response_body = {
+                "token": token,
+                "id": user_result.id,
+                "email": user_result.email,
+                "name": user_result.name,
+                "lastName": user_result.lastName, 
+                "isActive": user_result.is_active,
+                "profile": user_result.profile
+            }
             return response_body
+        
+def get_user_profile():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if user:
+        return user.serialize()
+    else:
+        return {"message": "User not found"}
 
 #Funciones para Customers
 
@@ -394,56 +415,64 @@ def getCategories():
 
 def addSales(data):
     print("DATA dentro de ******* Sales! ", data)
-    newSales = Sales()
-  
-    # Sales
-    newSales.idSales  = data.get("idsales")
-    newSales.iduser  = data.get("iduser")
-    newSales.totalPrice  = int(data.get("unitPrice")) * int(data.get("amount"))
-    newSales.nit  = data.get("nit")
+    sales_list = data.get("salesList", [])
     
-    print("DATA dentro de ******* Sales! ", newSales.idSales, '\n', newSales.iduser, '\n', newSales.totalPrice, '\n', newSales.nit )
-    sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newSales.idSales)).one_or_none()
-    if sales_exists == None:
-        db.session.add(newSales)
-        db.session.commit()
-        response_body = addDetailSales(data)
-        return response_body
-    else:
-        response_body = {"message": "Sales receipts alredy exists"}
-        response_body = addDetailSales(data)
-        return response_body
-           
+    for sale_data in sales_list:
+        newSales = Sales()
+    
+        # Sales
+        newSales.idSales  = sale_data.get("idsales")
+        newSales.iduser  = sale_data.get("iduser")
+        newSales.totalPrice  = int(sale_data.get("unitPrice")) * int(sale_data.get("amount"))
+        newSales.nit  = sale_data.get("nit")
         
+        print("DATA dentro de ******* Sales! ", newSales.idSales, '\n', newSales.iduser, '\n', newSales.totalPrice, '\n', newSales.nit )
+        sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newSales.idSales)).one_or_none()
+        if sales_exists == None:
+            db.session.add(newSales)
+            db.session.commit()
+            response_body = addDetailSales(sale_data)
+            if response_body.get("message") != "Sales created successfully":
+                return response_body
+        else:
+            response_body = {"message": "Sales receipts already exists"}
+            response_body = addDetailSales(sale_data)
+            if response_body.get("message") != "Sales created successfully":
+                return response_body
+    
+    return {"message": "Sales created successfully"}
+
+# Function to validate product existence and stock availability before processing a sale
+def validate_product_and_stock(data):
+    stock_available = db.session.execute(db.select(Products.stock).filter((Products.id_prod == data.get("id_prod")))).one_or_none()
+    if stock_available[0] < int(data.get("amount")):
+        return False, {"message": "Stock not available", "Stock": stock_available[0]}
+    return True, {}
 
 def addDetailSales(data):
     newDtSales = DetailSales()
     print("DATA dentro de addDetailSales! ", data)
+    
+    valid, error_response = validate_product_and_stock(data)
+    if not valid:
+        return error_response
+
     # DetailSales
     newDtSales.amount  = data.get("amount")
     newDtSales.unitPrice =  data.get("unitPrice")
     newDtSales.idSales = data.get("idsales")
-    newDtSales.id_prod  = data.get("id_prod") ### Verificar STOCK antes de la venta
+    newDtSales.id_prod  = data.get("id_prod")
 
-    sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newDtSales.idSales)).one_or_none()
-    if sales_exists == None:
-        response_body = {"message": "Sales receipts not  exists"}
-        return response_body
-    else:
-        stock_available = db.session.execute(db.select(Products.stock).filter((Products.id_prod == newDtSales.id_prod))).one_or_none()
-        # Prueba ---> stock_available = db.session.execute(db.select(DetailSales.products.stock).filter((DetailSales.products.id_prod == newDtSales.id_prod))).one_or_none()
-        print(stock_available[0], type(stock_available))
-        if stock_available[0] >= int(newDtSales.amount) :
-            newstock = stock_available[0] - int(newDtSales.amount)
-            db.session.query(Products).filter(Products.id_prod == newDtSales.id_prod).update({Products.stock : newstock})
-            
-            db.session.add(newDtSales)
-            db.session.commit()
-            response_body = {"message": "Sales created successfully"}
-            return response_body
-        else:
-            response_body = {"message": "Stock not available ", "Stock": stock_available[0] }
-            return response_body
+    db.session.add(newDtSales)
+    
+    # Actualizar el stock
+    stock_available = db.session.execute(db.select(Products.stock).filter((Products.id_prod == newDtSales.id_prod))).one_or_none()
+    newstock = stock_available[0] - int(newDtSales.amount)
+    db.session.query(Products).filter(Products.id_prod == newDtSales.id_prod).update({Products.stock : newstock})
+    
+    db.session.commit()
+    return {"message": "Sales created successfully"}
+
 
 def getNextId():
      obj = db.session.query(Sales).order_by(Sales.idSales.desc()).first()

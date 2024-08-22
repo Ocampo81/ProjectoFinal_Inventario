@@ -15,7 +15,7 @@ const Signup = () => {
         name: "",
         lastname: "",
         profile: 0,
-        is_active: true
+        is_active: false
     });
 
     const [showModal, setShowModal] = useState(false);
