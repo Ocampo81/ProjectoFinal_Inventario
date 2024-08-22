@@ -135,41 +135,41 @@ const PruebaSales = () => {
                                 <div className="col-sm">
                                     <label className="form-label" htmlFor="Sub Total"> Sub Total:  </label>
                                 </div>
+
+
+                                <button type="submit" className="btn btn-primary btn-block mb-4">Confirm</button>
+                                {listSales.map((item, index) => (
+                                    <li key={index}>
+                                        {/* ********** imprime un objeto  como un TODOLIST*/}
+                                        <div className="row">
+                                            <div className="col-sm">
+                                                <p>{listSales[index].prodname}</p>
+                                            </div>
+                                            <div className="col-sm">
+                                                <p>{listSales[index].category}</p>
+                                            </div>
+                                            <div className="col-sm">
+                                                <p>{listSales[index].brand}</p>
+                                            </div>
+                                            <div className="col-sm">
+                                                <p>{listSales[index].amount}</p>
+                                            </div>
+                                            <div className="col-sm">
+                                                <p>{listSales[index].unitPrice}</p>
+                                            </div>
+                                        </div>
+                                        <i className="fas fa-trash-alt" onClick={() =>
+                                            setListSales(
+                                                listSales.filter(
+                                                    (t, currentIndex) => index != currentIndex
+                                                )
+                                            )
+                                        }>
+                                        </i>
+                                    </li>
+                                ))}
                             </div>
                         </div>
-
-                        <button type="submit" className="btn btn-primary btn-block mb-4">Confirm</button>
-                        {listSales.map((item, index) => (
-                            <li key={index}>
-                                {/* ********** imprime un objeto  como un TODOLIST*/}
-                                <div className="row">
-                                    <div className="col-sm">
-                                        <p>{listSales[index].prodname}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].category}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].brand}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].amount}</p>
-                                    </div>
-                                    <div className="col-sm">
-                                        <p>{listSales[index].unitPrice}</p>
-                                    </div>
-                                </div>
-                                <i className="fas fa-trash-alt" onClick={() =>
-                                    setListSales(
-                                        listSales.filter(
-                                            (t, currentIndex) => index != currentIndex
-                                        )
-                                    )
-                                }>
-                                </i>
-                            </li>
-                        ))}
-
 
                     </form>
 

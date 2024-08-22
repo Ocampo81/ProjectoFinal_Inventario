@@ -14,7 +14,7 @@ const Signup = () => {
         password: "",
         name: "",
         lastname: "",
-        profile: 1,
+        profile: 0,
         is_active: true
     });
 
