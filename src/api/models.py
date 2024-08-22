@@ -70,7 +70,7 @@ class Customer(db.Model):
     __tablename__ = 'customer'
     nit = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(60), nullable=False)
-    date = db.Column(db.String(15), nullable=False)
+    date = db.Column(db.DateTime(), default=datetime.now())
     idUser = db.Column(db.Integer, db.ForeignKey('user.id'))
     address = relationship("Address",
                            cascade="all, delete, delete-orphan",
@@ -176,10 +176,11 @@ class Products(db.Model):
         idCatProd = db.Column(db.Integer, db.ForeignKey('categoryproduct.idCatProd'))
         Catproducts = relationship("CategoryProduct", back_populates="products")
         
-        # address = relationship("Address",
-        #                    cascade="all, delete, delete-orphan",
-        #                    back_populates="customer"
-        #                    )
+        EntryProduct = relationship("ProductEntry",
+                       cascade="all, delete",
+                       back_populates="Entryprod"
+                       )
+
 
         def __repr__(self):
             return '<Member %r>' %self.id_prod
@@ -217,4 +218,25 @@ class CategoryProduct(db.Model):
             "category": self.category,
             "description": self.description
             # do not serialize the products relationship
+        }
+    
+class ProductEntry(db.Model):
+    __tablename__ = 'productentry'    
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime(), default=datetime.now())
+    amount = db.Column(db.Integer, nullable=False)
+    cost_price = db.Column(db.Integer, nullable=False)
+    id_prod = db.Column(db.Integer, db.ForeignKey('products.id_prod'))
+    Entryprod = relationship("Products", back_populates="EntryProduct")
+    
+    def __repr__(self):
+        return '<Member %r>' %self.id
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "id_prod": self.id_prod,
+            "date": self.date,
+            "amount": self.amount,
+            "cost_price": self.cost_price
         }

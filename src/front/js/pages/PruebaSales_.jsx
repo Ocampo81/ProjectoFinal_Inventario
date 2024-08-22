@@ -87,7 +87,7 @@ const PruebaSales = () => {
                             <p># {store.nextid ? store.nextid.ID : "N/A"}</p>
                         </div>
                     </div>
-                    
+
                     <div className="customer-info">
                         {store.customer ? (
                             <>
@@ -100,7 +100,7 @@ const PruebaSales = () => {
                             <h3>Customer information not available</h3>
                         )}
                     </div>
-                    
+
                     <form className="sales-form" onSubmit={handleSubmit}>
                         <table className="invoice-table">
                             <thead>

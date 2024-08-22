@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct, Sales, DetailSales
+from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct, Sales, DetailSales,ProductEntry
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -212,7 +212,7 @@ def getOneCustomer(data):
         print(dict(customer._mapping))
         customerList.append(dict(customer._mapping))
 
-    return tuple(customerList)
+    return tuple(customerList) if customerList else None
 
 def getOneCustomerID(data):
     customerList=[]
@@ -221,15 +221,7 @@ def getOneCustomerID(data):
          .join(Customer, Customer.idUser == User.id)\
          .join(Address, Customer.nit == Address.nit)\
          .filter(User.id == data)
-         
-    
-    # print("VALOR DE QUERY *******   ", query, '\n', '\n', '\n', '\n')
-
     result = db.session.execute(query)
-    # result = db.session.execute('SELECT "user".id, "user".name, "user"."lastName", customer.nit, customer.phone, customer.date, address.address, address.country, address.city \
-                                # FROM "user" JOIN customer ON customer."idUser" = "user".id JOIN address ON customer.nit = address.nit where "user".id = ${data}')
-
-    # print("getOneCustomerID *******   ", result.serialize)
     for customer in result.fetchall():
         print(dict(customer._mapping))
         customerList.append(dict(customer._mapping))
@@ -272,6 +264,7 @@ def addProvider(data):
 
 def addProducts(data):
     newProducts = Products()
+    newEntry = ProductEntry()
     category_name = data.get("category").upper()
 
     # Obtener idCatProd basado en el nombre de la categoría
@@ -286,8 +279,12 @@ def addProducts(data):
     newProducts.brand = data.get("brand").upper()
     newProducts.salesPrice = data.get("salesPrice")
     newProducts.stock = data.get("stock")
-
     newProducts.idCatProd = Category_result[0].idCatProd
+
+    # campos en la tabla ProductEntry para tener el detalle de las entradas
+    newEntry.cost_price = data.get("cost_price")
+    newEntry.amount = data.get("amount")
+    newEntry.id_prod = data.get("id_prod")
 
     # Verificar si el producto ya existe
     Product_result = db.session.execute(db.select(Products).filter_by(id_prod=newProducts.id_prod)).one_or_none()
@@ -298,17 +295,16 @@ def addProducts(data):
     # Guardar el nuevo producto
     db.session.add(newProducts)
     db.session.commit()
-    
-    response_body = {"message": "PRODUCT created successfully"}
-    return response_body
-
-
-    # Guardar el nuevo producto
-    db.session.add(newProducts)
+    db.session.add(newEntry)
     db.session.commit()
     
+    
+    
     response_body = {"message": "PRODUCT created successfully"}
     return response_body
+
+
+ 
 
 def getProducts():
     productsList=[]
@@ -368,6 +364,17 @@ def updateProduct(id, data):
 
     return {"message": "Product updated successfully"}
 
+def delProducts(data):
+    delIdProd = db.session.execute(db.select(Products).filter_by(id_prod=data)).one_or_none()
+    if delIdProd != None:
+        delIdProd = Products.query.filter_by(id_prod=data).one()
+        db.session.delete(delIdProd)
+        db.session.commit()
+        response_body = {"message": "Products deleted successfully"}
+        return response_body
+    else:
+        response_body = {"message": "Products not found", "nit": data}
+        return response_body
 
 # Functions for CategoryProduct
 
@@ -391,17 +398,7 @@ def addCategoryProduct(data):
             response_body = {"message": "Category created successfully"}
             return response_body
 
-def delProducts(data):
-    delIdProd = db.session.execute(db.select(Products).filter_by(id_prod=data)).one_or_none()
-    if delIdProd != None:
-        delIdProd = Products.query.filter_by(id_prod=data).one()
-        db.session.delete(delIdProd)
-        db.session.commit()
-        response_body = {"message": "Products deleted successfully"}
-        return response_body
-    else:
-        response_body = {"message": "Products not found", "nit": data}
-        return response_body
+
 
 def getCategories():
     categoriesList = []
@@ -512,7 +509,7 @@ def getOneSales(data):
         print(dict(customer._mapping))
         customerList.append(dict(customer._mapping))
 
-    return tuple(customerList)
+    return tuple(customerList) if customerList else None
 
 def delSales(data):
     delSales = db.session.execute(db.select(Sales).filter_by(idSales=data)).one_or_none()
