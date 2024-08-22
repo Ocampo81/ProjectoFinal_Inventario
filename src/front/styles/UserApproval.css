@@ -13,9 +13,10 @@
     border-radius: 10px;
     text-align: center;
     padding: 50px;
-    max-width: 800px;
+    max-width: 1200px;  
     width: 100%;
     margin: auto;
+    box-sizing: border-box;
 }
 
 .user-list {
@@ -31,10 +32,13 @@
     display: flex; 
     justify-content: space-between; 
     align-items: center;
+    gap: 100px; 
 }
 
 .user-details {
-    flex-grow: 1; 
+    flex-grow: 1;
+    margin-right: 20px; /* Asegura un espacio constante entre el correo y el botón */
+    text-align: left; /* Alinea el texto del correo a la izquierda */
 }
 
 .role-select {
@@ -43,6 +47,7 @@
     border: none;
     border-radius: 5px;
     margin-right: 10px;
+    min-width: 150px; /* Establece un ancho mínimo para el select */
 }
 
 .approve-btn {
@@ -58,3 +63,22 @@
     background-color: #ffa500;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-btn {
+    background-color: #ffb700;
+    color: #2d2d2d;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.page-btn:hover {
+    background-color: #ffa500;
+}

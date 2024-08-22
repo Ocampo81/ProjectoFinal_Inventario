@@ -1,19 +1,22 @@
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
+import "../../styles/SuccessModal.css";
 
 const SuccessModal = ({ show, handleClose }) => {
+    if (!show) return null;
+
     return (
-        <Modal show={show} onHide={handleClose} centered>
-            <Modal.Header closeButton>
-                <Modal.Title>Success</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>User created successfully!</Modal.Body>
-            <Modal.Footer>
-                <Button variant="success" onClick={handleClose}>
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <button className="close-button" onClick={handleClose}>
+                    ×
+                </button>
+                <h2 className="modal-title">Success</h2>
+                <p className="modal-body">User created successfully!</p>
+                <button className="ok-button" onClick={handleClose}>
                     OK
-                </Button>
-            </Modal.Footer>
-        </Modal>
+                </button>
+            </div>
+        </div>
     );
 };
 

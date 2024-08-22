@@ -1,0 +1,78 @@
+/* Fondo que oscurece el resto de la página */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Contenedor del modal */
+.modal-content {
+    background-color: #3b3b3b;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    position: relative;
+    text-align: center;
+}
+
+/* Botón de cierre */
+.close-button {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    background-color: #ffb700 !important; /* Fondo del mismo color que el botón OK */
+    border: none !important; /* Sin borde */
+    color: #2d2d2d !important;
+    font-size: 18px !important; /* Tamaño de la fuente para la "X" */
+    cursor: pointer !important;
+    width: 28px !important; /* Ancho del botón */
+    height: 28px !important; /* Altura del botón */
+    padding: 0 !important;
+    line-height: 28px !important; /* Centrado vertical de la "X" */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 5px !important; /* Bordes redondeados */
+    box-sizing: border-box !important; /* Asegura que el padding y borde no afecten el tamaño */
+}
+
+.close-button:hover {
+    background-color: #ffa500 !important; /* Cambia el color de fondo al pasar el cursor */
+    color: #ffffff !important; /* Cambia el color de la "X" al pasar el cursor */
+}
+
+/* Título del modal */
+.modal-title {
+    color: #ffb700;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* Cuerpo del modal */
+.modal-body {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+/* Botón de confirmación */
+.ok-button {
+    background-color: #ffb700 !important;
+    color: #2d2d2d !important;
+    border: none !important;
+    padding: 10px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    width: 100% !important;
+}
+
+.ok-button:hover {
+    background-color: #ffa500 !important;
+    color: #ffffff !important;
+}
