@@ -103,12 +103,6 @@ const Login = () => {
                                                 Register here
                                             </Link>
                                         </p>
-                                        <Link to="#" className="small text-muted">
-                                            Terms of use.
-                                        </Link>
-                                        <Link to="#" className="small text-muted">
-                                            Privacy policy
-                                        </Link>
                                     </div>
                                 </div>
                             </div>

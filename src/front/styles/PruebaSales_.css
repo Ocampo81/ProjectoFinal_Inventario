@@ -1,3 +1,5 @@
+/* Mantén los estilos originales */
+
 .sales-page {
     background-color: #2d2d2d;
     color: #ffffff;
@@ -6,6 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 0px;
 }
 
 .invoice-container {
@@ -14,6 +17,8 @@
     padding: 20px;
     max-width: 900px;
     width: 100%;
+    margin: 20px; /* Añade un margen alrededor del contenedor */
+    box-sizing: border-box; /* Asegura que el padding esté incluido en el ancho total */
 }
 
 .invoice-header {
@@ -83,4 +88,37 @@
     margin-top: 20px;
     border-top: 1px solid #555;
     padding-top: 10px;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    .sales-page {
+        padding: 10px; /* Reduce el padding en pantallas pequeñas */
+    }
+
+    .invoice-container {
+        padding: 10px; /* Reduce el padding y el margen en pantallas pequeñas */
+        margin: 10px;
+    }
+
+    .invoice-header {
+        flex-direction: column; /* Cambia a disposición en columna para pantallas pequeñas */
+        align-items: flex-start;
+    }
+
+    .invoice-title {
+        text-align: left; /* Alinea el título a la izquierda en pantallas pequeñas */
+        margin-top: 10px;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        padding: 8px; /* Reduce el padding en la tabla */
+        font-size: 12px; /* Reduce el tamaño de la fuente en pantallas pequeñas */
+    }
+
+    .invoice-actions {
+        text-align: center;
+        margin-top: 20px;
+    }
 }
