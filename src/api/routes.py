@@ -122,6 +122,8 @@ def getCategories():
 @api.route('/sales', methods=['POST'])
 def addSales():
     data = request.json
+    if 'salesList' not in data:
+        return jsonify({"Message": "Missing salesList data"}), 400
     respuesta = app.addSales(data)
     return jsonify({"Message": respuesta}), 200
 

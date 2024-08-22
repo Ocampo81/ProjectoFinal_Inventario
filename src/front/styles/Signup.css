@@ -1,0 +1,90 @@
+/* Fondo general del SignUp */
+body {
+    background-color: #2d2d2d; /* Color de fondo principal de MainMenu */
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contenedor principal */
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Estilo de la tarjeta */
+.signup-page .card {
+    background-color: #3b3b3b;
+    color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    padding: 30px;
+    margin: auto;
+}
+
+/* Estilo de los input fields */
+.signup-page .form-control {
+    background-color: #ffffff;
+    color: #2d2d2d;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.signup-page .form-control:focus {
+    border-color: #ffb700;
+    box-shadow: 0 0 5px rgba(255, 183, 0, 0.5);
+}
+
+/* Estilo de las etiquetas */
+.signup-page .form-label {
+    color: #ffb700;
+}
+
+/* Botón principal */
+.signup-page .btn-primary {
+    background-color: #ffb700;
+    color: #2d2d2d;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.signup-page .btn-primary:hover {
+    background-color: #ffa500;
+    color: #ffffff;
+}
+
+/* Imagen lateral */
+.signup-page img {
+    border-radius: 10px 0 0 10px;
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+}
+
+/* Asegura que no haya scroll */
+.signup-page .container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.signup-page .row.g-0 {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}

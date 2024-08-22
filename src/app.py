@@ -423,12 +423,12 @@ def addSales(data):
         # Sales
         newSales.idSales  = sale_data.get("idsales")
         newSales.iduser  = sale_data.get("iduser")
-        newSales.totalPrice  = int(sale_data.get("unitPrice")) * int(sale_data.get("amount"))
+        newSales.totalPrice  = sale_data.get("subtotal")
         newSales.nit  = sale_data.get("nit")
         
-        print("DATA dentro de ******* Sales! ", newSales.idSales, '\n', newSales.iduser, '\n', newSales.totalPrice, '\n', newSales.nit )
+        print("DATA dentro de ******* Sales! ", newSales.idSales, newSales.iduser, newSales.totalPrice, newSales.nit)
         sales_exists = db.session.execute(db.select(Sales).filter_by(idSales=newSales.idSales)).one_or_none()
-        if sales_exists == None:
+        if sales_exists is None:
             db.session.add(newSales)
             db.session.commit()
             response_body = addDetailSales(sale_data)
@@ -441,6 +441,7 @@ def addSales(data):
                 return response_body
     
     return {"message": "Sales created successfully"}
+
 
 # Function to validate product existence and stock availability before processing a sale
 def validate_product_and_stock(data):

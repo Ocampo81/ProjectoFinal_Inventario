@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 import Alert from '../component/Alert';
+import "../../styles/Loginn.css";
 
 const Login = () => {
     const { store, actions } = useContext(Context);
@@ -31,21 +32,20 @@ const Login = () => {
     };
 
     return (
-        <section className="vh-100">
-            <div className="container py-5 h-100">
-                <div className="row d-flex justify-content-center align-items-center h-100">
-                    <div className="col col-xl-10">
-                        <div className="card" style={{ borderRadius: '1rem' }}>
+        <div className="login-page">
+            <div className="container h-100 d-flex justify-content-center align-items-center">
+                <div className="row d-flex justify-content-center align-items-center">
+                    <div className="col-lg-10">
+                        <div className="card login-card">
                             <div className="row g-0">
-                                <div className="col-md-6 col-lg-5 d-none d-md-block">
+                                <div className="col-md-6 d-none d-md-block">
                                     <img
                                         src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
                                         alt="login form"
                                         className="img-fluid"
-                                        style={{ borderRadius: '1rem 0 0 1rem' }}
                                     />
                                 </div>
-                                <div className="col-md-6 col-lg-7 d-flex align-items-center">
+                                <div className="col-md-6 d-flex align-items-center">
                                     <div className="card-body p-4 p-lg-5 text-black">
                                         <div className="d-flex align-items-center mb-3 pb-1">
                                             <i className="fas fa-cubes fa-2x me-3" style={{ color: '#ff6219' }}></i>
@@ -56,7 +56,7 @@ const Login = () => {
                                         </h5>
                                         <form onSubmit={handleLogin}>
                                             <fieldset>
-                                                <div data-mdb-input-init className="form-outline mb-4">
+                                                <div className="form-outline mb-4">
                                                     <input
                                                         type="email"
                                                         id="InputEmail1"
@@ -70,7 +70,7 @@ const Login = () => {
                                                     {error.email && <Alert message={error.email} />}
                                                 </div>
 
-                                                <div data-mdb-input-init className="form-outline mb-4">
+                                                <div className="form-outline mb-4">
                                                     <input
                                                         type="password"
                                                         id="InputPassword"
@@ -86,8 +86,6 @@ const Login = () => {
 
                                                 <div className="pt-1 mb-4">
                                                     <button
-                                                        data-mdb-button-init
-                                                        data-mdb-ripple-init
                                                         className="btn btn-dark btn-lg btn-block"
                                                         type="submit"
                                                     >
@@ -99,9 +97,9 @@ const Login = () => {
                                         <Link to="#" className="small text-muted">
                                             Forgot password?
                                         </Link>
-                                        <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
+                                        <p className="mb-5 pb-lg-2" style={{ color: '#ffb700' }}>
                                             Don't have an account?{' '}
-                                            <Link to="/signup" style={{ color: '#393f81' }}>
+                                            <Link to="/signup" style={{ color: '#ffb700' }}>
                                                 Register here
                                             </Link>
                                         </p>
@@ -118,7 +116,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
 

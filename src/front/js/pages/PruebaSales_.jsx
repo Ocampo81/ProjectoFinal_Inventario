@@ -10,12 +10,21 @@ const PruebaSales = () => {
     const params = useParams();
 
     useEffect(() => {
+        let isMounted = true;
+
         async function fetchData() {
-            await actions.getSalesNextId();
-            await actions.getOneCustomer(localStorage.getItem('userId'));
+            if (isMounted) {
+                await actions.getSalesNextId();
+                await actions.getOneCustomer(localStorage.getItem('userId'));
+            }
         }
+
         fetchData();
-    }, [actions]);
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const [idprod, setIdprod] = useState();
     const [amount, setAmount] = useState(0);
@@ -23,39 +32,42 @@ const PruebaSales = () => {
     const [listSales, setListSales] = useState([]);
 
     const handleAddProduct = () => {
+        const validAmount = parseFloat(amount) || 0;
+        const validUnitPrice = parseFloat(store.prodOne.salesPrice) || 0;
+    
         const salesData = {
             idsales: store.nextid ? store.nextid.ID : null,
             iduser: localStorage.getItem('userId'),
             nit: store.customer ? store.customer.nit : null,
-            amount: amount,
-            unitPrice: store.prodOne.salesPrice,
+            amount: validAmount,
+            unitPrice: validUnitPrice,
             id_prod: store.prodOne.id_prod,
             prodname: store.prodOne.prodname,
             category: store.prodOne.category,
-            brand: store.prodOne.brand
+            brand: store.prodOne.brand,
+            subtotal: validAmount * validUnitPrice
         };
-
+    
         setListSales(listSales.concat([salesData]));
         console.log("valor de SALE-salesData", salesData);
         console.log("****** valor de listSales", listSales);
-
+    
         // Reset fields after adding product to the list
         setIdprod('');
         setAmount(0);
         setUnitPrice(0);
-    };
+    };    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        for (let sale of listSales) {
-            const success = await actions.postAddSales(sale);
-            if (!success) {
-                console.error("Error al agregar la venta para el producto:", sale.prodname);
-            }
+        const success = await actions.postAddSalesBatch(listSales);
+        if (success) {
+            console.log("Factura enviada correctamente");
+            setListSales([]); // Clear the list after submission
+        } else {
+            console.error("Error al enviar la factura");
         }
-        console.log("Factura enviada correctamente");
-        setListSales([]); // Clear the list after submission
     };
 
     return (
@@ -111,7 +123,7 @@ const PruebaSales = () => {
                                         <td>{item.brand}</td>
                                         <td>{item.amount}</td>
                                         <td>{item.unitPrice}</td>
-                                        <td>{item.amount * item.unitPrice}</td>
+                                        <td>{!isNaN(item.amount * item.unitPrice) ? item.amount * item.unitPrice : "0"}</td>
                                     </tr>
                                 ))}
                                 <tr>
@@ -135,7 +147,7 @@ const PruebaSales = () => {
                                         />
                                     </td>
                                     <td>{store.prodOne ? store.prodOne.salesPrice : 0}</td>
-                                    <td>{amount * store.prodOne.salesPrice}</td>
+                                    <td>{!isNaN(amount * store.prodOne.salesPrice) ? amount * store.prodOne.salesPrice : "0"}</td>
                                 </tr>
                             </tbody>
                         </table>
