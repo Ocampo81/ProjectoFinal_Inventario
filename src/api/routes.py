@@ -82,6 +82,13 @@ def addProducts1():
     respuesta = app.addProducts(data)
     return jsonify({"Message": respuesta}), 200
 
+
+@api.route('/productsentry', methods=['POST'])
+def addProdEntry():
+    data = request.json
+    respuesta = app.addProdEntry(data)
+    return jsonify({"Message": respuesta}), 200
+
 @api.route('/products', methods=['GET'])
 def getProducts():
     respuesta = app.getProducts()
@@ -105,6 +112,11 @@ def delProducts(id_prod):
      respuesta = app.delProducts(id_prod)
      print(respuesta)
      return jsonify({"Message" : respuesta}),200
+
+@api.route('/nextprodid/', methods=['GET'])
+def getNextProdId():
+    respuesta = app.getNextProdId()
+    return jsonify(respuesta), 200
 
 # EndPoint Category
 @api.route('/category', methods=['POST'])

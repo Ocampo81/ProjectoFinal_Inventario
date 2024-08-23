@@ -16,6 +16,7 @@ import Profile from './pages/Profile.jsx';
 import injectContext from "./store/appContext";
 import UserApproval from './pages/UserApproval.jsx';
 import PruebaSales_ from './pages/PruebaSales_.jsx';
+import ProductsEntry from'./pages/ProductsEntry.jsx';
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -40,6 +41,7 @@ const Layout = () => {
                         <Route element={<Profile />} path="/profile" /> 
                         <Route element={<PruebaSales_ />} path="/PruebaSales" />
                         <Route element={<UserApproval />} path="/user-approval" />
+                        <Route element={<ProductsEntry />} path="/productsentry" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>

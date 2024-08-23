@@ -13,7 +13,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             customers: [],
             customer: null, 
             categories: [],
-            nextid: null, 
+            nextid: null,
+            nextid_prod: [], 
             sales: [],
         },
         actions: {
@@ -156,6 +157,27 @@ const getState = ({ getStore, getActions, setStore }) => {
             getProductId: async (id) => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`);
                 if (data) setStore({ prodOne: data[0] });
+            },
+            getNextProdId: async () => {
+                
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/nextprodid`);
+                if (data) {
+                    setStore({ nextid_prod: data });
+                } else {
+                    setStore({ nextid_prod: null });
+                }
+            },
+            addProductentry: async (productData) => {
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/productsentry`, {
+                    method: "POST",
+                    body: JSON.stringify(productData),
+                    headers: { "Content-Type": "application/json" }
+                });
+                if (response && response.Message.message !== "Category doesn't exist") {
+                    await getActions().getProducts();
+                    return true;
+                }
+                return "Category doesn't exist";
             },
 
             getCustomer: async () => {

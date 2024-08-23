@@ -226,6 +226,8 @@ class ProductEntry(db.Model):
     date = db.Column(db.DateTime(), default=datetime.now())
     amount = db.Column(db.Integer, nullable=False)
     cost_price = db.Column(db.Integer, nullable=False)
+    amount_Prev = db.Column(db.Integer, nullable=False)
+    salesPrice_prev = db.Column(db.Integer, nullable=False)
     id_prod = db.Column(db.Integer, db.ForeignKey('products.id_prod'))
     Entryprod = relationship("Products", back_populates="EntryProduct")
     

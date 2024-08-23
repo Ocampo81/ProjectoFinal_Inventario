@@ -303,6 +303,36 @@ def addProducts(data):
     response_body = {"message": "PRODUCT created successfully"}
     return response_body
 
+def addProdEntry(data):
+    print("VALORES DE DATA EN productsentry ****", data)
+
+    newEntry = ProductEntry()
+    newEntry.cost_price = data.get("costPrice")
+    newEntry.amount = data.get("amount")
+    newEntry.id_prod = data.get("id_prod")
+    # Guardar el nuevo producto
+    product = db.session.execute(db.select(Products).filter_by(id_prod=data.get("id_prod"))).one_or_none()
+    product = product[0]
+    #entry = db.session.execute(db.select(ProductEntry).filter_by(id_prod=data.get("id_prod"))).order_by(Products.id_prod.desc()).first()
+
+    entry = db.session.execute(db.select(ProductEntry).order_by(ProductEntry.date.desc()).filter_by(id_prod=data.get("id_prod"))).first()
+     # campos en la tabla ProductEntry para tener el detalle de las entradas
+
+    if entry == None:
+        newEntry.amount_Prev = 0
+
+    newEntry.amount_Prev = entry[0].amount
+    newEntry.salesPrice_prev = product.salesPrice
+
+    product.stock = product.stock + int(data.get("amount"))
+    product.salesPrice = int(data.get("salesPrice"))
+    db.session.add(newEntry)
+    db.session.commit()
+    
+    
+    
+    response_body = {"message": "PRODUCT created successfully"}
+    return response_body
 
  
 
@@ -375,6 +405,13 @@ def delProducts(data):
     else:
         response_body = {"message": "Products not found", "nit": data}
         return response_body
+    
+def getNextProdId():
+     obj = db.session.query(Products).order_by(Products.id_prod.desc()).first()
+     nextId = obj.id_prod + 1 if obj else 1
+    #  print("Nex ID: ",obj, type(obj.idSales), nextId+1) 
+     response_body = {"ID": nextId}
+     return response_body
 
 # Functions for CategoryProduct
 
@@ -476,8 +513,12 @@ def addDetailSales(data):
 
 def getNextId():
      obj = db.session.query(Sales).order_by(Sales.idSales.desc()).first()
-     nextId = obj.idSales + 1 if obj else 1
-    #  print("Nex ID: ",obj, type(obj.idSales), nextId+1) 
+     print(obj)
+     if obj != None: 
+         nextId = obj.idSales + 1
+     else: 
+         nextId = 1
+    
      response_body = {"ID": nextId}
      return response_body
 

@@ -34,7 +34,7 @@ const PruebaSales = () => {
     const handleAddProduct = () => {
         const validAmount = parseFloat(amount) || 0;
         const validUnitPrice = parseFloat(store.prodOne.salesPrice) || 0;
-    
+
         const salesData = {
             idsales: store.nextid ? store.nextid.ID : null,
             iduser: localStorage.getItem('userId'),
@@ -47,16 +47,16 @@ const PruebaSales = () => {
             brand: store.prodOne.brand,
             subtotal: validAmount * validUnitPrice
         };
-    
+
         setListSales(listSales.concat([salesData]));
-        console.log("valor de SALE-salesData", salesData);
-        console.log("****** valor de listSales", listSales);
-    
+        // console.log("valor de SALE-salesData", salesData);
+        // console.log("****** valor de listSales", listSales);
+
         // Reset fields after adding product to the list
         setIdprod('');
         setAmount(0);
         setUnitPrice(0);
-    };    
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
