@@ -68,39 +68,41 @@ const UserApproval = () => {
     return (
         <div className="user-approval-page">
             <Navbar />
-            <div className="user-approval-container">
-                <h1>User Approval</h1>
-                <div className="user-list">
-                    {currentUsers.map(user => (
-                        <div key={user.id} className="user-item">
-                            <div className="user-details">
-                                <p><strong>Name:</strong> {user.name} {user.lastName}</p>
-                                <p><strong>Email:</strong> {user.email}</p>
+            <div className="main-content">
+                <div className="user-approval-container">
+                    <h1>User Approval</h1>
+                    <div className="user-list">
+                        {currentUsers.map(user => (
+                            <div key={user.id} className="user-item">
+                                <div className="user-details">
+                                    <p><strong>Name:</strong> {user.name} {user.lastName}</p>
+                                    <p><strong>Email:</strong> {user.email}</p>
+                                </div>
+                                <div>
+                                    <select
+                                        className="role-select"
+                                        value={selectedRoles[user.id] || ""}
+                                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                    >
+                                        <option value="">Select Role</option>
+                                        <option value="1">Admin</option>
+                                        <option value="2">Sales</option>
+                                        <option value="3">Inventory</option>
+                                    </select>
+                                    <button className="approve-btn" onClick={() => handleApprove(user.id)}>Approve</button>
+                                </div>
                             </div>
-                            <div>
-                                <select
-                                    className="role-select"
-                                    value={selectedRoles[user.id] || ""}
-                                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                                >
-                                    <option value="">Select Role</option>
-                                    <option value="1">Admin</option>
-                                    <option value="2">Sales</option>
-                                    <option value="3">Inventory</option>
-                                </select>
-                                <button className="approve-btn" onClick={() => handleApprove(user.id)}>Approve</button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div className="pagination">
-                    <button onClick={handlePreviousPage} className="page-btn">Previous</button>
-                    {pageNumbers.map(number => (
-                        <button key={number} onClick={() => paginate(number)} className="page-btn">
-                            {number}
-                        </button>
-                    ))}
-                    <button onClick={handleNextPage} className="page-btn">Next</button>
+                        ))}
+                    </div>
+                    <div className="pagination">
+                        <button onClick={handlePreviousPage} className="page-btn">Previous</button>
+                        {pageNumbers.map(number => (
+                            <button key={number} onClick={() => paginate(number)} className="page-btn">
+                                {number}
+                            </button>
+                        ))}
+                        <button onClick={handleNextPage} className="page-btn">Next</button>
+                    </div>
                 </div>
             </div>
         </div>
