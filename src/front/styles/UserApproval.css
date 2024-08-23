@@ -4,8 +4,15 @@
     padding: 20px;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    width: calc(100% - 120px); /* Ajusta el ancho disponible considerando un navbar de 120px de ancho */
+    margin-left: auto;
 }
 
 .user-approval-container {
