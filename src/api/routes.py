@@ -67,6 +67,7 @@ def getOneCustomer1(nit):
 
 @api.route('/customerid/<int:userId>', methods=['GET'])
 def getOneCustomerID(userId):
+    print("ingrese getOneCustomerID",userId )
     respuesta = app.getOneCustomerID(userId)
     return jsonify(respuesta), 200
 

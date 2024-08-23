@@ -11,7 +11,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             prodOne: [],
             employees: [],
             customers: [],
-            customer: null, 
+            customer: [], 
             categories: [],
             nextid: null,
             nextid_prod: [], 
@@ -191,6 +191,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             getOneCustomer: async (id) => {
+                console.log("DENTRO DEL FLUX GTEONECUSTOMER",id)
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/customerid/${id}`);
                 if (data) {
                     console.log("Datos de cliente recibidos del servidor:", data);

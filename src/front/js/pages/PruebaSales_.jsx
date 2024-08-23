@@ -15,6 +15,7 @@ const PruebaSales = () => {
         async function fetchData() {
             if (isMounted) {
                 await actions.getSalesNextId();
+                console.log("VALOR DE USERID", localStorage.getItem('userId'))
                 await actions.getOneCustomer(localStorage.getItem('userId'));
             }
         }

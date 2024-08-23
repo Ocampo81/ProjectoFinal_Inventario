@@ -223,7 +223,7 @@ def getOneCustomerID(data):
          .filter(User.id == data)
     result = db.session.execute(query)
     for customer in result.fetchall():
-        print(dict(customer._mapping))
+        print("DENTRO DE APP GETONE",dict(customer._mapping))
         customerList.append(dict(customer._mapping))
 
     return tuple(customerList) if customerList else None
