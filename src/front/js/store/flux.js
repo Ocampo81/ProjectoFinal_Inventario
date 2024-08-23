@@ -211,6 +211,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             postAddSalesBatch: async (salesList) => {
+                console.log("LISTA QUE VA PARA CREAR FACTURA dentro del Flux", salesList);
                 const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/sales`, {
                     method: "POST",
                     body: JSON.stringify({ salesList }),

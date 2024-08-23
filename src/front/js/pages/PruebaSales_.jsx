@@ -33,10 +33,10 @@ const PruebaSales = () => {
     const [listSales, setListSales] = useState([]);
 
     const handleAddProduct = () => {
-        if (!idprod || !amount || idprod.trim() === "" || amount.trim() === "") {
-            alert("Por favor, completa todos los campos antes de agregar un producto.");
-            return;
-        }
+        // if (!idprod || !amount || idprod.trim() === "" || amount.trim() === "") {
+        //     alert("Por favor, completa todos los campos antes de agregar un producto.");
+        //     return;
+        // }
 
         const validAmount = parseFloat(amount) || 0;
         const validUnitPrice = parseFloat(store.prodOne.salesPrice) || 0;
@@ -59,9 +59,10 @@ const PruebaSales = () => {
             subtotal: validAmount * validUnitPrice
         };
 
-        setListSales(listSales.concat([salesData]));
+        // setListSales(listSales.concat([salesData])); //original
+        setListSales(listSales_prev => [...listSales_prev, salesData])
         // console.log("valor de SALE-salesData", salesData);
-        // console.log("****** valor de listSales", listSales);
+        console.log("****** valor de listSales", listSales);
 
         // Reset fields after adding product to the list
         setIdprod('');
@@ -71,11 +72,17 @@ const PruebaSales = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        handleAddProduct(); //se adiciona porque cuando solo hay un producto no lo registra se envia en blanco
         const success = await actions.postAddSalesBatch(listSales);
         if (success) {
             console.log("Factura enviada correctamente");
             setListSales([]); // Clear the list after submission
+            setIdprod('');
+            setAmount(0);
+            setUnitPrice(0);
+            store.prodOne = [];
+            navigate("/PruebaSales");
+
         } else {
             console.error("Error al enviar la factura");
         }

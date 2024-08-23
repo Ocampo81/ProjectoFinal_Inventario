@@ -505,6 +505,7 @@ def addDetailSales(data):
     # Actualizar el stock
     stock_available = db.session.execute(db.select(Products.stock).filter((Products.id_prod == newDtSales.id_prod))).one_or_none()
     newstock = stock_available[0] - int(newDtSales.amount)
+    print("**** DETAILSALES :",newstock, '\n', stock_available[0], '\n', int(newDtSales.amount),'\n','\n' )
     db.session.query(Products).filter(Products.id_prod == newDtSales.id_prod).update({Products.stock : newstock})
     
     db.session.commit()

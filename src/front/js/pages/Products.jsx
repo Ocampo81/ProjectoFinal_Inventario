@@ -27,19 +27,20 @@ const Products = () => {
 
     useEffect(() => {
         actions.getProducts();
+        actions.getNextProdId();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const productData = {
-            prodname: productName,
+            prodname: store.nextid_prod.ID,
             brand: brand,
             salesPrice: salesPrice,
             stock: stock,
             category: category,
             id_prod: idProduct
         };
-    
+
         if (editMode) {
             await actions.updateProduct(editProductId, productData);
             setEditMode(false);
@@ -125,7 +126,7 @@ const Products = () => {
             setIsSuccessAlertVisible(true);
         }
     };
-    
+
 
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -144,6 +145,17 @@ const Products = () => {
                 <div className="product-container">
                     <h1>Product Management</h1>
                     <form className="product-form" onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Product ID:</label>
+                            <input
+                                type="text"
+                                placeholder={store.nextid_prod.ID}
+                                readOnly
+                            // value={idProduct}
+                            // onChange={(e) => setIdProduct(e.target.value)}
+                            // disabled={editMode}  // Deshabilita el input cuando estamos en modo edición
+                            />
+                        </div>
                         <div className="form-group">
                             <label>Product Name:</label>
                             <input
@@ -189,16 +201,7 @@ const Products = () => {
                                 onChange={(e) => setCategory(e.target.value)}
                             />
                         </div>
-                        <div className="form-group">
-                            <label>Product ID:</label>
-                            <input
-                                type="text"
-                                placeholder="Product ID"
-                                value={idProduct}
-                                onChange={(e) => setIdProduct(e.target.value)}
-                                disabled={editMode}  // Deshabilita el input cuando estamos en modo edición
-                            />
-                        </div>
+
                         <button type="submit">
                             {editMode ? "Update Product" : "Add Product"}
                         </button>
@@ -208,9 +211,9 @@ const Products = () => {
                             </button>
                         )}
                     </form>
-        
+
                     <div className="divider"></div> {/* Aquí está el divisor */}
-        
+
                     <h2>Product List</h2>
                     <div className="product-list">
                         {currentProducts.map((product) => (
@@ -265,7 +268,7 @@ const Products = () => {
                             Next Page
                         </button>
                     </div>
-        
+
                     {isSuccessAlertVisible && (
                         <SuccessAlert
                             title={successTitle}
@@ -274,7 +277,7 @@ const Products = () => {
                         />
                     )}
                 </div>
-        
+
                 {isCategoryModalOpen && (
                     <div className="modal">
                         <div className="modal-content">
@@ -298,6 +301,6 @@ const Products = () => {
             </div>
         </div>
     );
-}    
+}
 
 export default Products;
