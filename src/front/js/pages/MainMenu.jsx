@@ -15,7 +15,7 @@ const MainMenu = () => {
               <h2>Products</h2>
               <p>Manage your products</p>
             </Link>
-            <Link to="/clients" className="menu-item">
+            <Link to="/clients" className="menu-item">  
               <i className="fas fa-users fa-3x menu-icon"></i>
               <h2>Clients</h2>
               <p>Manage your clients</p>

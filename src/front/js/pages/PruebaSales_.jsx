@@ -15,7 +15,7 @@ const PruebaSales = () => {
         async function fetchData() {
             if (isMounted) {
                 await actions.getSalesNextId();
-                console.log("VALOR DE USERID", localStorage.getItem('userId'))
+                console.log("VALOR DE USERID", localStorage.getItem('userId'));
                 await actions.getOneCustomer(localStorage.getItem('userId'));
             }
         }
@@ -27,24 +27,31 @@ const PruebaSales = () => {
         };
     }, []);
 
-    const [idprod, setIdprod] = useState();
+    const [idprod, setIdprod] = useState("");
     const [amount, setAmount] = useState(0);
     const [unitPrice, setUnitPrice] = useState(0);
     const [listSales, setListSales] = useState([]);
 
     const handleAddProduct = () => {
-        // if (!idprod || !amount || idprod.trim() === "" || amount.trim() === "") {
-        //     alert("Por favor, completa todos los campos antes de agregar un producto.");
-        //     return;
-        // }
-
-        const validAmount = parseFloat(amount) || 0;
-        const validUnitPrice = parseFloat(store.prodOne.salesPrice) || 0;
-
-        if (validAmount <= 0) {
-            alert("La cantidad debe ser mayor a cero.");
+        // Validaciones
+        if (!idprod || idprod.trim() === "") {
+            alert("Por favor, ingresa un ID de producto válido antes de agregar.");
             return;
         }
+
+        if (!store.prodOne || !store.prodOne.id_prod) {
+            alert("Producto no encontrado. Por favor, asegúrate de que el ID de producto sea correcto.");
+            return;
+        }
+
+        const validAmount = parseFloat(amount);
+        if (isNaN(validAmount) || validAmount <= 0) {
+            alert("La cantidad debe ser un número mayor a cero.");
+            return;
+        }
+
+        // Si todas las validaciones pasan, procede a agregar el producto a la lista
+        const validUnitPrice = parseFloat(store.prodOne.salesPrice) || 0;
 
         const salesData = {
             idsales: store.nextid ? store.nextid.ID : null,
@@ -59,34 +66,40 @@ const PruebaSales = () => {
             subtotal: validAmount * validUnitPrice
         };
 
-        // setListSales(listSales.concat([salesData])); //original
-        setListSales(listSales_prev => [...listSales_prev, salesData])
-        // console.log("valor de SALE-salesData", salesData);
-        console.log("****** valor de listSales", listSales);
+        setListSales(listSales_prev => [...listSales_prev, salesData]);
 
-        // Reset fields after adding product to the list
+        // Resetear los campos después de añadir el producto
         setIdprod('');
         setAmount(0);
         setUnitPrice(0);
+
+        // Limpiar store.prodOne después de añadir el producto
+        setStore({ prodOne: {} });
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        handleAddProduct(); //se adiciona porque cuando solo hay un producto no lo registra se envia en blanco
+    
+        // Verificar si hay un producto que no ha sido agregado a la lista
+        if (idprod && store.prodOne && store.prodOne.id_prod && amount > 0) {
+            handleAddProduct(); // Agregar el producto a la lista automáticamente si no se ha hecho
+        }
+    
         const success = await actions.postAddSalesBatch(listSales);
         if (success) {
             console.log("Factura enviada correctamente");
-            setListSales([]); // Clear the list after submission
+            setListSales([]); // Limpiar la lista después de enviar
             setIdprod('');
             setAmount(0);
             setUnitPrice(0);
-            store.prodOne = [];
+            setStore({ prodOne: {} });
             navigate("/PruebaSales");
-
+    
         } else {
             console.error("Error al enviar la factura");
         }
     };
+    
 
     return (
         <section className="text-center text-lg-start">
@@ -151,7 +164,10 @@ const PruebaSales = () => {
                                             <input
                                                 type="number"
                                                 value={idprod}
-                                                onChange={(e) => actions.getProductId(e.target.value)}
+                                                onChange={(e) => {
+                                                    setIdprod(e.target.value);
+                                                    actions.getProductId(e.target.value);
+                                                }}
                                                 placeholder="Product ID"
                                             />
                                         </td>
