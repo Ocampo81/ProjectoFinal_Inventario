@@ -113,6 +113,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             addProduct: async (productData) => {
+                console.log("productData PRODUCTS en FLUX", productData)
                 const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products`, {
                     method: "POST",
                     body: JSON.stringify(productData),

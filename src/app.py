@@ -282,10 +282,11 @@ def addProducts(data):
     newProducts.idCatProd = Category_result[0].idCatProd
 
     # campos en la tabla ProductEntry para tener el detalle de las entradas
-    newEntry.cost_price = data.get("cost_price")
-    newEntry.amount = data.get("amount")
+    newEntry.cost_price = 0
+    newEntry.amount = 0
     newEntry.id_prod = data.get("id_prod")
-
+    newEntry.amount_Prev = 0
+    newEntry.salesPrice_prev = 0
     # Verificar si el producto ya existe
     Product_result = db.session.execute(db.select(Products).filter_by(id_prod=newProducts.id_prod)).one_or_none()
     if Product_result is not None:

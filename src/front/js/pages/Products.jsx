@@ -33,14 +33,14 @@ const Products = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const productData = {
-            prodname: store.nextid_prod.ID,
+            prodname: productName,
             brand: brand,
             salesPrice: salesPrice,
             stock: stock,
             category: category,
-            id_prod: idProduct
+            id_prod: store.nextid_prod.ID
         };
-
+        console.log("productData PRODUCTS", productData)
         if (editMode) {
             await actions.updateProduct(editProductId, productData);
             setEditMode(false);
