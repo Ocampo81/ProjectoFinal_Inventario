@@ -9,7 +9,7 @@ const Products = () => {
     const [brand, setBrand] = useState("");
     const [salesPrice, setSalesPrice] = useState("");
     const [stock, setStock] = useState("");
-    const [categoryId, setCategoryId] = useState(""); // Cambiado a id_prod
+    const [categoryId, setCategoryId] = useState(""); 
     const [description, setDescription] = useState("");
     const [editMode, setEditMode] = useState(false);
     const [editProductId, setEditProductId] = useState(null);
@@ -26,7 +26,7 @@ const Products = () => {
             brand: brand,
             salesPrice: salesPrice,
             stock: stock,
-            idCatProd: categoryId, // Este campo se envía como idCatProd, lo que es correcto
+            idCatProd: categoryId, 
             description: description,
         };
 
@@ -54,7 +54,7 @@ const Products = () => {
         setBrand(product.brand);
         setSalesPrice(product.salesPrice);
         setStock(product.stock);
-        setCategoryId(product.id_prod); // Cambiado a id_prod para editar
+        setCategoryId(product.id_prod); 
         setDescription(product.description);
     };
 
@@ -135,7 +135,7 @@ const Products = () => {
                                     <p><strong>Brand:</strong> {product.brand}</p>
                                     <p><strong>Sales Price:</strong> {product.salesPrice}</p>
                                     <p><strong>Stock:</strong> {product.stock}</p>
-                                    <p><strong>Category ID:</strong> {product.id_prod}</p> {/* Cambiado a id_prod */}
+                                    <p><strong>Category ID:</strong> {product.id_prod}</p> 
                                     <p><strong>Description:</strong> {product.description}</p>
                                 </div>
                             )}
