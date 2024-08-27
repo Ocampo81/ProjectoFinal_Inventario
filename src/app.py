@@ -285,8 +285,8 @@ def addProducts(data):
     newEntry.cost_price = data.get("costPrice")
     newEntry.amount = data.get("amount")
     newEntry.id_prod = data.get("id_prod")
-    newEntry.amount_Prev = 0
-    newEntry.salesPrice_prev = 0
+    newEntry.amount_Prev = 0  # se asigna en "cero" porque el producto es nuevo, no exite cantidad anterior
+    newEntry.salesPrice_prev = 0 # se asigna en "cero" porque el producto es nuevo, no exite precio de venta anterior
     # Verificar si el producto ya existe
     Product_result = db.session.execute(db.select(Products).filter_by(id_prod=newProducts.id_prod)).one_or_none()
     if Product_result is not None:
@@ -315,21 +315,20 @@ def addProdEntry(data):
     #entry = db.session.execute(db.select(ProductEntry).filter_by(id_prod=data.get("id_prod"))).order_by(Products.id_prod.desc()).first()
 
     entry = db.session.execute(db.select(ProductEntry).order_by(ProductEntry.date.desc()).filter_by(id_prod=data.get("id_prod"))).first()
-     # campos en la tabla ProductEntry para tener el detalle de las entradas
 
+     # campos en la tabla ProductEntry para tener el detalle de las entradas
     if entry == None:
         newEntry.amount_Prev = 0
-
-    newEntry.amount_Prev = entry[0].amount
+    else:
+        newEntry.amount_Prev = entry[0].amount
+    
     newEntry.salesPrice_prev = product.salesPrice
 
     product.stock = product.stock + int(data.get("amount"))
     product.salesPrice = int(data.get("salesPrice"))
     db.session.add(newEntry)
     db.session.commit()
-    
-    
-    
+
     response_body = {"message": "PRODUCT created successfully"}
     return response_body
 
