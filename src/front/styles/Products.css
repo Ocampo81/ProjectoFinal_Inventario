@@ -11,7 +11,7 @@
 .main-content {
     display: flex;
     justify-content: center;
-    width: calc(100% - 120px); /* Ajusta el ancho disponible considerando un navbar de 120px de ancho */
+    width: calc(100% - 120px); 
     margin-left: auto;
 }
 
@@ -103,7 +103,7 @@
 }
 
 .product-item span {
-    margin-right: 300px; /* Añadir espacio entre el nombre del producto y los botones */
+    margin-right: 300px; 
 }
 
 .product-item:hover {
@@ -204,4 +204,21 @@
 
 .modal-content button:hover {
     background-color: #ffa500;
+}
+
+.back-button {
+    display: inline-block;
+    color: #ffb700;
+    text-decoration: none;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+
+.back-button:hover {
+    color: #ffa500;
+}
+
+.back-button i {
+    margin-right: 5px;
 }

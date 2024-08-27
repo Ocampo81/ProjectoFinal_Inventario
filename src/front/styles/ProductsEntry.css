@@ -45,6 +45,7 @@
     border: none;
     border-radius: 5px;
 }
+
 .product-form td {
     width: 70%;
     padding: 10px;
@@ -52,6 +53,7 @@
     border: none;
     border-radius: 5px;
 }
+
 .product-form button {
     background-color: #ffb700;
     color: #2d2d2d;
@@ -102,7 +104,7 @@
 }
 
 .product-item span {
-    margin-right: 300px; /* Añadir espacio entre el nombre del producto y los botones */
+    margin-right: 300px;
 }
 
 .product-item:hover {
@@ -203,4 +205,31 @@
 
 .modal-content button:hover {
     background-color: #ffa500;
+}
+
+.back-button {
+    display: inline-block;
+    color: #ffb700;
+    text-decoration: none;
+    font-size: 1.2rem;
+    position: absolute;
+    top: 20px;
+    left: 140px; 
+    transition: color 0.3s;
+}
+
+.back-button:hover {
+    color: #ffa500;
+}
+
+.back-button i {
+    margin-right: 5px;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    width: 100%; 
+    margin-left: 0; 
+    padding-top: 60px; 
 }
