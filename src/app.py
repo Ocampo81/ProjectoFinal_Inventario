@@ -339,14 +339,34 @@ def addProdEntry(data):
 
 def getProducts():
     productsList=[]
+    productsList1=[]
+    prueba = []
+    count = 0
     # query = db.select(Customer.nit,Customer.phone,Customer.date, Address.address,Address.country,Address.city).join(Address, Customer.nit == Address.nit)
-    query = db.select(Products.id_prod,Products.prodname,Products.brand, Products.salesPrice, Products.stock, Products.Catproducts, CategoryProduct.category,CategoryProduct.description).join(CategoryProduct, Products.idCatProd == CategoryProduct.idCatProd)
+    query = db.select(Products.id_prod,Products.prodname,Products.brand, Products.salesPrice, Products.stock, Products.Catproducts, CategoryProduct.category,CategoryProduct.description,ProductEntry.cost_price,ProductEntry.amount )\
+        .join(CategoryProduct, Products.idCatProd == CategoryProduct.idCatProd)\
+        .join(ProductEntry, Products.id_prod == ProductEntry.id_prod).order_by(ProductEntry.id.desc())
+    
     result = db.session.execute(query)
 
     for products in result.fetchall():
-        print("GETPRODUCTS: ", products._mapping)
-        productsList.append(dict(products._mapping))
 
+        print("GETPRODUCTS: ", products._mapping)
+        # productsList.append(dict(products._mapping))
+
+        
+        print("GETPRODUCTS IDPROD: ", products._mapping.id_prod)
+        
+        # for i in range(len(productsList)):
+        #     print(i)
+        # print("productsList FUERA IF ***",productsList[i].get("id_prod"))
+        if products._mapping.id_prod not in prueba:
+            prueba.append(products._mapping.id_prod)
+
+            print("Valor de prueba:", prueba)
+            productsList.append(dict(products._mapping))
+        
+    print("productsList *****  1   ***",productsList)
     return tuple(productsList)
 
 def getOneProducts(data):

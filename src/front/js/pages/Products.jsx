@@ -9,7 +9,9 @@ const Products = () => {
     const [productName, setProductName] = useState("");
     const [brand, setBrand] = useState("");
     const [salesPrice, setSalesPrice] = useState("");
+    const [costPrice, setCostPrice] = useState("");
     const [stock, setStock] = useState("");
+    const [amount, setAmount] = useState("");
     const [category, setCategory] = useState("");
     const [idProduct, setIdProduct] = useState("");
     const [editMode, setEditMode] = useState(false);
@@ -36,7 +38,9 @@ const Products = () => {
             prodname: productName,
             brand: brand,
             salesPrice: salesPrice,
+            CostPrice: costPrice,
             stock: stock,
+            amount: amount,
             category: category,
             id_prod: store.nextid_prod.ID
         };
@@ -50,7 +54,9 @@ const Products = () => {
             setProductName("");
             setBrand("");
             setSalesPrice("");
+            setCostPrice("")
             setStock("");
+            setAmount("");
             setCategory("");
             setIdProduct("");
         } else {
@@ -62,8 +68,10 @@ const Products = () => {
                 setSuccessMessage("The product was added successfully.");
                 setProductName("");
                 setBrand("");
+                setCostPrice("")
                 setSalesPrice("");
                 setStock("");
+                setAmount("");
                 setCategory("");
                 setIdProduct("");
             }
@@ -78,6 +86,8 @@ const Products = () => {
         setProductName(product.prodname);
         setBrand(product.brand);
         setSalesPrice(product.salesPrice);
+        setCostPrice(product.CostPrice);
+        setAmount(product.amount);
         setStock(product.stock);
         setCategory(product.category);
         setIdProduct(product.id_prod);
@@ -109,8 +119,10 @@ const Products = () => {
         setEditProductId(null);
         setProductName("");
         setBrand("");
+        setCostPrice("");
         setSalesPrice("");
         setStock("");
+        setAmount("");
         setCategory("");
         setIdProduct("");
     };
@@ -175,12 +187,30 @@ const Products = () => {
                             />
                         </div>
                         <div className="form-group">
+                            <label>Cost Price:</label>
+                            <input
+                                type="number"
+                                placeholder="Cost Price"
+                                value={costPrice}
+                                onChange={(e) => setCostPrice(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group">
                             <label>Sales Price:</label>
                             <input
                                 type="number"
                                 placeholder="Sales Price"
                                 value={salesPrice}
                                 onChange={(e) => setSalesPrice(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Amount:</label>
+                            <input
+                                type="Amount"
+                                placeholder="amount"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
                             />
                         </div>
                         <div className="form-group">
@@ -231,8 +261,10 @@ const Products = () => {
                                 {expandedProductId === product.id_prod && (
                                     <div className="product-details">
                                         <p><strong>Brand:</strong> {product.brand}</p>
+                                        <p><strong>Cost Price:</strong> {product.costPrice}</p>
                                         <p><strong>Sales Price:</strong> {product.salesPrice}</p>
                                         <p><strong>Stock:</strong> {product.stock}</p>
+                                        <p><strong>Amount:</strong> {product.Amount}</p>
                                         <p><strong>Category:</strong> {product.category}</p>
                                         <p><strong>Description:</strong> {product.description ? product.description : "No description available"}</p> {/* Manejo de descripción nula */}
                                         <p><strong>Product ID:</strong> {product.id_prod}</p>
