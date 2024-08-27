@@ -1,13 +1,12 @@
-/* Estilos específicos para la página de login */
 .login-page {
-    height: 100vh; /* Asegura que ocupe toda la altura de la pantalla */
+    height: 100vh; 
     margin: 0;
-    background-color: #2d2d2d; /* Fondo oscuro */
+    background-color: #2d2d2d; 
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0; /* Añade un padding para el espacio superior e inferior */
+    padding: 20px 0; 
 }
 
 .login-page .login-card {
@@ -15,8 +14,8 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    margin: auto; /* Centra la tarjeta horizontalmente */
-    max-height: calc(100vh - 40px); /* Asegura que la tarjeta no supere la altura de la pantalla */
+    margin: auto; 
+    max-height: calc(100vh - 40px); 
 }
 
 .login-page .form-control {
@@ -55,6 +54,6 @@
     padding: 0rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Ajusta el contenido a la parte superior */
+    justify-content: flex-start;
     height: 100%;
 }

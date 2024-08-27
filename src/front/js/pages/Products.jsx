@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
 import Navbar from "../component/Navbar";
 import "../../styles/Products.css";
 import SuccessAlert from "../component/SuccessAlert";
@@ -154,6 +155,10 @@ const Products = () => {
         <div className="products-page">
             <Navbar />
             <div className="main-content">
+                <Link to="/products-menu" className="back-button">
+                    <i className="fas fa-arrow-left"></i> Back
+                </Link>
+
                 <div className="product-container">
                     <h1>Product Management</h1>
                     <form className="product-form" onSubmit={handleSubmit}>

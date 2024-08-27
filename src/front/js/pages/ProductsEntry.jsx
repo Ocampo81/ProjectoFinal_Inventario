@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
+import { Link } from "react-router-dom";
 import Navbar from "../component/Navbar";
 import "../../styles/ProductsEntry.css";
 import SuccessAlert from "../component/SuccessAlert";
@@ -34,8 +35,6 @@ const ProductsEntry = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const productData = {
-            // prodname: store.prodOne.prodname,
-            // brand: store.prodOne.brand,
             salesPrice: salesPrice,
             costPrice: costPrice,
             amount: amount,
@@ -43,8 +42,6 @@ const ProductsEntry = () => {
         };
 
         const result = await actions.addProductentry(productData);
-
-
     };
 
     const handleEdit = (product) => {
@@ -66,8 +63,8 @@ const ProductsEntry = () => {
     };
 
     function valida(salesprice) {
-        setSuccessTitle("Atencion");
-        setSuccessMessage("The salesprice Can't < than Cost price.");
+        setSuccessTitle("Atención");
+        setSuccessMessage("The sales price can't be less than cost price.");
         setIsSuccessAlertVisible(true);
     };
 
@@ -108,7 +105,6 @@ const ProductsEntry = () => {
         }
     };
 
-
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = store.products
@@ -118,12 +114,15 @@ const ProductsEntry = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const nextPage = () => setCurrentPage((prevPage) => prevPage + 1);
     const prevPage = () => setCurrentPage((prevPage) => prevPage - 1);
-    console.log(store.nextid_prod.ID);
-    const nada = store.nextid_prod;
-    console.log("nada", nada)
+
     return (
         <div className="productsentry-page">
             <Navbar />
+            {/* Botón de regreso */}
+            <Link to="/products-menu" className="back-button">
+                <i className="fas fa-arrow-left"></i> Back
+            </Link>
+
             <div className="product-container">
                 <h1>Product Entry</h1>
                 <form className="product-form" onSubmit={handleSubmit}>
@@ -131,18 +130,13 @@ const ProductsEntry = () => {
                         <label>Product ID:</label>
                         <input
                             type="number"
-                            // name={idProduct}
                             value={idProduct}
                             onChange={(e) => actions.getProductId(e.target.value)}
-
                         />
                     </div>
                     <div className="form-group">
-
                         <label>Product Name:</label>
                         <td>{store.prodOne ? store.prodOne.prodname : "N/A"}</td>
-
-
                     </div>
                     <div className="form-group">
                         <label>Brand:</label>
@@ -168,18 +162,14 @@ const ProductsEntry = () => {
                             placeholder={store.prodOne.salesPrice}
                             value={salesPrice}
                             onChange={(e) => setSalesPrice(e.target.value)}
-
                             onKeyDown={(e) => {
                                 if (salesPrice > costPrice) {
-                                    console.log("OK OK  salesPrice", salesPrice, costPrice)
-                                }
-                                else {
+                                    console.log("OK salesPrice", salesPrice, costPrice)
+                                } else {
                                     console.log("error salesPrice", salesPrice)
                                     valida(salesPrice)
                                 }
                             }}
-
-
                         />
                     </div>
                     <div className="form-group">
@@ -192,18 +182,13 @@ const ProductsEntry = () => {
                         />
                     </div>
 
-
                     <button type="submit">
                         Add Entry
                     </button>
                     <button type="button" onClick={handleCancel}>
                         Cancel
                     </button>
-
                 </form>
-
-                <div className="divider"></div> {/* Aquí está el divisor */}
-
             </div>
         </div>
     );

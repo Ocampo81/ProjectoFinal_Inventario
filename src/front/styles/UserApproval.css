@@ -11,7 +11,7 @@
 .main-content {
     display: flex;
     justify-content: center;
-    width: calc(100% - 120px); /* Ajusta el ancho disponible considerando un navbar de 120px de ancho */
+    width: calc(100% - 120px);
     margin-left: auto;
 }
 
@@ -44,8 +44,8 @@
 
 .user-details {
     flex-grow: 1;
-    margin-right: 20px; /* Asegura un espacio constante entre el correo y el botón */
-    text-align: left; /* Alinea el texto del correo a la izquierda */
+    margin-right: 20px; 
+    text-align: left;
 }
 
 .role-select {
@@ -54,7 +54,7 @@
     border: none;
     border-radius: 5px;
     margin-right: 10px;
-    min-width: 150px; /* Establece un ancho mínimo para el select */
+    min-width: 150px; 
 }
 
 .approve-btn {

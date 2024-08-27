@@ -13,7 +13,7 @@
     display: flex;
     justify-content: center; 
     width: calc(100% - 120px); 
-    margin-left: 120px; /* Asegura que el contenedor esté alineado a la derecha del navbar */
+    margin-left: 120px; 
 }
 
 .invoice-container {
@@ -102,8 +102,8 @@
     }
 
     .main-content {
-        width: 100%; /* Asegura que ocupe todo el ancho disponible en pantallas pequeñas */
-        margin-left: 0; /* Elimina el margen izquierdo en pantallas pequeñas */
+        width: 100%; 
+        margin-left: 0; 
     }
 
     .invoice-container {

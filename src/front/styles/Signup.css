@@ -1,5 +1,3 @@
-/* Encapsulando los estilos en .signup-page */
-
 .signup-page {
     background-color: #2d2d2d;
     margin: 0;
@@ -16,7 +14,7 @@
     align-items: center;
     min-height: 100vh;
     width: 100%;
-    overflow-y: auto; /* Habilita el desplazamiento vertical */
+    overflow-y: auto; 
 }
 
 .signup-page .card {
@@ -64,7 +62,7 @@
     color: #ffffff;
 }
 
-/* Imagen lateral */
+
 .signup-page img {
     border-radius: 10px 0 0 10px;
     height: 100%;
@@ -73,7 +71,7 @@
     overflow: hidden;
 }
 
-/* Ajustes para evitar el desplazamiento vertical */
+
 .signup-page .container {
     min-height: 100vh;
     display: flex;
@@ -83,7 +81,7 @@
     overflow-y: auto;
 }
 
-/* Elimina los márgenes de la fila para centrar mejor */
+
 .signup-page .row.g-0 {
     margin: 0;
     padding: 0;
@@ -92,7 +90,7 @@
     align-items: center;
 }
 
-/* Estilo para el enlace "Back to login" */
+
 .signup-page .text-light {
     color: #ffb700;
     text-decoration: none;

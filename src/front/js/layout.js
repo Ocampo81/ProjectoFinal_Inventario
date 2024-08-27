@@ -16,7 +16,8 @@ import Profile from './pages/Profile.jsx';
 import injectContext from "./store/appContext";
 import UserApproval from './pages/UserApproval.jsx';
 import PruebaSales_ from './pages/PruebaSales_.jsx';
-import ProductsEntry from'./pages/ProductsEntry.jsx';
+import ProductsEntry from './pages/ProductsEntry.jsx';
+import ProductsMenu from './pages/ProductsMenu.jsx'; 
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -33,7 +34,9 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<RegisterCompany />} path="/register-company" />
                         <Route element={<MainMenu />} path="/main-menu" />
+                        <Route element={<ProductsMenu />} path="/products-menu" /> 
                         <Route element={<Products />} path="/products" />
+                        <Route element={<ProductsEntry />} path="/products-entry" /> 
                         <Route element={<Clients />} path="/clients" />
                         <Route element={<Employees />} path="/employees" />
                         <Route element={<Sales />} path="/sales" />
@@ -41,7 +44,6 @@ const Layout = () => {
                         <Route element={<Profile />} path="/profile" /> 
                         <Route element={<PruebaSales_ />} path="/PruebaSales" />
                         <Route element={<UserApproval />} path="/user-approval" />
-                        <Route element={<ProductsEntry />} path="/productsentry" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>

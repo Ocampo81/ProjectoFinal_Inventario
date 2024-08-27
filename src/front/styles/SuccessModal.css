@@ -1,4 +1,3 @@
-/* Fondo que oscurece el resto de la página */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -27,25 +26,25 @@
     position: absolute !important;
     top: 10px !important;
     right: 10px !important;
-    background-color: #ffb700 !important; /* Fondo del mismo color que el botón OK */
-    border: none !important; /* Sin borde */
+    background-color: #ffb700 !important; 
+    border: none !important; 
     color: #2d2d2d !important;
-    font-size: 18px !important; /* Tamaño de la fuente para la "X" */
+    font-size: 18px !important; 
     cursor: pointer !important;
-    width: 28px !important; /* Ancho del botón */
-    height: 28px !important; /* Altura del botón */
+    width: 28px !important;
+    height: 28px !important; 
     padding: 0 !important;
-    line-height: 28px !important; /* Centrado vertical de la "X" */
+    line-height: 28px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border-radius: 5px !important; /* Bordes redondeados */
-    box-sizing: border-box !important; /* Asegura que el padding y borde no afecten el tamaño */
+    border-radius: 5px !important; 
+    box-sizing: border-box !important;
 }
 
 .close-button:hover {
-    background-color: #ffa500 !important; /* Cambia el color de fondo al pasar el cursor */
-    color: #ffffff !important; /* Cambia el color de la "X" al pasar el cursor */
+    background-color: #ffa500 !important; 
+    color: #ffffff !important; 
 }
 
 /* Título del modal */
