@@ -38,7 +38,7 @@ const Products = () => {
             prodname: productName,
             brand: brand,
             salesPrice: salesPrice,
-            CostPrice: costPrice,
+            costPrice: costPrice,
             stock: stock,
             amount: amount,
             category: category,
@@ -86,7 +86,7 @@ const Products = () => {
         setProductName(product.prodname);
         setBrand(product.brand);
         setSalesPrice(product.salesPrice);
-        setCostPrice(product.CostPrice);
+        setCostPrice(product.costPrice);
         setAmount(product.amount);
         setStock(product.stock);
         setCategory(product.category);
@@ -261,10 +261,10 @@ const Products = () => {
                                 {expandedProductId === product.id_prod && (
                                     <div className="product-details">
                                         <p><strong>Brand:</strong> {product.brand}</p>
-                                        <p><strong>Cost Price:</strong> {product.costPrice}</p>
+                                        <p><strong>Cost Price:</strong> {product.cost_price}</p>
                                         <p><strong>Sales Price:</strong> {product.salesPrice}</p>
                                         <p><strong>Stock:</strong> {product.stock}</p>
-                                        <p><strong>Amount:</strong> {product.Amount}</p>
+                                        <p><strong>Amount:</strong> {product.amount}</p>
                                         <p><strong>Category:</strong> {product.category}</p>
                                         <p><strong>Description:</strong> {product.description ? product.description : "No description available"}</p> {/* Manejo de descripción nula */}
                                         <p><strong>Product ID:</strong> {product.id_prod}</p>

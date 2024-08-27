@@ -266,7 +266,7 @@ def addProducts(data):
     newProducts = Products()
     newEntry = ProductEntry()
     category_name = data.get("category").upper()
-
+    print("category_name :*****",category_name)
     # Obtener idCatProd basado en el nombre de la categoría
     Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=category_name)).one_or_none()
     
@@ -278,12 +278,12 @@ def addProducts(data):
     newProducts.prodname = data.get("prodname").upper()
     newProducts.brand = data.get("brand").upper()
     newProducts.salesPrice = data.get("salesPrice")
-    newProducts.stock = data.get("stock")
+    newProducts.stock = data.get("amount")
     newProducts.idCatProd = Category_result[0].idCatProd
 
     # campos en la tabla ProductEntry para tener el detalle de las entradas
-    newEntry.cost_price = 0
-    newEntry.amount = 0
+    newEntry.cost_price = data.get("costPrice")
+    newEntry.amount = data.get("amount")
     newEntry.id_prod = data.get("id_prod")
     newEntry.amount_Prev = 0
     newEntry.salesPrice_prev = 0
@@ -298,9 +298,7 @@ def addProducts(data):
     db.session.commit()
     db.session.add(newEntry)
     db.session.commit()
-    
-    
-    
+
     response_body = {"message": "PRODUCT created successfully"}
     return response_body
 
@@ -339,10 +337,8 @@ def addProdEntry(data):
 
 def getProducts():
     productsList=[]
-    productsList1=[]
     prueba = []
-    count = 0
-    # query = db.select(Customer.nit,Customer.phone,Customer.date, Address.address,Address.country,Address.city).join(Address, Customer.nit == Address.nit)
+    
     query = db.select(Products.id_prod,Products.prodname,Products.brand, Products.salesPrice, Products.stock, Products.Catproducts, CategoryProduct.category,CategoryProduct.description,ProductEntry.cost_price,ProductEntry.amount )\
         .join(CategoryProduct, Products.idCatProd == CategoryProduct.idCatProd)\
         .join(ProductEntry, Products.id_prod == ProductEntry.id_prod).order_by(ProductEntry.id.desc())
@@ -350,23 +346,9 @@ def getProducts():
     result = db.session.execute(query)
 
     for products in result.fetchall():
-
-        print("GETPRODUCTS: ", products._mapping)
-        # productsList.append(dict(products._mapping))
-
-        
-        print("GETPRODUCTS IDPROD: ", products._mapping.id_prod)
-        
-        # for i in range(len(productsList)):
-        #     print(i)
-        # print("productsList FUERA IF ***",productsList[i].get("id_prod"))
         if products._mapping.id_prod not in prueba:
             prueba.append(products._mapping.id_prod)
-
-            print("Valor de prueba:", prueba)
             productsList.append(dict(products._mapping))
-        
-    print("productsList *****  1   ***",productsList)
     return tuple(productsList)
 
 def getOneProducts(data):
