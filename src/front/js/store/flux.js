@@ -16,6 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             nextid: null,
             nextid_prod: [], 
             sales: [],
+            states: [],
         },
         actions: {
             fetchWithCheck: async (url, options = {}) => {
@@ -31,7 +32,40 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return null;
                 }
             },
-
+            getToken: async () => { 
+                const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/getaccesstoken", {
+                    body: JSON.stringify(response),
+                    headers: {
+                    "Accept": "application/json",
+                    "api-token": "uXV-d_QF25Rl209jI9zpmkI3VXDlPp8j1vA_aMJ9KdRHT9E3UwX5bxNhEBWhlZiqS2A",
+                    "user-email": "gespana26@yahoo.com"
+                    }
+                });
+                if (response) {
+                    
+                        // setStore({ user: response.Message });
+                        localStorage.setItem("apiToken", response.auth_token);
+                        console.log("localStorage.getItem('apiToken')", localStorage.getItem('apiToken'));
+                        // const token = localStorage.getItem('apiToken');
+                        // console.log("VALOR DE TOKEN", token);
+                        // actions.getStates(token);
+                        return true;
+                    
+                }
+                return false;
+            },
+            getStates: async (token) => { 
+                const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/states/colombia",{
+                    headers : { 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(response),
+                });
+                if (response) {
+                    setStore({ states: response.state_name });
+                    console.log(setStore.states)
+                    return true;
+                }
+                return false;
+            },
             getMessage: async () => {
                 const data = await getActions().fetchWithCheck(process.env.BACKEND_URL + "/api/hello");
                 if (data) setStore({ message: data.message });

@@ -19,6 +19,9 @@ import PruebaSales_ from './pages/PruebaSales_.jsx';
 import ProductsEntry from './pages/ProductsEntry.jsx';
 import ProductsMenu from './pages/ProductsMenu.jsx'; 
 
+import States from './pages/States.jsx';
+
+
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
@@ -44,6 +47,7 @@ const Layout = () => {
                         <Route element={<Profile />} path="/profile" /> 
                         <Route element={<PruebaSales_ />} path="/PruebaSales" />
                         <Route element={<UserApproval />} path="/user-approval" />
+                        <Route element={<States />} path="/states" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                 </ScrollToTop>
