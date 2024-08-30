@@ -602,7 +602,7 @@ def getStates():
 
 def getReport():
     salesList=[]
-    query = db.select(Sales.nit, Sales.idSales, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).group_by(Sales.idSales)
+    query = db.select(Sales.nit, Sales.idSales, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).group_by(Sales.idSales,DetailSales.amount)
 
     # query = db.select(User.name, User.lastName, Products.prodname, Sales.iduser, Sales.nit, func.sum(DetailSales.amount), DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod)\
     #     .join(Sales, Sales.idSales == DetailSales.idSales)\
