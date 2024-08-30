@@ -9,13 +9,30 @@ const PruebaSales = () => {
     const navigate = useNavigate();
     const params = useParams();
 
+    const [idprod, setIdprod] = useState("");
+    const [amount, setAmount] = useState(0);
+    const [unitPrice, setUnitPrice] = useState(0);
+    const [listSales, setListSales] = useState([]);
+    const [prodDetails, setProdDetails] = useState({
+        prodname: "",
+        category: "",
+        brand: "",
+        salesPrice: 0
+    });
+
+    const defaultProdDetails = {
+        prodname: "",
+        category: "",
+        brand: "",
+        salesPrice: 0
+    };
+
     useEffect(() => {
         let isMounted = true;
 
         async function fetchData() {
             if (isMounted) {
                 await actions.getSalesNextId();
-                console.log("VALOR DE USERID", localStorage.getItem('userId'));
                 await actions.getOneCustomer(localStorage.getItem('userId'));
             }
         }
@@ -27,13 +44,7 @@ const PruebaSales = () => {
         };
     }, []);
 
-    const [idprod, setIdprod] = useState("");
-    const [amount, setAmount] = useState(0);
-    const [unitPrice, setUnitPrice] = useState(0);
-    const [listSales, setListSales] = useState([]);
-
     const handleAddProduct = () => {
-        // Validaciones
         if (!idprod || idprod.trim() === "") {
             alert("Por favor, ingresa un ID de producto válido antes de agregar.");
             return;
@@ -50,7 +61,6 @@ const PruebaSales = () => {
             return;
         }
 
-        // Si todas las validaciones pasan, procede a agregar el producto a la lista
         const validUnitPrice = parseFloat(store.prodOne.salesPrice) || 0;
 
         const salesData = {
@@ -68,38 +78,52 @@ const PruebaSales = () => {
 
         setListSales(listSales_prev => [...listSales_prev, salesData]);
 
-        // Resetear los campos después de añadir el producto
         setIdprod('');
         setAmount(0);
         setUnitPrice(0);
 
-        // Limpiar store.prodOne después de añadir el producto
-        setStore({ prodOne: {} });
+        setProdDetails(defaultProdDetails);
+    };
+
+    const handleProductChange = async (productId) => {
+        setIdprod(productId);
+        if (productId.trim() === "") {
+            setProdDetails(defaultProdDetails);
+        } else {
+            await actions.getProductId(productId);
+            if (store.prodOne) {
+                setProdDetails({
+                    prodname: store.prodOne.prodname || "",
+                    category: store.prodOne.category || "",
+                    brand: store.prodOne.brand || "",
+                    salesPrice: store.prodOne.salesPrice || 0
+                });
+            } else {
+                setProdDetails(defaultProdDetails);
+            }
+        }
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
-        // Verificar si hay un producto que no ha sido agregado a la lista
+
         if (idprod && store.prodOne && store.prodOne.id_prod && amount > 0) {
-            handleAddProduct(); // Agregar el producto a la lista automáticamente si no se ha hecho
+            handleAddProduct();
         }
-    
+
         const success = await actions.postAddSalesBatch(listSales);
         if (success) {
-            console.log("Factura enviada correctamente");
-            setListSales([]); // Limpiar la lista después de enviar
+            setListSales([]);
             setIdprod('');
             setAmount(0);
             setUnitPrice(0);
-            setStore({ prodOne: {} });
+            setProdDetails(defaultProdDetails);
             navigate("/PruebaSales");
-    
+
         } else {
             console.error("Error al enviar la factura");
         }
     };
-    
 
     return (
         <section className="text-center text-lg-start">
@@ -164,16 +188,13 @@ const PruebaSales = () => {
                                             <input
                                                 type="number"
                                                 value={idprod}
-                                                onChange={(e) => {
-                                                    setIdprod(e.target.value);
-                                                    actions.getProductId(e.target.value);
-                                                }}
+                                                onChange={(e) => handleProductChange(e.target.value)}
                                                 placeholder="Product ID"
                                             />
                                         </td>
-                                        <td>{store.prodOne ? store.prodOne.prodname : "N/A"}</td>
-                                        <td>{store.prodOne ? store.prodOne.category : "N/A"}</td>
-                                        <td>{store.prodOne ? store.prodOne.brand : "N/A"}</td>
+                                        <td>{prodDetails.prodname || "N/A"}</td>
+                                        <td>{prodDetails.category || "N/A"}</td>
+                                        <td>{prodDetails.brand || "N/A"}</td>
                                         <td>
                                             <input
                                                 type="number"
@@ -182,8 +203,8 @@ const PruebaSales = () => {
                                                 required
                                             />
                                         </td>
-                                        <td>{store.prodOne ? store.prodOne.salesPrice : 0}</td>
-                                        <td>{!isNaN(amount * store.prodOne.salesPrice) ? amount * store.prodOne.salesPrice : "0"}</td>
+                                        <td>{prodDetails.salesPrice || 0}</td>
+                                        <td>{!isNaN(amount * prodDetails.salesPrice) ? amount * prodDetails.salesPrice : "0"}</td>
                                     </tr>
                                 </tbody>
                             </table>

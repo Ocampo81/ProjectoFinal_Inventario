@@ -17,14 +17,13 @@ import UserApproval from './pages/UserApproval.jsx';
 import PruebaSales_ from './pages/PruebaSales_.jsx';
 import ProductsEntry from './pages/ProductsEntry.jsx';
 import ProductsMenu from './pages/ProductsMenu.jsx'; 
-
 import States from './pages/States.jsx';
-
+import ReportAmountSold from './pages/ReportAmountSold.jsx';  
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
     return (
         <div>
@@ -46,7 +45,8 @@ const Layout = () => {
                         <Route element={<PruebaSales_ />} path="/PruebaSales" />
                         <Route element={<UserApproval />} path="/user-approval" />
                         <Route element={<States />} path="/states" />
-                        <Route element={<h1>Not found!</h1>} />
+                        <Route element={<ReportAmountSold />} path="/report-amount-sold" /> 
+                        <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                 </ScrollToTop>
             </BrowserRouter>

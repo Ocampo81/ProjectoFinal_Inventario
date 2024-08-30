@@ -25,7 +25,7 @@ const MainMenu = () => {
               <h2>Sales</h2>
               <p>Manage your sales</p>
             </Link>
-            <Link to="/reports" className="menu-item">
+            <Link to="/report-amount-sold" className="menu-item">
               <i className="fas fa-chart-line fa-3x menu-icon"></i>
               <h2>Reports</h2>
               <p>Generate reports</p>

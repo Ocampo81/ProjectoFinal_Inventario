@@ -21,47 +21,51 @@
 .product-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .product-form .form-group {
     display: flex;
-    justify-content: space-between;
-    width: 80%;
+    justify-content: flex-start;
+    width: 100%;
     margin-bottom: 10px;
     align-items: center;
+    position: relative; /* Añadido para control de posición */
 }
 
 .product-form label {
-    width: 30%;
-    text-align: right;
-    margin-right: 10px;
+    width: 20%;
+    text-align: left;
+    margin-right: 5px;
 }
 
 .product-form input {
-    width: 70%;
+    width: calc(60% - 10px); /* Ajuste del ancho del input */
     padding: 10px;
     font-size: 1rem;
     border: none;
     border-radius: 5px;
+    display: inline-block; /* Asegura que el input esté en línea */
 }
 
-.product-form td {
-    width: 70%;
-    padding: 10px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
+.product-form .button-group {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    position: absolute; /* Añadido para controlar la posición del botón */
+    right: 0; /* Mover el botón al extremo derecho */
+    top: 0; /* Alinear verticalmente al input */
 }
 
-.product-form button {
+.product-form .button-group button {
     background-color: #ffb700;
     color: #2d2d2d;
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
-    margin-top: 30px;
+    white-space: nowrap;
+    height: 42px;
 }
 
 .product-form button:hover {
@@ -76,14 +80,17 @@
 
 .product-actions {
     display: flex;
+    justify-content: center;
     gap: 10px;
+    width: 100%;
+    margin-top: 30px;
 }
 
 .product-actions button {
     background-color: #ffb700;
     color: #2d2d2d;
     border: none;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }

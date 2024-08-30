@@ -202,9 +202,25 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             getProductId: async (id) => {
-                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`);
-                if (data) setStore({ prodOne: data[0] });
+                try {
+                    // Utilizamos la función fetchWithCheck para realizar la solicitud
+                    const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`);
+            
+                    // Si obtenemos datos, actualizamos el estado con el primer producto
+                    if (data && data.length > 0) {
+                        setStore({ prodOne: data[0] });
+                    } else {
+                        // Si no hay datos, limpiamos prodOne
+                        setStore({ prodOne: null });
+                    }
+                } catch (error) {
+                    console.error("Error fetching product:", error);
+                    setStore({ prodOne: null });  // Maneja el error adecuadamente
+                }
             },
+            
+            
+            
 
             getNextProdId: async () => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/nextprodid`);

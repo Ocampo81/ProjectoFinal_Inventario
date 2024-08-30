@@ -38,47 +38,38 @@ const ProductsEntry = () => {
             salesPrice: salesPrice,
             costPrice: costPrice,
             amount: amount,
-            id_prod: store.prodOne.id_prod
+            id_prod: store.prodOne ? store.prodOne.id_prod : idProduct,
         };
 
         const result = await actions.addProductentry(productData);
     };
 
-    const handleEdit = (product) => {
-        setEditMode(true);
-        setEditProductId(product.id_prod);
-        setProductName(product.prodname);
-        setBrand(product.brand);
-        setSalesPrice(product.salesPrice);
-        setStock(product.stock);
-        setCategory(product.category);
-        setIdProduct(product.id_prod);
-    };
-
-    const handleDelete = async (id) => {
-        await actions.deleteProduct(id);
-        setSuccessTitle("Product Deleted");
-        setSuccessMessage("The product was deleted successfully.");
-        setIsSuccessAlertVisible(true);
-    };
-
-    function valida(salesprice) {
-        setSuccessTitle("Atención");
-        setSuccessMessage("The sales price can't be less than cost price.");
-        setIsSuccessAlertVisible(true);
-    };
-
-    const toggleProductDetails = (id) => {
-        if (expandedProductId === id) {
-            setExpandedProductId(null);
+    const handleSearchProduct = async () => {
+        if (idProduct === "") {
+            setProductName("");
+            setBrand("");
+            setCategory("");
+            setCostPrice("");
+            setSalesPrice("");
+            setAmount("");
+            actions.setProdOne(null); 
         } else {
-            setExpandedProductId(id);
-        }
-    };
-
-    const handleContainerClick = (id, event) => {
-        if (!event.target.closest(".edit-btn") && !event.target.closest(".delete-btn")) {
-            toggleProductDetails(id);
+            await actions.getProductId(idProduct);
+            if (store.prodOne) {
+                setProductName(store.prodOne.prodname || "");
+                setBrand(store.prodOne.brand || "");
+                setCategory(store.prodOne.category || "");
+                setCostPrice(store.prodOne.costPrice || "");
+                setSalesPrice(store.prodOne.salesPrice || "");
+                setAmount(store.prodOne.amount || "");
+            } else {
+                setProductName("");
+                setBrand("");
+                setCategory("");
+                setCostPrice("");
+                setSalesPrice("");
+                setAmount("");
+            }
         }
     };
 
@@ -88,37 +79,16 @@ const ProductsEntry = () => {
         setProductName("");
         setBrand("");
         setSalesPrice("");
-        setStock("");
-        setCategory("");
+        setCategory(""); 
+        setCostPrice(""); 
+        setAmount(""); // 
         setIdProduct("");
+        actions.setProdOne(null);
     };
-
-    const handleCategorySubmit = async () => {
-        const categoryData = {
-            category: newCategoryName,
-            description: newCategoryDescription,
-        };
-        const result = await actions.addCategory(categoryData);
-        if (result) {
-            setIsCategoryModalOpen(false);
-            setIsSuccessAlertVisible(true);
-        }
-    };
-
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = store.products
-        .sort((a, b) => a.prodname.localeCompare(b.prodname))
-        .slice(indexOfFirstProduct, indexOfLastProduct);
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    const nextPage = () => setCurrentPage((prevPage) => prevPage + 1);
-    const prevPage = () => setCurrentPage((prevPage) => prevPage - 1);
 
     return (
         <div className="productsentry-page">
             <Navbar />
-            {/* Botón de regreso */}
             <Link to="/products-menu" className="back-button">
                 <i className="fas fa-arrow-left"></i> Back
             </Link>
@@ -128,23 +98,34 @@ const ProductsEntry = () => {
                 <form className="product-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Product ID:</label>
-                        <input
-                            type="number"
-                            value={idProduct}
-                            onChange={(e) => actions.getProductId(e.target.value)}
-                        />
+                        <div className="input-button-container">
+                            <input
+                                type="number"
+                                value={idProduct}
+                                onChange={(e) => setIdProduct(e.target.value)} 
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        handleSearchProduct();
+                                    }
+                                }}
+                            />
+                            <button type="button" onClick={handleSearchProduct}>
+                                Search Product
+                            </button>
+                        </div>
                     </div>
                     <div className="form-group">
                         <label>Product Name:</label>
-                        <td>{store.prodOne ? store.prodOne.prodname : "N/A"}</td>
+                        <span>{productName}</span>
                     </div>
                     <div className="form-group">
                         <label>Brand:</label>
-                        <td>{store.prodOne ? store.prodOne.brand : "N/A"}</td>
+                        <span>{brand}</span>
                     </div>
                     <div className="form-group">
                         <label>Category:</label>
-                        <td>{store.prodOne ? store.prodOne.category : "N/A"}</td>
+                        <span>{category}</span>
                     </div>
                     <div className="form-group">
                         <label>Cost Price:</label>
@@ -159,15 +140,15 @@ const ProductsEntry = () => {
                         <label>Sales Price:</label>
                         <input
                             type="number"
-                            placeholder={store.prodOne.salesPrice}
+                            placeholder={salesPrice}
                             value={salesPrice}
                             onChange={(e) => setSalesPrice(e.target.value)}
                             onKeyDown={(e) => {
                                 if (salesPrice > costPrice) {
-                                    console.log("OK salesPrice", salesPrice, costPrice)
+                                    console.log("OK salesPrice", salesPrice, costPrice);
                                 } else {
-                                    console.log("error salesPrice", salesPrice)
-                                    valida(salesPrice)
+                                    console.log("error salesPrice", salesPrice);
+                                    valida(salesPrice);
                                 }
                             }}
                         />
@@ -182,16 +163,18 @@ const ProductsEntry = () => {
                         />
                     </div>
 
-                    <button type="submit">
-                        Add Entry
-                    </button>
-                    <button type="button" onClick={handleCancel}>
-                        Cancel
-                    </button>
+                    <div className="product-actions">
+                        <button type="submit">
+                            Add Entry
+                        </button>
+                        <button type="button" onClick={handleCancel}>
+                            Cancel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     );
-}
+};
 
 export default ProductsEntry;

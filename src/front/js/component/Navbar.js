@@ -50,11 +50,10 @@ const Navbar = () => {
                     </Link>
                 </li>
 
-                {/* Mostrar iconos según el perfil del usuario */}
                 {profile === 1 && (
                     <>
                         <li>
-                            <Link to="/products" className="navbar-icon">
+                            <Link to="/products-menu" className="navbar-icon">
                                 <i className="fas fa-box-open fa-lg"></i>
                                 <span className="tooltiptext">Products</span>
                             </Link>
