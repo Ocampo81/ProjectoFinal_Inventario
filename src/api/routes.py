@@ -179,10 +179,17 @@ def getStates():
     print("respuesta getStates",respuesta)
     return jsonify(respuesta), 200
 
-@api.route('/report/', methods=['GET'])
-def getReport():
+@api.route('/amountsold/', methods=['GET'])
+def getAmountSold():
     print("entre a routes.py")
-    respuesta = app.getReport()
+    respuesta = app.getAmountSold()
+    print("respuesta getStates",respuesta)
+    return jsonify(respuesta), 200
+
+@api.route('/productclient/<int:nit>', methods=['GET'])
+def getProductXClient(nit):
+    print("entre a routes.py")
+    respuesta = app.getProductXClient(nit)
     print("respuesta getStates",respuesta)
     return jsonify(respuesta), 200
 

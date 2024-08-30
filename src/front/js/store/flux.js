@@ -19,6 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             sales: [],
             states: [],
             statesList: [],
+            reportsList: [],
         },
         actions: {
             fetchWithCheck: async (url, options = {}) => {
@@ -307,6 +308,20 @@ const getState = ({ getStore, getActions, setStore }) => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/states`);
                 setStore({ statesList: data });
                 console.log("ENTRE A getStatesBack", data)
+                return data;
+            },
+            getAmountSold: async () => {
+                console.log("ENTRE A getAmountSold")
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/amountsold`);
+                setStore({ reportsList: data });
+                console.log("ENTRE A getAmountSold", data)
+                return data;
+            },
+            getProductClient: async () => {
+                console.log("ENTRE A getProductClient")
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/amountsold/${localStorage.getItem('userId')}`);
+                setStore({ reportsList: data });
+                console.log("ENTRE A getProductClient", data)
                 return data;
             },
 

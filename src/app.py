@@ -600,22 +600,39 @@ def getStates():
 
     return tuple(stateList)
 
-def getReport():
-    salesList=[]
-    query = db.select(Sales.nit, Sales.idSales, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).group_by(Sales.idSales,DetailSales.amount)
-
-    # query = db.select(User.name, User.lastName, Products.prodname, Sales.iduser, Sales.nit, func.sum(DetailSales.amount), DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod)\
-    #     .join(Sales, Sales.idSales == DetailSales.idSales)\
-    #     .join(User, User.id == Sales.iduser)\
-    #     .join(Products, Products.id_prod == DetailSales.id_prod).group_by(Sales.nit)
+def getAmountSold():
+    amountSoldList=[]
+    query = db.select(Products.prodname, func.sum(DetailSales.amount).label("Amounts Sold"), func.avg(Sales.totalPrice).label("Avg Selling Price"),DetailSales.id_prod)\
+        .join(Sales, Sales.idSales == DetailSales.idSales)\
+        .join(Products, Products.id_prod == DetailSales.id_prod)\
+        .group_by(Products.prodname, DetailSales.id_prod)\
+        .order_by(func.sum(DetailSales.amount).desc())
     
     result = db.session.execute(query)
 
     for sales in result.fetchall():
         print(dict(sales._mapping))
-        salesList.append(dict(sales._mapping))
+        amountSoldList.append(dict(sales._mapping))
 
-    return tuple(salesList) if salesList else None
+    return tuple(amountSoldList) if amountSoldList else None
+
+def getProductXClient(data):
+    amountSoldList=[]
+    query = db.select(Products.prodname, Sales.date, DetailSales.amount, Sales.totalPrice)\
+        .join(Sales, Sales.idSales == DetailSales.idSales)\
+        .filter_by(nit=data)\
+        .join(Products, Products.id_prod == DetailSales.id_prod)\
+        .group_by(Products.prodname, DetailSales.id_prod, Sales.date, DetailSales.amount, Sales.totalPrice)\
+        .order_by(Sales.date.desc())
+    
+    result = db.session.execute(query)
+
+    for sales in result.fetchall():
+        print(dict(sales._mapping))
+        amountSoldList.append(dict(sales._mapping))
+
+    return tuple(amountSoldList) if amountSoldList else None
+
 ######## 
 
 @app.route('/<path:path>', methods=['GET'])
