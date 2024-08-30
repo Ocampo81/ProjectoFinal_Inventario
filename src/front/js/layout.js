@@ -8,7 +8,6 @@ import Signup from './pages/Signup.jsx';
 import RegisterCompany from './pages/RegisterCompany.jsx';
 import Products from './pages/Products.jsx';
 import Clients from './pages/Clients.jsx';
-import Employees from './pages/Employees.jsx';
 import Sales from './pages/Sales.jsx';
 import Reports from './pages/Reports.jsx';
 import MainMenu from './pages/MainMenu.jsx';
@@ -41,7 +40,6 @@ const Layout = () => {
                         <Route element={<Products />} path="/products" />
                         <Route element={<ProductsEntry />} path="/products-entry" /> 
                         <Route element={<Clients />} path="/clients" />
-                        <Route element={<Employees />} path="/employees" />
                         <Route element={<Sales />} path="/sales" />
                         <Route element={<Reports />} path="/reports" />
                         <Route element={<Profile />} path="/profile" /> 

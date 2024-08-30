@@ -4,83 +4,80 @@
     padding: 20px;
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 
-.invoice-container {
+.client-container {
     background-color: #3b3b3b;
     border-radius: 10px;
-    padding: 20px;
-    max-width: 900px;
+    text-align: center;
+    padding: 50px;
+    max-width: 800px;
     width: 100%;
+    margin: auto;
 }
 
-.invoice-header {
+.client-list {
+    margin-top: 20px;
+}
+
+.client-item {
     display: flex;
     justify-content: space-between;
-    border-bottom: 2px solid #ffb700;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-.company-info {
-    text-align: left;
-}
-
-.invoice-title {
-    text-align: right;
-}
-
-.customer-info {
-    margin-bottom: 20px;
-}
-
-.invoice-table {
-    width: 100%;
-    margin-bottom: 20px;
-    border-collapse: collapse;
-}
-
-.invoice-table th,
-.invoice-table td {
+    align-items: center;
     padding: 10px;
-    border: 1px solid #555;
-    text-align: left;
-}
-
-.invoice-table th {
-    background-color: #ffb700;
-    color: #2d2d2d;
-}
-
-.invoice-actions {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.invoice-actions .btn {
-    margin-right: 10px;
-}
-
-.invoice-summary {
-    text-align: right;
-    border-top: 2px solid #ffb700;
-    padding-top: 20px;
-    margin-top: 20px;
-}
-
-.invoice-summary p {
+    background-color: #444;
     margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.invoice-summary h2 {
-    color: #ffa500;
+.client-item span {
+    margin-right: 300px; 
 }
 
-.invoice-footer {
-    text-align: left;
+.client-item:hover {
+    background-color: #555;
+}
+
+.client-details {
+    background-color: #2d2d2d;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    border-left: 4px solid #ffa500;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 20px;
-    border-top: 1px solid #555;
-    padding-top: 10px;
+}
+
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.page-button, .next-page-button, .prev-page-button {
+    background-color: #ffb700;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    color: #2d2d2d; 
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.page-button:hover, .next-page-button:hover, .prev-page-button:hover {
+    background-color: #ffa500;
+}
+
+.page-button.active {
+    background-color: #ffa500;
 }

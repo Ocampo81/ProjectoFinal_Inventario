@@ -122,13 +122,22 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             getUserProfile: async () => {
+                const token = localStorage.getItem("accessToken");
+                if (!token) return null;
+
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/profile`, {
                     method: "GET",
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+                        "Authorization": `Bearer ${token}`
                     }
                 });
-                return data;
+
+                if (data) {
+                    setStore({ user: data, isAuthenticated: true });
+                    return true;
+                } else {
+                    return false;
+                }
             },
 
             getCategories: async () => {
@@ -163,7 +172,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 return "Category doesn't exist";
             },
 
-            
             getProducts: async () => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products`);
                 if (data) {
@@ -196,8 +204,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`);
                 if (data) setStore({ prodOne: data[0] });
             },
+
             getNextProdId: async () => {
-                
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/nextprodid`);
                 if (data) {
                     setStore({ nextid_prod: data });
@@ -205,6 +213,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     setStore({ nextid_prod: null });
                 }
             },
+
             addProductentry: async (productData) => {
                 const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/productsentry`, {
                     method: "POST",

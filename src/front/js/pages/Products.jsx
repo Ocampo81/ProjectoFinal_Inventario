@@ -168,9 +168,6 @@ const Products = () => {
                                 type="text"
                                 placeholder={store.nextid_prod.ID}
                                 readOnly
-                            // value={idProduct}
-                            // onChange={(e) => setIdProduct(e.target.value)}
-                            // disabled={editMode}  // Deshabilita el input cuando estamos en modo edición
                             />
                         </div>
                         <div className="form-group">
@@ -198,6 +195,7 @@ const Products = () => {
                                 placeholder="Cost Price"
                                 value={costPrice}
                                 onChange={(e) => setCostPrice(e.target.value)}
+                                disabled={editMode}
                             />
                         </div>
                         <div className="form-group">
@@ -207,6 +205,7 @@ const Products = () => {
                                 placeholder="Sales Price"
                                 value={salesPrice}
                                 onChange={(e) => setSalesPrice(e.target.value)}
+                                disabled={editMode} 
                             />
                         </div>
                         <div className="form-group">
@@ -225,6 +224,7 @@ const Products = () => {
                                 placeholder="Stock"
                                 value={stock}
                                 onChange={(e) => setStock(e.target.value)}
+                                disabled={editMode} 
                             />
                         </div>
                         <div className="form-group">
@@ -247,7 +247,7 @@ const Products = () => {
                         )}
                     </form>
 
-                    <div className="divider"></div> {/* Aquí está el divisor */}
+                    <div className="divider"></div> 
 
                     <h2>Product List</h2>
                     <div className="product-list">
