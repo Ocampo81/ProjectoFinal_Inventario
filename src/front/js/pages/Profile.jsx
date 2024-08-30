@@ -5,15 +5,19 @@ import "../../styles/Profile.css";
 
 const Profile = () => {
     const { store, actions } = useContext(Context);
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState(store.user);
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await actions.getUserProfile();
-            setUserData(data);
+            if (!store.user.email) {  
+                const data = await actions.getUserProfile();
+                if (data) {
+                    setUserData(store.user); 
+                }
+            }
         };
         fetchData();
-    }, [actions]);
+    }, [store.user, actions]);
 
     return (
         <div className="profile-page">

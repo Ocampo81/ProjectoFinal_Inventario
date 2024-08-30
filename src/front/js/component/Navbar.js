@@ -72,12 +72,6 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/employees" className="navbar-icon">
-                                <i className="fas fa-user-tie fa-lg"></i>
-                                <span className="tooltiptext">Employees</span>
-                            </Link>
-                        </li>
-                        <li>
                             <Link to="/reports" className="navbar-icon">
                                 <i className="fas fa-chart-line fa-lg"></i>
                                 <span className="tooltiptext">Reports</span>
