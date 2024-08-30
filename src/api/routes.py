@@ -165,6 +165,27 @@ def getNextId():
     respuesta = app.getNextId()
     return jsonify(respuesta), 200
 
+@api.route('/states/', methods=['POST'])
+def addStates():
+    statesList = request.json
+    respuesta = app.addStates(statesList)
+    print("Valor devuelto de addstates:   ",respuesta)
+    return jsonify(respuesta), 200
+
+@api.route('/states/', methods=['GET'])
+def getStates():
+    print("entre a routes.py")
+    respuesta = app.getStates()
+    print("respuesta getStates",respuesta)
+    return jsonify(respuesta), 200
+
+@api.route('/report/', methods=['GET'])
+def getReport():
+    print("entre a routes.py")
+    respuesta = app.getReport()
+    print("respuesta getStates",respuesta)
+    return jsonify(respuesta), 200
+
 # ******   Endpoint prueba
 
 @api.route('/customerotro', methods=['GET'])

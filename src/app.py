@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
-from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct, Sales, DetailSales,ProductEntry
+from api.models import db, User, Customer, Address, Provider, Products, CategoryProduct, Sales, DetailSales,ProductEntry,States
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -15,7 +15,10 @@ from datetime import datetime
 from sqlalchemy.orm import relationship, join, sessionmaker
 from sqlalchemy import create_engine, engine, join, and_, or_
 import json
+from sqlalchemy.sql import func
 from werkzeug.security import check_password_hash
+
+
 
 # from models import Person
 
@@ -80,9 +83,6 @@ def getPendingUsers():
 
 # Function to handle user signup and return a message
 def Signup(data):
-    #data = request.json
-    # print("DATA DATA en APP SIN *****:", data)
-    # print("DATA DATA en APP:", data.get("email"),'\n', data.get("password"), '\n', data.get("name"), '\n',  data.get("lastname"))
     newUser = User()
     newUser.email = data.get("email")
     newUser.name = data.get("name")
@@ -568,7 +568,54 @@ def delSales(data):
         return response_body
 
 
+def addStates(statesList):
+    # valid, error_response = validate_product_and_stock(statesList)
+    # if not valid:
+    #     return error_response
 
+    # DetailSales
+    db.session.execute('''TRUNCATE TABLE States''')
+    db.session.commit()
+    count = 1
+    listStates = []
+
+    for states1 in statesList:
+        newStates = States(id= count,state_name=states1.get("state_name"))
+        listStates.append(newStates)
+        count = count + 1
+
+    db.session.add_all(listStates)
+    db.session.commit()
+    return {"message": "States created successfully"}
+
+def getStates():
+    print("ENTREEEEE!!! a getStates en APP.py")
+    stateList=[]
+    # query = db.select(States)
+    result = States.query.all()
+
+    for state in result:
+        print(state.state_name)
+        stateList.append(state.state_name)
+
+    return tuple(stateList)
+
+def getReport():
+    salesList=[]
+    query = db.select(Sales.nit, Sales.idSales, DetailSales.amount, DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod).join(Sales, Sales.idSales == DetailSales.idSales).group_by(Sales.idSales)
+
+    # query = db.select(User.name, User.lastName, Products.prodname, Sales.iduser, Sales.nit, func.sum(DetailSales.amount), DetailSales.unitPrice, DetailSales.idSales, DetailSales.id_prod)\
+    #     .join(Sales, Sales.idSales == DetailSales.idSales)\
+    #     .join(User, User.id == Sales.iduser)\
+    #     .join(Products, Products.id_prod == DetailSales.id_prod).group_by(Sales.nit)
+    
+    result = db.session.execute(query)
+
+    for sales in result.fetchall():
+        print(dict(sales._mapping))
+        salesList.append(dict(sales._mapping))
+
+    return tuple(salesList) if salesList else None
 ######## 
 
 @app.route('/<path:path>', methods=['GET'])
@@ -579,35 +626,6 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
-
-# **** PRUEBA *****
-def getCustomerOtro():
-    customerList=[] 
-    query = db.session.query(Address).join(Customer, Address.nit == Customer.nit)
-    query1 = db.session.query(Customer).join(Address, Customer.nit == Address.nit)
-    print("query", query)
-
-    print("query1 ", query1 )
-    for customer in query1:
-        print(customer.serialize(), customer.address[0].serialize())
-        cust = customer.serialize()
-        addr = customer.address[0].serialize()
-        print(type(cust), type(addr))
-        print(cust.items(), addr.values())
-        print(cust.get('nit'), addr['city'])
-        # # print("customer: ", customer, type(customer))
-        # campo = customer[0].serialize()
-        # campo1= customer[1].serialize()
-        # print("campo: ", campo, campo1 )
-
-        # print(campo.get("nit")) 
-        #     #   campo[1], campo.phone, campo1[5])
-        #     #   , campo1.city, campo1.address)
-        # # print(customer.nit, customer.date, customer.phone, customer.addresses.country, customer.addresses.city, customer.addresses.address)
-        # # customerList.append(campo)
-
-    return None
-# tuple(customerList)
 
 
 

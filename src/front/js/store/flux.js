@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
             message: "",
+            apiToken: "",
             isAuthenticated: false,
             userToken: null,
             user: {},
@@ -17,6 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             nextid_prod: [], 
             sales: [],
             states: [],
+            statesList: [],
         },
         actions: {
             fetchWithCheck: async (url, options = {}) => {
@@ -32,6 +34,21 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return null;
                 }
             },
+            getStates: async (token) => { 
+                console.log("***** TOKEN dentro de GETSTATES: ",token)
+                const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/states/colombia",{
+                    headers : { 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(response),
+                });
+                if (response) {
+                    setStore({ states: response });
+                    console.log("STATES DENTRO DE STORE", getStore().states)
+                    getActions().addStates(getStore().states)
+
+                    return true;
+                }
+                return false;
+            },
             getToken: async () => { 
                 const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/getaccesstoken", {
                     body: JSON.stringify(response),
@@ -42,30 +59,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
                 });
                 if (response) {
-                    
-                        // setStore({ user: response.Message });
-                        localStorage.setItem("apiToken", response.auth_token);
-                        console.log("localStorage.getItem('apiToken')", localStorage.getItem('apiToken'));
-                        // const token = localStorage.getItem('apiToken');
-                        // console.log("VALOR DE TOKEN", token);
-                        // actions.getStates(token);
+                        setStore({ apiToken: response.auth_token });
+                        // localStorage.setItem("apiToken", response.auth_token);
+                        // console.log("'apiToken: *****')",getStore().apiToken);
+                        getActions().getStates(getStore().apiToken);
                         return true;
                     
                 }
                 return false;
             },
-            getStates: async (token) => { 
-                const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/states/colombia",{
-                    headers : { 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify(response),
-                });
-                if (response) {
-                    setStore({ states: response.state_name });
-                    console.log(setStore.states)
-                    return true;
-                }
-                return false;
-            },
+            
             getMessage: async () => {
                 const data = await getActions().fetchWithCheck(process.env.BACKEND_URL + "/api/hello");
                 if (data) setStore({ message: data.message });
@@ -269,8 +272,35 @@ const getState = ({ getStore, getActions, setStore }) => {
                     body: JSON.stringify({ role }),
                     headers: { "Content-Type": "application/json" }
                 });
+
+            
                 return response && response.message === "User approved successfully";
             },
+
+            addStates: async (states) => {
+                console.log("states en addStates", states)
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/states`, {
+                    method: "POST",
+                    body: JSON.stringify(states),
+                    headers: { "Content-Type": "application/json" }
+                });
+                console.log("RESPUESTA DE ADDstates",response)
+                if (response.message == "States created successfully") {
+                    console.log("RESPUESTA DE ADDstates",response.message)
+                    await getActions().getStatesBack();
+                    return true;
+                }
+                return "State doesn't exist";
+            },
+
+            getStatesBack: async () => {
+                console.log("ENTRE A getStatesBack")
+                const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/states`);
+                setStore({ statesList: data });
+                console.log("ENTRE A getStatesBack", data)
+                return data;
+            },
+
         }
     };
 };

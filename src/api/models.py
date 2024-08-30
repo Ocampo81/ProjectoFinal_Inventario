@@ -242,3 +242,21 @@ class ProductEntry(db.Model):
             "amount": self.amount,
             "cost_price": self.cost_price
         }
+    
+class States(db.Model):
+    __tablename__ = 'states'    
+    id = db.Column(db.Integer, primary_key=True)
+    state_name = db.Column(db.String(100), unique=True, nullable=False )
+    
+    # id_prod = db.Column(db.Integer, db.ForeignKey('products.id_prod'))
+    # Entryprod = relationship("Products", back_populates="EntryProduct")
+    
+    def __repr__(self):
+        return '<Member %r>' %self.id
+        # return f'"id": {self.id} "state_name" : {self.state_name}'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "state_name": self.state_name
+        }
