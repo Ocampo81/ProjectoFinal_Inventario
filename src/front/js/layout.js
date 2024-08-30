@@ -5,7 +5,7 @@ import { BackendURL } from "./component/backendURL";
 
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
-import RegisterCompany from './pages/RegisterCompany.jsx';
+import RegisterInformation from './pages/RegisterInformation.jsx';
 import Products from './pages/Products.jsx';
 import Clients from './pages/Clients.jsx';
 import Sales from './pages/Sales.jsx';
@@ -33,7 +33,7 @@ const Layout = () => {
                         <Route element={<Login />} path="/" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
-                        <Route element={<RegisterCompany />} path="/register-company" />
+                        <Route element={<RegisterInformation />} path="/register-information" />
                         <Route element={<MainMenu />} path="/main-menu" />
                         <Route element={<ProductsMenu />} path="/products-menu" /> 
                         <Route element={<Products />} path="/products" />

@@ -1,14 +1,12 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
-import SuccessModal from "../component/SuccessModal";
 import Alert from "../component/Alert";
 import "../../styles/Signup.css";
 
 const Signup = () => {
-    const { store, actions } = useContext(Context);
+    const { store } = useContext(Context);
     const navigate = useNavigate();
-    const params = useParams();
 
     const [data, setData] = useState({
         email: "",
@@ -19,7 +17,6 @@ const Signup = () => {
         is_active: false
     });
 
-    const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
@@ -30,19 +27,12 @@ const Signup = () => {
         });
     };
 
-    const handleSubmit = async (event) => {
+    const handleNext = (event) => {
         event.preventDefault();
-        const success = await actions.postSignup(data);
-        if (success) {
-            setShowModal(true);
-        } else {
-            setError(store.message);
-        }
-    };
-
-    const handleClose = () => {
-        setShowModal(false);
-        navigate("/login");
+        // Guardar los datos en el almacenamiento local
+        localStorage.setItem("signupData", JSON.stringify(data));
+        // Redirigir a la siguiente vista
+        navigate("/register-information");
     };
 
     return (
@@ -68,7 +58,7 @@ const Signup = () => {
                                 <div className="card-body p-5 shadow-5 text-center">
                                     <h2 className="fw-bold mb-5">Sign up now</h2>
                                     {error && <Alert message={error} />}
-                                    <form onSubmit={handleSubmit}>
+                                    <form onSubmit={handleNext}>
                                         <div className="row">
                                             <div className="col-md-6 mb-4">
                                                 <div data-mdb-input-init className="form-outline">
@@ -94,9 +84,8 @@ const Signup = () => {
                                             <label className="form-label" htmlFor="password">Password</label>
                                         </div>
 
-                                        <button type="submit" className="btn btn-primary btn-block mb-4">Sign up</button>
+                                        <button type="submit" className="btn btn-primary btn-block mb-4">Next</button>
 
-                                        {/* Añadir el enlace para regresar al login */}
                                         <div className="mt-3">
                                             <Link to="/login" className="text-light">Back to login</Link>
                                         </div>
@@ -110,7 +99,6 @@ const Signup = () => {
                         </div>
                     </div>
                 </div>
-                <SuccessModal show={showModal} handleClose={handleClose} />
             </section>
         </div>
     );

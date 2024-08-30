@@ -16,6 +16,13 @@ def handle_hello():
     }
     return jsonify(response_body), 200
 
+# Endpoint para registrar usuario y cliente en un solo paso
+@api.route('/register_user', methods=['POST'])
+def register_user():
+    data = request.json
+    respuesta = app.register_user(data)
+    return jsonify({"Message": respuesta}), 200
+
 @api.route('/signup', methods=['POST'])
 def Signup1():
     data = request.json
@@ -67,7 +74,7 @@ def getOneCustomer1(nit):
 
 @api.route('/customerid/<int:userId>', methods=['GET'])
 def getOneCustomerID(userId):
-    print("ingrese getOneCustomerID",userId )
+    print("ingrese getOneCustomerID", userId)
     respuesta = app.getOneCustomerID(userId)
     return jsonify(respuesta), 200
 
@@ -82,7 +89,6 @@ def addProducts1():
     data = request.json
     respuesta = app.addProducts(data)
     return jsonify({"Message": respuesta}), 200
-
 
 @api.route('/productsentry', methods=['POST'])
 def addProdEntry():
@@ -108,11 +114,10 @@ def updateProduct(id):
 
 @api.route('/products/<int:id_prod>', methods=['DELETE'])
 def delProducts(id_prod):
-     print(id_prod)
-     # data = request.json
-     respuesta = app.delProducts(id_prod)
-     print(respuesta)
-     return jsonify({"Message" : respuesta}),200
+    print(id_prod)
+    respuesta = app.delProducts(id_prod)
+    print(respuesta)
+    return jsonify({"Message": respuesta}), 200
 
 @api.route('/nextprodid/', methods=['GET'])
 def getNextProdId():
@@ -154,11 +159,10 @@ def getOneSales(idsales):
 
 @api.route('/sales/<int:idsales>', methods=['DELETE'])
 def delSales(idsales):
-     print(idsales)
-     # data = request.json
-     respuesta = app.delSales(idsales)
-     print(respuesta)
-     return jsonify({"Message" : respuesta}),200
+    print(idsales)
+    respuesta = app.delSales(idsales)
+    print(respuesta)
+    return jsonify({"Message": respuesta}), 200
 
 @api.route('/salesNextid/', methods=['GET'])
 def getNextId():
@@ -169,28 +173,28 @@ def getNextId():
 def addStates():
     statesList = request.json
     respuesta = app.addStates(statesList)
-    print("Valor devuelto de addstates:   ",respuesta)
+    print("Valor devuelto de addstates: ", respuesta)
     return jsonify(respuesta), 200
 
 @api.route('/states/', methods=['GET'])
 def getStates():
     print("entre a routes.py")
     respuesta = app.getStates()
-    print("respuesta getStates",respuesta)
+    print("respuesta getStates", respuesta)
     return jsonify(respuesta), 200
 
 @api.route('/amountsold/', methods=['GET'])
 def getAmountSold():
     print("entre a routes.py")
     respuesta = app.getAmountSold()
-    print("respuesta getStates",respuesta)
+    print("respuesta getStates", respuesta)
     return jsonify(respuesta), 200
 
 @api.route('/productclient/<int:nit>', methods=['GET'])
 def getProductXClient(nit):
     print("entre a routes.py")
     respuesta = app.getProductXClient(nit)
-    print("respuesta getStates",respuesta)
+    print("respuesta getStates", respuesta)
     return jsonify(respuesta), 200
 
 # ******   Endpoint prueba

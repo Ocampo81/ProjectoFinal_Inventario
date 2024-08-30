@@ -1,0 +1,107 @@
+.register-information-page {
+    background-color: #2d2d2d;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; 
+}
+
+.register-information-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    overflow-y: auto; 
+    position: relative; 
+}
+
+.back-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    color: #ffb700;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1000; 
+}
+
+.back-button:hover {
+    color: #ffa500;
+}
+
+.register-information-container .card {
+    background-color: #3b3b3b;
+    color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: auto;
+    width: 100%;
+    overflow: hidden;
+}
+
+.register-information-container .form-control {
+    background-color: #ffffff;
+    color: #2d2d2d;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.register-information-container .form-control:focus {
+    border-color: #ffb700;
+    box-shadow: 0 0 5px rgba(255, 183, 0, 0.5);
+}
+
+.register-information-container .form-label {
+    color: #ffb700;
+}
+
+.register-information-container .btn-primary {
+    background-color: #ffb700;
+    color: #2d2d2d;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-information-container .btn-primary:hover {
+    background-color: #ffa500;
+    color: #ffffff;
+}
+
+.register-information-container img {
+    border-radius: 10px 0 0 10px;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 768px) {
+    .register-information-container .card {
+        margin: 20px;
+        padding: 10px;
+    }
+
+    .register-information-container .card-body {
+        padding: 0.5rem;
+    }
+
+    .back-button {
+        top: 5px;
+        left: 5px;
+        font-size: 0.9rem; 
+    }
+}

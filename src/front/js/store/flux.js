@@ -12,10 +12,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             prodOne: [],
             employees: [],
             customers: [],
-            customer: [], 
+            customer: [],
             categories: [],
             nextid: null,
-            nextid_prod: [], 
+            nextid_prod: [],
             sales: [],
             states: [],
             statesList: [],
@@ -25,65 +25,68 @@ const getState = ({ getStore, getActions, setStore }) => {
             fetchWithCheck: async (url, options = {}) => {
                 try {
                     const response = await fetch(url, options);
+                    const contentType = response.headers.get("content-type");
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(JSON.stringify(errorData));
+                        if (contentType && contentType.includes("application/json")) {
+                            const errorData = await response.json();
+                            throw new Error(JSON.stringify(errorData));
+                        } else {
+                            throw new Error("Error in fetch: Non-JSON response received");
+                        }
                     }
-                    return await response.json();
+                    return contentType && contentType.includes("application/json")
+                        ? await response.json()
+                        : null;
                 } catch (error) {
                     console.error("Error in fetch:", error.message);
                     return null;
                 }
             },
-            getStates: async (token) => { 
-                console.log("***** TOKEN dentro de GETSTATES: ",token)
-                const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/states/colombia",{
-                    headers : { 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify(response),
+
+            getStates: async (token) => {
+                const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/states/colombia", {
+                    headers: { 'Authorization': `Bearer ${token}` },
                 });
                 if (response) {
                     setStore({ states: response });
-                    console.log("STATES DENTRO DE STORE", getStore().states)
-                    getActions().addStates(getStore().states)
+                    console.log("STATES DENTRO DE STORE", getStore().states);
+                    getActions().addStates(getStore().states);
 
                     return true;
                 }
                 return false;
             },
-            getToken: async () => { 
+
+            getToken: async () => {
                 const response = await getActions().fetchWithCheck("https://www.universal-tutorial.com/api/getaccesstoken", {
-                    body: JSON.stringify(response),
                     headers: {
-                    "Accept": "application/json",
-                    "api-token": "uXV-d_QF25Rl209jI9zpmkI3VXDlPp8j1vA_aMJ9KdRHT9E3UwX5bxNhEBWhlZiqS2A",
-                    "user-email": "gespana26@yahoo.com"
+                        "Accept": "application/json",
+                        "api-token": "uXV-d_QF25Rl209jI9zpmkI3VXDlPp8j1vA_aMJ9KdRHT9E3UwX5bxNhEBWhlZiqS2A",
+                        "user-email": "gespana26@yahoo.com"
                     }
                 });
                 if (response) {
-                        setStore({ apiToken: response.auth_token });
-                        // localStorage.setItem("apiToken", response.auth_token);
-                        // console.log("'apiToken: *****')",getStore().apiToken);
-                        getActions().getStates(getStore().apiToken);
-                        return true;
-                    
+                    setStore({ apiToken: response.auth_token });
+                    getActions().getStates(getStore().apiToken);
+                    return true;
                 }
                 return false;
             },
-            
+
             getMessage: async () => {
                 const data = await getActions().fetchWithCheck(process.env.BACKEND_URL + "/api/hello");
                 if (data) setStore({ message: data.message });
             },
 
             postSignup: async (data) => {
-                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/signup`, {
+                const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/register_user`, {
                     method: "POST",
                     body: JSON.stringify(data),
                     headers: { "Content-Type": "application/json" }
                 });
                 if (response) {
                     setStore({ message: response.Message.message });
-                    return response.Message.message === "User created successfully";
+                    return response.Message.message === "User and Customer created successfully";
                 }
                 return false;
             },
@@ -95,17 +98,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                     headers: { "Content-Type": "application/json" }
                 });
                 if (response) {
-                    if (response.Message.token) {
-                        setStore({ user: response.Message });
-                        localStorage.setItem("accessToken", response.Message.token);
-                        localStorage.setItem("userId", response.Message.id);
-                        localStorage.setItem("isActive", response.Message.isActive);
-                        localStorage.setItem("profile", response.Message.profile);
-                        localStorage.setItem("firstName", response.Message.name); 
-                        localStorage.setItem("lastName", response.Message.lastName);  
+                    if (response.token) {
+                        setStore({ user: response });
+                        localStorage.setItem("accessToken", response.token);
+                        localStorage.setItem("userId", response.id);
+                        localStorage.setItem("isActive", response.isActive);
+                        localStorage.setItem("profile", response.profile);
+                        localStorage.setItem("firstName", response.name);
+                        localStorage.setItem("lastName", response.lastName);
                         return true;
                     } else {
-                        setStore({ message: response.Message.Error });
+                        setStore({ message: response.Error });
                     }
                 }
                 return false;
@@ -119,7 +122,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 localStorage.removeItem("firstName");
                 localStorage.removeItem("lastName");
                 setStore({ user: null, isAuthenticated: false });
-                window.location.href = "/login"; 
+                window.location.href = "/login";
             },
 
             getUserProfile: async () => {
@@ -160,7 +163,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             addProduct: async (productData) => {
-                console.log("productData PRODUCTS en FLUX", productData)
                 const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products`, {
                     method: "POST",
                     body: JSON.stringify(productData),
@@ -203,24 +205,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             getProductId: async (id) => {
                 try {
-                    // Utilizamos la función fetchWithCheck para realizar la solicitud
                     const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/products/${id}`);
-            
-                    // Si obtenemos datos, actualizamos el estado con el primer producto
                     if (data && data.length > 0) {
                         setStore({ prodOne: data[0] });
                     } else {
-                        // Si no hay datos, limpiamos prodOne
                         setStore({ prodOne: null });
                     }
                 } catch (error) {
                     console.error("Error fetching product:", error);
-                    setStore({ prodOne: null });  // Maneja el error adecuadamente
+                    setStore({ prodOne: null });
                 }
             },
-            
-            
-            
 
             getNextProdId: async () => {
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/nextprodid`);
@@ -255,7 +250,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             getOneCustomer: async (id) => {
-                console.log("DENTRO DEL FLUX GTEONECUSTOMER",id)
+                console.log("DENTRO DEL FLUX GTEONECUSTOMER", id);
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/customerid/${id}`);
                 if (data) {
                     console.log("Datos de cliente recibidos del servidor:", data);
@@ -299,20 +294,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                     headers: { "Content-Type": "application/json" }
                 });
 
-            
                 return response && response.message === "User approved successfully";
             },
 
             addStates: async (states) => {
-                console.log("states en addStates", states)
                 const response = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/states`, {
                     method: "POST",
                     body: JSON.stringify(states),
                     headers: { "Content-Type": "application/json" }
                 });
-                console.log("RESPUESTA DE ADDstates",response)
                 if (response.message == "States created successfully") {
-                    console.log("RESPUESTA DE ADDstates",response.message)
                     await getActions().getStatesBack();
                     return true;
                 }
@@ -320,24 +311,21 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 
             getStatesBack: async () => {
-                console.log("ENTRE A getStatesBack")
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/states`);
                 setStore({ statesList: data });
-                console.log("ENTRE A getStatesBack", data)
+                console.log("ENTRE A getStatesBack", data);
                 return data;
             },
             getAmountSold: async () => {
-                console.log("ENTRE A getAmountSold")
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/amountsold`);
                 setStore({ reportsList: data });
-                console.log("ENTRE A getAmountSold", data)
+                console.log("ENTRE A getAmountSold", data);
                 return data;
             },
             getProductClient: async () => {
-                console.log("ENTRE A getProductClient")
                 const data = await getActions().fetchWithCheck(`${process.env.BACKEND_URL}/api/amountsold/${localStorage.getItem('userId')}`);
                 setStore({ reportsList: data });
-                console.log("ENTRE A getProductClient", data)
+                console.log("ENTRE A getProductClient", data);
                 return data;
             },
 

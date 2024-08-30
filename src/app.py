@@ -103,6 +103,26 @@ def Signup(data):
             db.session.commit()
             response_body = {"message": "User created successfully"}
             return response_body
+        
+def register_user(data):
+    # Crea el usuario
+    user_response = Signup(data)
+
+    if user_response.get("message") == "User created successfully":
+        # Utiliza addCustomer para crear la entrada del cliente
+        customer_data = {
+            "nit": data.get("nit"),
+            "phone": data.get("phone"),
+            "idUser": user_response.get("id"),
+            "address": data.get("address"),
+            "city": data.get("city"),
+            "country": data.get("country")
+        }
+        customer_response = addCustomer(customer_data)
+        return customer_response
+    else:
+        return user_response
+
 
 # Function to handle user login and return token, id, and email
 def Login(data):
@@ -153,11 +173,8 @@ def addCustomer(data):
     newAddr = Address()
     newCustomer.nit = data.get("nit")
     newCustomer.phone = data.get("phone")
-    newCustomer.date = data.get("date")
     newCustomer.idUser = data.get("idUser")
-    newCustomer.addrNit = data.get("nit")
 
-    # newAddr.id = data.get("id")
     newAddr.nit = data.get("nit")
     newAddr.address = data.get("address")
     newAddr.city = data.get("city")
