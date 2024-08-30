@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import "../../styles/RegisterInformation.css"; 
+import { Context } from '../store/appContext'; // Asegúrate de que la ruta sea correcta
+import Navbar from '../component/Navbar';
+import '../../styles/RegisterInformation.css';
 
 const RegisterInformation = () => {
+    const { store, actions } = useContext(Context);
     const [formData, setFormData] = useState({
-        nit: '',       
-        address: '',   
-        city: '',
+        nit: '',
+        address: '',
+        city: '', // Este ahora será el departamento seleccionado
         country: '',
         phone: '',
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Si statesList está vacío, obtenemos los estados
+        if (store.statesList.length === 0) {
+            actions.getToken(); // Esto debería cargar statesList en el store
+        }
+    }, [store.statesList, actions]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -60,27 +70,71 @@ const RegisterInformation = () => {
                         <h2 className="fw-bold mb-5">Register Information</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="form-outline mb-4">
-                                <input type="text" name="nit" className="form-control" onChange={handleChange} required />
+                                <input
+                                    type="text"
+                                    name="nit"
+                                    className="form-control"
+                                    value={formData.nit}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <label className="form-label">NIT</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input type="text" name="address" className="form-control" onChange={handleChange} required />
+                                <input
+                                    type="text"
+                                    name="address"
+                                    className="form-control"
+                                    value={formData.address}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <label className="form-label">Address</label>
                             </div>
 
+                            {/* Reemplazamos el input de "City" con un select */}
                             <div className="form-outline mb-4">
-                                <input type="text" name="city" className="form-control" onChange={handleChange} required />
-                                <label className="form-label">City</label>
+                                <select
+                                    name="city"
+                                    className="form-control"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="">Select a Department</option>
+                                    {store.statesList && store.statesList.length > 0 ? (
+                                        store.statesList.map((state, index) => (
+                                            <option key={index} value={state}>{state}</option>
+                                        ))
+                                    ) : (
+                                        <option value="" disabled>Loading departments...</option>
+                                    )}
+                                </select>
+                                <label className="form-label">Department</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input type="text" name="country" className="form-control" onChange={handleChange} required />
+                                <input
+                                    type="text"
+                                    name="country"
+                                    className="form-control"
+                                    value={formData.country}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <label className="form-label">Country</label>
                             </div>
 
                             <div className="form-outline mb-4">
-                                <input type="text" name="phone" className="form-control" onChange={handleChange} required />
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    className="form-control"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    required
+                                />
                                 <label className="form-label">Phone</label>
                             </div>
 

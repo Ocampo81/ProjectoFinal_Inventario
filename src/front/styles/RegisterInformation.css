@@ -88,6 +88,32 @@
     overflow: hidden;
 }
 
+/* Estilo para el select del departamento */
+.register-information-container select.form-control {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #ffffff;
+    color: #2d2d2d;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.register-information-container select.form-control:focus {
+    border-color: #ffb700;
+    box-shadow: 0 0 5px rgba(255, 183, 0, 0.5);
+    outline: none;
+}
+
+.register-information-container select.form-control option {
+    background-color: #ffffff;
+    color: #2d2d2d;
+}
+
 /* Media Query para pantallas pequeñas */
 @media (max-width: 768px) {
     .register-information-container .card {
