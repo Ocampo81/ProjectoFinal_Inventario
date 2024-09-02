@@ -88,7 +88,6 @@
     overflow: hidden;
 }
 
-/* Estilo para el select del departamento */
 .register-information-container select.form-control {
     -webkit-appearance: none;
     -moz-appearance: none;

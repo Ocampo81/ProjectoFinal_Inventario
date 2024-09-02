@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Context } from '../store/appContext'; // Asegúrate de que la ruta sea correcta
+import { Context } from '../store/appContext';
 import Navbar from '../component/Navbar';
 import '../../styles/RegisterInformation.css';
 
@@ -9,7 +9,7 @@ const RegisterInformation = () => {
     const [formData, setFormData] = useState({
         nit: '',
         address: '',
-        city: '', // Este ahora será el departamento seleccionado
+        city: '', 
         country: '',
         phone: '',
     });
@@ -17,10 +17,9 @@ const RegisterInformation = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Si statesList está vacío, obtenemos los estados
         console.log("store.statesList.length", store.statesList.length);
         if (store.statesList.length === 0) {
-            actions.getToken(); // Esto debería cargar statesList en el store
+            actions.getToken(); 
         }
     });
 
@@ -69,7 +68,6 @@ const RegisterInformation = () => {
 
     return (
         <div className="register-information-page">
-            {/* Botón para volver a la vista de Signup */}
             <Link to="/signup" className="back-button">
                 <i className="fas fa-arrow-left"></i> Back
             </Link>
@@ -103,7 +101,6 @@ const RegisterInformation = () => {
                                 <label className="form-label">Address</label>
                             </div>
 
-                            {/* Reemplazamos el input de "City" con un select */}
                             <div className="form-outline mb-4">
                                 <select
                                     name="city"

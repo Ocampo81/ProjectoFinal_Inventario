@@ -109,12 +109,10 @@ def Signup(datau):
             return response_body
         
 def register_user(data):
-    # usa la función Signup para Crear el usuario
     user_response = Signup(data)
-    # Valida el mensaje retornado por Signup
     print("user_responseuser_response", user_response)
     if user_response.get("message") == "User created successfully":
-        # Utiliza addCustomer para crear la entrada del cliente
+
         user_result = db.session.execute(db.select(User).filter_by(email=data.get("email"))).one_or_none()
                
         customer_data = {
@@ -126,7 +124,7 @@ def register_user(data):
             "country": data.get("country"),
             "idUser" :  user_result[0].id
         }
-         # usa la función addCustomer para Crear el usuario como customer
+
         customer_response = addCustomer(customer_data)
         return customer_response
     else:
@@ -295,7 +293,6 @@ def addProducts(data):
     newEntry = ProductEntry()
     category_name = data.get("category").upper()
     print("category_name :*****",category_name)
-    # Obtener idCatProd basado en el nombre de la categoría
     Category_result = db.session.execute(db.select(CategoryProduct).filter_by(category=category_name)).one_or_none()
     
     if not Category_result:

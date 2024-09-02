@@ -41,7 +41,7 @@
 
 .client-item p {
     margin: 0;
-    margin-right: 300px; /* Mantener el mismo estilo que en Clients */
+    margin-right: 300px; 
 }
 
 .pagination-container {

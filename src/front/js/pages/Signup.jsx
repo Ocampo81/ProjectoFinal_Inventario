@@ -29,9 +29,7 @@ const Signup = () => {
 
     const handleNext = (event) => {
         event.preventDefault();
-        // Guardar los datos en el almacenamiento local
         localStorage.setItem("signupData", JSON.stringify(data));
-        // Redirigir a la siguiente vista
         navigate("/register-information");
     };
 
