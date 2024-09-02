@@ -19,6 +19,7 @@ import ProductsEntry from './pages/ProductsEntry.jsx';
 import ProductsMenu from './pages/ProductsMenu.jsx'; 
 import States from './pages/States.jsx';
 import ReportAmountSold from './pages/ReportAmountSold.jsx';  
+import ProductClientReport from './pages/ProductClientReport.jsx';
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -46,6 +47,7 @@ const Layout = () => {
                         <Route element={<UserApproval />} path="/user-approval" />
                         <Route element={<States />} path="/states" />
                         <Route element={<ReportAmountSold />} path="/report-amount-sold" /> 
+                        <Route element={<ProductClientReport />} path="/product-client-report" /> 
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                 </ScrollToTop>

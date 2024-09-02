@@ -35,6 +35,11 @@ const MainMenu = () => {
               <h2>User Approval</h2>
               <p>Approve new users</p>
             </Link>
+            <Link to="/product-client-report" className="menu-item"> {/* Nueva opción para admin */}
+              <i className="fas fa-box-open fa-3x menu-icon"></i>
+              <h2>Product Client Report</h2>
+              <p>View products by client</p>
+            </Link>
           </div>
         </div>
       </div>
@@ -55,6 +60,11 @@ const MainMenu = () => {
               <i className="fas fa-chart-line fa-3x menu-icon"></i>
               <h2>Reports</h2>
               <p>Generate reports</p>
+            </Link>
+            <Link to="/product-client-report" className="menu-item"> {/* Nueva opción para sales */}
+              <i className="fas fa-box-open fa-3x menu-icon"></i>
+              <h2>Product Client Report</h2>
+              <p>View products by client</p>
             </Link>
           </div>
         </div>

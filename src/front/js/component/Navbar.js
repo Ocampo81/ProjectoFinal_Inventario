@@ -82,6 +82,12 @@ const Navbar = () => {
                                 <span className="tooltiptext">User Approval</span>
                             </Link>
                         </li>
+                        <li>
+                            <Link to="/product-client-report" className="navbar-icon"> {/* Nueva opción para admin */}
+                                <i className="fas fa-box-open fa-lg"></i>
+                                <span className="tooltiptext">Product Client Report</span>
+                            </Link>
+                        </li>
                     </>
                 )}
                 {profile === 2 && (
@@ -96,6 +102,12 @@ const Navbar = () => {
                             <Link to="/reports" className="navbar-icon">
                                 <i className="fas fa-chart-line fa-lg"></i>
                                 <span className="tooltiptext">Reports</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/product-client-report" className="navbar-icon"> {/* Nueva opción para sales */}
+                                <i className="fas fa-box-open fa-lg"></i>
+                                <span className="tooltiptext">Product Client Report</span>
                             </Link>
                         </li>
                     </>
