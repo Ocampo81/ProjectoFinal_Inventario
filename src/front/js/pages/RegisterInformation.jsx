@@ -18,10 +18,11 @@ const RegisterInformation = () => {
 
     useEffect(() => {
         // Si statesList está vacío, obtenemos los estados
+        console.log("store.statesList.length", store.statesList.length);
         if (store.statesList.length === 0) {
             actions.getToken(); // Esto debería cargar statesList en el store
         }
-    }, [store.statesList, actions]);
+    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,32 +40,41 @@ const RegisterInformation = () => {
             ...signupData,
             ...formData
         };
+        console.log("Valor de fullData antes de enviar al BACK ////", fullData);
 
-        fetch('/api/register_user', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(fullData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            navigate('/dashboard');
-        })
-        .catch(error => {
-            console.error('Hubo un error al registrar la información', error);
-        });
+        const success = actions.postRegisterUser(fullData);
+        if (success) {
+            console.log("User created successfully");
+        } else {
+            console.log("User ERROR");
+        }
+
+
+        //     fetch('/api/register_user', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify(fullData)
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         navigate('/dashboard');
+        //     })
+        //     .catch(error => {
+        //         console.error('Hubo un error al registrar la información', error);
+        //     });
     };
 
     return (
-        <div className="register-information-page"> 
+        <div className="register-information-page">
             {/* Botón para volver a la vista de Signup */}
             <Link to="/signup" className="back-button">
                 <i className="fas fa-arrow-left"></i> Back
             </Link>
 
-            <div className="register-information-container"> 
+            <div className="register-information-container">
                 <div className="card cascading-right bg-body-tertiary" style={{ backdropFilter: 'blur(30px)' }}>
                     <div className="card-body p-5 shadow-5 text-center">
                         <h2 className="fw-bold mb-5">Register Information</h2>

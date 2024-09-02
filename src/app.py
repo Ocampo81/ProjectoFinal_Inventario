@@ -82,14 +82,17 @@ def getPendingUsers():
     return [user.serialize() for user in users]
 
 # Function to handle user signup and return a message
-def Signup(data):
+def Signup(datau):
+    print("datau recibida de register-user", datau)
     newUser = User()
-    newUser.email = data.get("email")
-    newUser.name = data.get("name")
-    newUser.lastName = data.get("lastname")
-    newUser.password = data.get("password")
+    newUser.email = datau.get("email")
+    newUser.name = datau.get("name")
+    newUser.lastName = datau.get("lastname")
+    newUser.password = datau.get("password")
     newUser.is_active = False  
     newUser.profile = 0  
+    print("GET GET  ",datau.get("email"),datau.get("name"), datau.get("lastname"),datau.get("password") )
+    print(newUser.email,newUser.name, newUser.lastName,newUser.password )
     if newUser.email == "" or newUser.password == "":
         response_body = {"message": "email and password are required"}
         return response_body
@@ -101,23 +104,29 @@ def Signup(data):
         else:
             db.session.add(newUser)
             db.session.commit()
+             
             response_body = {"message": "User created successfully"}
             return response_body
         
 def register_user(data):
-    # Crea el usuario
+    # usa la función Signup para Crear el usuario
     user_response = Signup(data)
-
+    # Valida el mensaje retornado por Signup
+    print("user_responseuser_response", user_response)
     if user_response.get("message") == "User created successfully":
         # Utiliza addCustomer para crear la entrada del cliente
+        user_result = db.session.execute(db.select(User).filter_by(email=data.get("email"))).one_or_none()
+               
         customer_data = {
             "nit": data.get("nit"),
             "phone": data.get("phone"),
             "idUser": user_response.get("id"),
             "address": data.get("address"),
             "city": data.get("city"),
-            "country": data.get("country")
+            "country": data.get("country"),
+            "idUser" :  user_result[0].id
         }
+         # usa la función addCustomer para Crear el usuario como customer
         customer_response = addCustomer(customer_data)
         return customer_response
     else:
@@ -169,6 +178,8 @@ def get_user_profile():
 #Funciones para Customers
 
 def addCustomer(data):
+
+    print("VAO¿LORES DE DATA", data)
     newCustomer = Customer()
     newAddr = Address()
     newCustomer.nit = data.get("nit")

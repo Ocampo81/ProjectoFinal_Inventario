@@ -21,6 +21,7 @@ def handle_hello():
 def register_user():
     data = request.json
     respuesta = app.register_user(data)
+    print("RETORNO De app.py register", respuesta)
     return jsonify({"Message": respuesta}), 200
 
 @api.route('/signup', methods=['POST'])
